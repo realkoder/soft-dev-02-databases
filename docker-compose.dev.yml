@@ -1,0 +1,22 @@
+# ===========================================================
+#       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
+# ===========================================================
+# docker-compose up: docker-compose -f docker-compose.dev.yml up
+# docker-compose logs: docker-compose -f docker-compose.dev.yml logs -f
+# docker-compose down: docker-compose -f docker-compose.dev.yml down --rmi all --remove-orphans // Deletes all images - JUST MAKE SURE VOLUMES WONT BE DELETED
+
+services:
+  postgresdb:
+    container_name: postgresdb
+    image: postgres:17
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: munchora
+    volumes:
+      - munchora_postgres_data:/var/lib/postgresql/data
+    
+volumes:
+  munchora_postgres_data:
+    name: munchora_postgres_data
