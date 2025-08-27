@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get '/test', to: 'test#test'
+
+      get '/users', to: 'users#index'
     end
   end
 

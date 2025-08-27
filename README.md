@@ -169,7 +169,7 @@ Created database 'db/test.sqlite3'
 _Users_ can either signup manually or by _OAuth_
 
 ```bash
-bin/rails generate model User fullname:string email:string provider:string uid:string password_digest:string image_src:string --primary_key_type=uuid
+bin/rails generate model User fullname:string email:string provider:string uid:string password_digest:string image_src:string bio:string last_signed_in_at:datetime --primary_key_type=uuid
 ```
 
 Ensure to add the following to make the UUID work:
