@@ -31,6 +31,26 @@ Dotenv.load('.env.dev') if Rails.env.development?
 
 ```
 
+### MySQL vs PostgreSQL by ChatGPT
+
+**PostgreSQL**
+- Fully ACID-compliant; strong data integrity.
+- Advanced SQL support: CTEs, window functions, materialized views.
+- Rich data types: JSONB, arrays, UUID, enums.
+- Highly extensible with custom types, functions, and extensions (e.g., PostGIS).
+- Excels at complex queries, analytics, and hybrid relational + document workloads.
+
+**MySQL**
+- ACID compliance depends on storage engine (InnoDB recommended).
+- Simpler, faster for basic CRUD and read-heavy web apps.
+- Fewer advanced SQL features and data types.
+- Mature replication and clustering; easy to scale for reads.
+- Widely supported in hosting providers and legacy applications.
+
+**Decision Guide**
+- **Choose PostgreSQL** for complex, data-intensive, or feature-rich applications.
+- **Choose MySQL** for simple, high-read, fast CRUD applications with broad support.
+
 <br>
 
 ---
