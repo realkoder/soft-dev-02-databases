@@ -1,12 +1,12 @@
 .PHONY: dev
 dev:
-	docker-compose -f docker-compose.dev.yml up -d
+	docker-compose -f docker-compose.dev.relational-db.yml up -d
 	cd munchora-server-relational-db && bin/rails s &
 	cd client && npm run dev
 
 .PHONY: stop
 stop:
-	docker-compose -f docker-compose.dev.yml down
+	docker-compose -f docker-compose.dev.relational-db.yml down
 	pkill -f "rails s"
 	pkill -f "npm run dev"
 

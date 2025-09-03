@@ -28,7 +28,6 @@ And since not relying on default dot-env name but `.env.dev` add this to `config
 require 'dotenv'
 
 Dotenv.load('.env.dev') if Rails.env.development?
-
 ```
 
 ### MySQL vs PostgreSQL by ChatGPT
