@@ -18,9 +18,11 @@ This full stack webapp is builded in the following way:
 
 `Ruby` with `Ruby on Rails` as webframework.
 
-Generating the **Ruby on Rails Api project** with _PostgreSQL_ `rails new munchora-server-relational-db --api --database=postgresql`
+Generating the **Ruby on Rails Api project** with _PostgreSQL_
+`rails new munchora-server-relational-db --api --database=postgresql`
 
-Using _dot-env_ for secrets -> add `gem 'dotenv-rails', groups: [:development, :test]` to `Gemfile` and run `bin/bundle install`.
+Using _dot-env_ for secrets -> add `gem 'dotenv-rails', groups: [:development, :test]` to `Gemfile` and run
+`bin/bundle install`.
 
 And since not relying on default dot-env name but `.env.dev` add this to `config/application.rb`:
 
@@ -33,6 +35,7 @@ Dotenv.load('.env.dev') if Rails.env.development?
 ### MySQL vs PostgreSQL by ChatGPT
 
 **PostgreSQL**
+
 - Fully ACID-compliant; strong data integrity.
 - Advanced SQL support: CTEs, window functions, materialized views.
 - Rich data types: JSONB, arrays, UUID, enums.
@@ -40,6 +43,7 @@ Dotenv.load('.env.dev') if Rails.env.development?
 - Excels at complex queries, analytics, and hybrid relational + document workloads.
 
 **MySQL**
+
 - ACID compliance depends on storage engine (InnoDB recommended).
 - Simpler, faster for basic CRUD and read-heavy web apps.
 - Fewer advanced SQL features and data types.
@@ -47,12 +51,67 @@ Dotenv.load('.env.dev') if Rails.env.development?
 - Widely supported in hosting providers and legacy applications.
 
 **Decision Guide**
+
 - **Choose PostgreSQL** for complex, data-intensive, or feature-rich applications.
 - **Choose MySQL** for simple, high-read, fast CRUD applications with broad support.
 
 <br>
 
 ---
+
+### Changing from PostgreSQL to MySQL
+
+Add the following gem to Gemfile: ´gem 'mysql2', '>= 0.5'´
+
+Had some issues with dependencies for `mysql-client openssl@3 zstd`
+Installed them with brew: `brew install mysql-client openssl@3 zstd`
+
+And then told bundle where to find the dependencies
+`bundle config build.mysql2 "--with-mysql-config=/opt/homebrew/opt/mysql-client/bin/mysql_config --with-ldflags=-L/opt/homebrew/opt/openssl@3/lib --with-cppflags=-I/opt/homebrew/opt/openssl@3/include --with-ldflags=-L/opt/homebrew/opt/zstd/lib --with-cppflags=-I/opt/homebrew/opt/zstd/include"`
+
+And the lastly `bundle install`
+
+#### Making it work with UUID's
+
+Needed some extra tweaking to enable UUID triggers for creating users with UUIDs
+
+_docker-compose_
+
+```yml
+services:
+  mysqldb:
+    image: mysql:8.0
+    ports: [ "3307:3306" ]
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: munchora
+      MYSQL_USER: munchora
+      MYSQL_PASSWORD: admin
+      MYSQL_LOG_BIN_TRUST_FUNCTION_CREATORS: 1
+    command: --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=1
+```
+
+The users migration file
+
+```ruby
+create_table :users, id: :string, limit: 36 do |t|
+  # ... columns
+end
+
+execute <<~SQL
+  CREATE TRIGGER before_users_insert
+  BEFORE INSERT ON users
+  FOR EACH ROW
+  BEGIN
+    IF NEW.id IS NULL THEN SET NEW.id = UUID();
+    END IF;
+  END;
+SQL
+```
+
+---
+
+<br>
 
 #### Generating a controller
 
@@ -76,9 +135,9 @@ Add the following to gem file and install by `bin/bundle install`
 
 ```ruby
  # Rspec for TDD
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
-  gem 'faker'
+gem 'rspec-rails'
+gem 'factory_bot_rails'
+gem 'faker'
 ```
 
 Add test db configs for `config/database.yml`
@@ -97,7 +156,9 @@ test:
 
 Create and migrate test db `RAILS_ENV=test bin/rails db:create db:migrate`
 
-Since using _Supabase_ for _dev_ and _prod_ environmets but a more simple dockerbased postgres db the extension `"graphql.pg_graphql" "vault.supabase_vault"` can't be implemented to the simple postgres db so it's important to use the unless approach in `schema.rb`:
+Since using _Supabase_ for _dev_ and _prod_ environmets but a more simple dockerbased postgres db the extension
+`"graphql.pg_graphql" "vault.supabase_vault"` can't be implemented to the simple postgres db so it's important to use
+the unless approach in `schema.rb`:
 
 ```ruby
 enable_extension "graphql.pg_graphql" unless Rails.env.test?
@@ -118,7 +179,8 @@ bin/bundle exec rspec
 
 #### Shoulda Matchers with RSpec
 
-Using gem _Shoulda Matchers_ for one liners that test Rails functionality - read more in this [medium article](https://medium.com/@ajikjikq/shoulda-matchers-with-rspec-3e287774ec17)
+Using gem _Shoulda Matchers_ for one liners that test Rails functionality - read more in
+this [medium article](https://medium.com/@ajikjikq/shoulda-matchers-with-rspec-3e287774ec17)
 
 Add this gem test group to gem file
 
@@ -198,7 +260,8 @@ Ensure to add the following to make the UUID work:
 enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 ```
 
-Using Gem `bcrypt` -> when you assign to `user.password`, it automatically hashes the password using bcrypt and stores it in the password_digest column.
+Using Gem `bcrypt` -> when you assign to `user.password`, it automatically hashes the password using bcrypt and stores
+it in the password_digest column.
 
 ---
 
@@ -256,11 +319,11 @@ Add _login post_ route to `confi/routes.rb`
 
 ```ruby
   namespace :api do
-    namespace :v1 do
-      resources :users, only: [:index, :show, :create, :update, :destroy]
-      post '/login', to: 'auth#login'
-    end
+  namespace :v1 do
+    resources :users, only: [:index, :show, :create, :update, :destroy]
+    post '/login', to: 'auth#login'
   end
+end
 ```
 
 <br>
@@ -343,10 +406,11 @@ end
 **UsersController example (authenticated route)**
 
 ```ruby
+
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user!, only: [:index, :show, :update, :destroy]
 
-# .....
+  # ...
 ```
 
 ### OpenAI LLM USAGE
@@ -365,7 +429,8 @@ Relying on sockets for notification emitting between backend and clients.
 bin/rails generate channel Notifications
 ```
 
-since the following command is made for Ruby on Rails full stack app, but for the projects it's only used as API framework, then simply delete the unneeded JS file:
+since the following command is made for Ruby on Rails full stack app, but for the projects it's only used as API
+framework, then simply delete the unneeded JS file:
 
 ```bash
 rm app/javascript/channels/notifications_channel.js
@@ -387,9 +452,11 @@ ActionCable.server.pubsub.redis_connection_for_subscriptions.client("list") if A
 
 ### Ruby Rails in Production
 
-The application is manually deployed on _Linode Ubuntu VM_ using certbot for HTTPS config and nginx routing incoming requests.
+The application is manually deployed on _Linode Ubuntu VM_ using certbot for HTTPS config and nginx routing incoming
+requests.
 
-Client and backend application are each builded by Dockerfiles pushed to _GHCR_ and then pulled from the ubuntu vm for deployment with _docker-compose_.
+Client and backend application are each builded by Dockerfiles pushed to _GHCR_ and then pulled from the ubuntu vm for
+deployment with _docker-compose_.
 
 When migrations need to be added for the prod env it can be done manually by hand:
 

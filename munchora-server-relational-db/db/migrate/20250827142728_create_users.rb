@@ -1,6 +1,6 @@
 class CreateUsers < ActiveRecord::Migration[8.0]
   def change
-    create_table :users, id: :uuid do |t|
+    create_table :users, id: :string, limit: 36 do |t|
       t.string :fullname
       t.string :email
       t.string :provider
@@ -12,5 +12,17 @@ class CreateUsers < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
+
+    # Create trigger to generate UUID on insert
+    execute <<~SQL
+      CREATE TRIGGER before_users_insert
+      BEFORE INSERT ON users
+      FOR EACH ROW
+      BEGIN
+        IF NEW.id IS NULL OR NEW.id = '' THEN
+          SET NEW.id = UUID();
+        END IF;
+      END;
+    SQL
   end
 end
