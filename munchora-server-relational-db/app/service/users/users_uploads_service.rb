@@ -22,6 +22,6 @@ class Users::UsersUploadsService
     full_path = Rails.root.join("public", image_path.delete_prefix("/"))
     File.delete(full_path) if File.exist?(full_path)
   rescue => e
-    Rails.logger.error("Failed to delete old recipe image: #{e.message}")
+    Rails.logger.error("Failed to delete old recipes image: #{e.message}")
   end
 end

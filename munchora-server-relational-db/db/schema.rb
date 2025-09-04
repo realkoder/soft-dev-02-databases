@@ -10,7 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_04_103622) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_04_180835) do
+  create_table "llm_usages", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.string "recipe_id", limit: 36, null: false
+    t.string "provider"
+    t.string "model"
+    t.text "prompt"
+    t.integer "prompt_tokens"
+    t.integer "completion_tokens"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_llm_usages_on_recipe_id"
+    t.index ["user_id"], name: "index_llm_usages_on_user_id"
+  end
+
+  create_table "recipes", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.string "title"
+    t.text "description"
+    t.string "image_url"
+    t.json "instructions"
+    t.boolean "is_public", default: false
+    t.json "cuisine"
+    t.string "difficulty"
+    t.json "tags"
+    t.integer "prep_time", default: 10
+    t.integer "cook_time", default: 10
+    t.integer "servings", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "is_public"], name: "index_recipes_on_user_id_and_is_public"
+    t.index ["user_id"], name: "index_recipes_on_user_id"
+  end
+
   create_table "users", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "fullname"
     t.string "email"
@@ -24,5 +57,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_04_103622) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["fullname"], name: "index_users_on_fullname"
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
   end
+
+  add_foreign_key "llm_usages", "recipes"
+  add_foreign_key "llm_usages", "users"
+  add_foreign_key "recipes", "users"
 end

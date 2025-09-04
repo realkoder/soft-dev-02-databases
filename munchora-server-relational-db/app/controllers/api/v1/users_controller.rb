@@ -1,4 +1,5 @@
 class Api::V1::UsersController < ApplicationController
+  before_action :authenticate_user!, only: [:index, :show, :update, :destroy, :upload_image, :delete_image]
 
   # GET /api/v1/users?q=<search>&page=<amount>&per_page=<amount>
   def index
