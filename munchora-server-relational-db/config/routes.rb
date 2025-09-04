@@ -7,14 +7,18 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  
+
   namespace :api do
     namespace :v1 do
-      get '/test', to: 'test#test'
+      get "/test", to: "test#test"
 
-      get '/users', to: 'users#index'
+      # USERS
+      delete "users/delete-image", to: "users#delete_image"
+      post "users/upload-image", to: "users#upload_image"
+      resources :users, only: [:index, :show, :create, :update, :destroy]
+
     end
   end
 
-  match '*path', via: :all, to: 'application#route_not_found'
+  match "*path", via: :all, to: "application#route_not_found"
 end

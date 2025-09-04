@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_27_142728) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_04_103622) do
   create_table "users", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "fullname"
     t.string "email"
@@ -22,5 +22,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_142728) do
     t.datetime "last_signed_in_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["fullname"], name: "index_users_on_fullname"
   end
 end
