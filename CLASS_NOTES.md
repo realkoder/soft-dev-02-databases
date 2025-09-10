@@ -75,8 +75,79 @@ Data consistency (enforcing rules beyond simple constraints)
 
 Auditing (keeping a history of changes)
 
----
+**Example of preventing negative _servings_ for Munchora _recipes_**
 
+```mysql
+CREATE TRIGGER validate_recipe_servings
+    BEFORE INSERT
+    ON recipes
+    FOR EACH ROW
+BEGIN
+    IF NEW.servings < 1 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Servings must be at least 1';
+    END IF;
+END;
+```
+
+This will throw an error if someone tries:
+
+```mysql
+INSERT INTO recipes (user_id, title, servings)
+VALUES ('123', 'Pizza', -5);
+```
+
+### 🔹 Example: Auditing Trigger for Munchora - Recipes
+
+Let’s say you want to keep a history of updates (title, description, etc.) for versioning or “undo” functionality.
+
+First, create an audit table:
+
+```ruby
+create_table :recipe_audits, id: :bigint do |t|
+  t.string :recipe_id, limit: 36, null: false
+  t.string :user_id, limit: 36, null: false
+  t.string :action, null: false # 'INSERT' | 'UPDATE' | 'DELETE'
+  t.json :old_data
+  t.json :new_data
+  t.timestamps
+end
+```
+
+Then, add a trigger:
+
+```ruby
+execute <<~SQL
+  CREATE TRIGGER after_recipe_update
+  AFTER UPDATE ON recipes
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO recipe_audits (recipe_id, user_id, action, old_data, new_data, created_at, updated_at)
+    VALUES (
+      OLD.id,
+      OLD.user_id,
+      'UPDATE',
+      JSON_OBJECT(
+        'title', OLD.title,
+        'description', OLD.description,
+        'instructions', OLD.instructions,
+        'tags', OLD.tags
+      ),
+      JSON_OBJECT(
+        'title', NEW.title,
+        'description', NEW.description,
+        'instructions', NEW.instructions,
+        'tags', NEW.tags
+      ),
+      NOW(),
+      NOW()
+    );
+  END;
+SQL
+
+```
+
+---
 
 ## Stored Procedures
 
@@ -100,15 +171,15 @@ They can reduce network round-trips (one procedure call instead of many small qu
 Suppose you want to build a grocery list from all recipes a user selected.
 
 Without a procedure: your backend has to query ingredients, sum quantities, normalize units, and then insert into
-grocery_lists.
+_grocery_lists_.
 
-With a procedure: you could encapsulate that logic in sp_generate_grocery_list(user_id).
+With a procedure: you could encapsulate that logic in _sp_generate_grocery_list(user_id)_.
 
-Input: user_id
+**Input**: _user_id_
 
-Logic: aggregate ingredients across recipes, handle duplicates, convert units
+**Logic**: _aggregate ingredients across recipes, handle duplicates, convert units_
 
-Output: rows in grocery_list_items
+**Output**: _rows in grocery_list_items_
 
 This makes the logic consistent and reusable no matter which part of the app calls it.
 
@@ -116,7 +187,7 @@ This makes the logic consistent and reusable no matter which part of the app cal
 
 Suppose you want to calculate calories, protein, etc. across all recipes in a user’s plan.
 
-A procedure sp_calculate_nutrition(plan_id) could:
+A procedure _sp_calculate_nutrition(plan_id)_ could:
 
 Join recipes + ingredients + nutrition info
 
@@ -124,17 +195,17 @@ Sum totals
 
 Store results in a summary table
 
-Now, instead of repeating a heavy multi-join query in Rails/React Native, you just call the procedure.
+Now, instead of repeating a heavy multi-join query in Rails, you just call the _procedure_.
 
 #### _3._ Audit Logging
 
 Imagine you want to track every time a grocery list is updated (for future “undo” features or analytics).
 
-A procedure sp_update_grocery_item(item_id, new_qty) could:
+A procedure _sp_update_grocery_item(item_id, new_qty)_ could:
 
 Update the item
 
-Insert a row into grocery_list_audit automatically
+Insert a row into _grocery_list_audit_ automatically
 
 This guarantees that every update also logs history — can’t be skipped by accident in app code.
 
