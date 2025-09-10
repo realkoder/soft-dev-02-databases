@@ -3,28 +3,28 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   describe "validations" do
     it "is valid with all required fields" do
-      user = User.new(email: "test@example.com", fullname: "Jane Doe", password: "securepass")
+      user = User.new(email: "test@example.com", first_name: "Jane", last_name: "Doe", password: "securepass")
       expect(user).to be_valid
     end
 
     it "is invalid without email when provider is blank" do
-      user = User.new(fullname: "Jane", password: "securepass")
+      user = User.new(first_name: "Jane", last_name: "Doe", password: "securepass")
       expect(user).not_to be_valid
       expect(user.errors[:email]).to include("can't be blank")
     end
 
     it "is valid without email if provider is present" do
-      user = User.new(provider: "apple", uid: "abc123", fullname: "John", password: "")
+      user = User.new(provider: "apple", uid: "abc123", first_name: "John", last_name: "Doe", password: "")
       expect(user).to be_valid
     end
 
     it "is invalid with short password for manual signup" do
-      user = User.new(email: "test@example.com", fullname: "Test", password: "123")
+      user = User.new(email: "test@example.com", first_name: "Test", last_name: "Last", password: "123")
       expect(user).not_to be_valid
     end
 
     it "is valid without password if provider is present" do
-      user = User.new(provider: "apple", uid: "uid123", fullname: "OAuth User")
+      user = User.new(provider: "apple", uid: "uid123", first_name: "OAuth", last_name: "User")
       expect(user).to be_valid
     end
   end
@@ -39,7 +39,7 @@ RSpec.describe User, type: :model do
 
   describe "#as_json" do
     it "does not include password_digest" do
-      user = User.create!(id: SecureRandom.uuid, email: "secure@example.com", fullname: "Test", password: "secure123")
+      user = User.create!(id: SecureRandom.uuid, email: "secure@example.com", first_name: "Test", last_name: "Doe", password: "secure123")
       json = user.as_json
       expect(json).not_to have_key("password_digest")
     end
