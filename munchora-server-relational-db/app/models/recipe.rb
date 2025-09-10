@@ -3,6 +3,8 @@ class Recipe < ApplicationRecord
   has_many :llm_usages # dependent: :destroy -> this can make delete_on_cascade
   has_many :ingredients, dependent: :destroy
 
+  accepts_nested_attributes_for :ingredients, allow_destroy: true
+
   validates :title, presence: true, length: { maximum: 150 }
   validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true
   validates :description, presence: true, length: { maximum: 500 }

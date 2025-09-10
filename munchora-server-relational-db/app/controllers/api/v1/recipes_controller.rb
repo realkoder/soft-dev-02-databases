@@ -1,4 +1,6 @@
 class Api::V1::RecipesController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user_or_nil, only: [:index, :show]
   before_action :set_recipe, only: [:show, :update, :destroy]
 
   ADMIN_EMAIL = "alexanderbtcc@gmail.com"
@@ -34,7 +36,7 @@ class Api::V1::RecipesController < ApplicationController
       query = "%#{params[:search].downcase}%"
       recipes = recipes.where(
         "LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(cuisine) LIKE ?",
-        query, query, query
+        query, query, query # Protecting against sql injections - using prepared statement
       )
       filters_applied = true
     end
@@ -45,7 +47,7 @@ class Api::V1::RecipesController < ApplicationController
     paginated_recipes = recipes.page(params[:page]).per(params[:per_page] || 10)
 
     render json: {
-      data: paginated_recipes.as_json(include: { user: { only: [:image_src, :id] } }),
+      data: paginated_recipes.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] } }),
       pagination: {
         current_page: paginated_recipes.current_page,
         total_pages: paginated_recipes.total_pages,
@@ -57,19 +59,9 @@ class Api::V1::RecipesController < ApplicationController
   # GET /api/v1/recipes/:id
   def show
     if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
-      render json: @recipe.as_json(include: { user: { only: [:image_src, :id] } })
+      render json: @recipe.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] } })
     else
       head :forbidden
-    end
-  end
-
-  # POST /api/v1/recipes
-  def create
-    @recipe = current_user.recipes.build(recipe_params)
-    if @recipe.save
-      render json: @recipe.as_json(include: { user: { only: [:image_src, :id] } })
-    else
-      render json: { errors: @recipe.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -79,11 +71,32 @@ class Api::V1::RecipesController < ApplicationController
       head :forbidden and return
     end
 
-    if @recipe.update(recipe_params)
-      render json: @recipe.as_json(include: { user: { only: [:image_src, :id] } })
-    else
-      render json: { errors: @recipe.errors.full_messages }, status: :unprocessable_entity
+    Recipe.transaction do
+      if recipe_params[:ingredients]
+        # Remove old ingredients
+        @recipe.ingredients.destroy_all
+
+        # Build new ingredients
+        recipe_params[:ingredients].each do |ingredient|
+          @recipe.ingredients.build(
+            name: ingredient[:name],
+            category: ingredient[:category],
+            amount: ingredient[:amount]
+          )
+        end
+      end
+
+      @recipe.update!(recipe_params.except(:ingredients))
     end
+
+    render json: @recipe.as_json(
+      include: {
+        ingredients: { only: [:id, :name, :category, :amount] },
+        user: { only: [:image_src, :id] }
+      }
+    )
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   # DELETE /api/v1/recipes/:id
@@ -149,7 +162,7 @@ class Api::V1::RecipesController < ApplicationController
     params.require(:recipe).permit(
       :title, :description, :cuisine,
       :is_public, :difficulty, :prep_time, :cook_time, :servings,
-      instructions: [], ingredients: [], tags: []
+      instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
     )
   end
 end

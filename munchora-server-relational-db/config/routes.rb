@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :show, :create, :update, :destroy]
 
       # RECIPES
-      resources :recipes, only: [:index, :show, :create, :update, :destroy] do
+      resources :recipes, only: [:index, :show, :update, :destroy] do
         member do
           post "upload-image", to: "recipes#upload_image"
           delete "delete-image", to: "recipes#delete_image"
