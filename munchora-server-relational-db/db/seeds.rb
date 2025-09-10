@@ -142,6 +142,47 @@ end
 puts "Seeded #{sample_recipes.size} recipes."
 
 # =================
+# INGREDIENTS
+# =================
+
+ingredients_list = [
+  { name: "Spaghetti", category: "pasta & rice 🍝", amount: 200 },
+  { name: "Pancetta", category: "meat 🍗", amount: 100 },
+  { name: "Eggs", category: "dairy 🥚", amount: 2 },
+  { name: "Parmesan Cheese", category: "dairy 🥚", amount: 50 },
+  { name: "Quinoa", category: "grains 🌾", amount: 100 },
+  { name: "Mixed Vegetables", category: "vegetables 🥦", amount: 150 },
+  { name: "Tahini", category: "sauces & oils 🫙", amount: 30 },
+  { name: "Chocolate", category: "snacks 🍫", amount: 100 },
+  { name: "Butter", category: "dairy 🥚", amount: 50 },
+  { name: "Sugar", category: "spices & herbs 🌶️", amount: 50 }
+]
+
+Recipe.all.each do |recipe|
+  case recipe.title
+  when "Spaghetti Carbonara"
+    ingredients_for_recipe = ingredients_list.select { |i| ["Spaghetti", "Pancetta", "Eggs", "Parmesan Cheese"].include?(i[:name]) }
+  when "Vegan Buddha Bowl"
+    ingredients_for_recipe = ingredients_list.select { |i| ["Quinoa", "Mixed Vegetables", "Tahini"].include?(i[:name]) }
+  when "Chocolate Lava Cake"
+    ingredients_for_recipe = ingredients_list.select { |i| ["Chocolate", "Butter", "Eggs", "Sugar"].include?(i[:name]) }
+  else
+    ingredients_for_recipe = []
+  end
+
+  ingredients_for_recipe.each do |ing|
+    Ingredient.create!(
+      recipe_id: recipe.id,
+      name: ing[:name],
+      category: ing[:category],
+      amount: ing[:amount]
+    )
+  end
+end
+
+puts "Seeded ingredients for recipes."
+
+# =================
 # LLM_USAGE
 # =================
 

@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_10_062207) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_10_141725) do
+  create_table "ingredients", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "category"
+    t.integer "amount"
+    t.string "recipe_id", limit: 36, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
+  end
+
   create_table "llm_usages", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "user_id", limit: 36, null: false
     t.string "recipe_id", limit: 36, null: false
@@ -63,6 +73,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_062207) do
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
   end
 
+  add_foreign_key "ingredients", "recipes"
   add_foreign_key "llm_usages", "recipes"
   add_foreign_key "llm_usages", "users"
   add_foreign_key "recipes", "users"
