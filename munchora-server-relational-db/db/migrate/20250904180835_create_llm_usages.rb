@@ -15,7 +15,7 @@ class CreateLlmUsages < ActiveRecord::Migration[8.0]
     # Create trigger to generate UUID on insert
     execute <<~SQL
       CREATE TRIGGER before_llm_usages_insert
-      BEFORE INSERT ON users
+      BEFORE INSERT ON llm_usages
       FOR EACH ROW
       BEGIN
         IF NEW.id IS NULL OR NEW.id = '' THEN

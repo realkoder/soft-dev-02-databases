@@ -20,7 +20,7 @@ class CreateRecipes < ActiveRecord::Migration[8.0]
     # Create trigger to generate UUID on insert
     execute <<~SQL
       CREATE TRIGGER before_recipes_insert
-      BEFORE INSERT ON users
+      BEFORE INSERT ON recipes
       FOR EACH ROW
       BEGIN
         IF NEW.id IS NULL OR NEW.id = '' THEN

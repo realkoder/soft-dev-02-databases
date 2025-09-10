@@ -64,6 +64,94 @@ databases (_MongoDB_, _RavenDB_) for multi-document transactions. Implementing f
 
 <br>
 
+## Triggers
+
+**🔹 What Triggers Do**
+
+A trigger in MySQL is a piece of logic that automatically runs before or after an INSERT, UPDATE, or DELETE on a table.
+They’re useful for:
+
+Data consistency (enforcing rules beyond simple constraints)
+
+Auditing (keeping a history of changes)
+
+---
+
+
+## Stored Procedures
+
+### 🔹 Why Stored Procedures Exist
+
+Stored procedures are essentially:
+
+Reusable server-side logic that runs inside MySQL.
+
+They’re great when you want to encapsulate business rules or heavy operations in the DB, so every client/app doesn’t
+have to duplicate the logic.
+
+They can reduce network round-trips (one procedure call instead of many small queries).
+
+---
+
+### 🔹 Where They Could Be Used in Munchora
+
+#### _1._ Generating a User’s Grocery List
+
+Suppose you want to build a grocery list from all recipes a user selected.
+
+Without a procedure: your backend has to query ingredients, sum quantities, normalize units, and then insert into
+grocery_lists.
+
+With a procedure: you could encapsulate that logic in sp_generate_grocery_list(user_id).
+
+Input: user_id
+
+Logic: aggregate ingredients across recipes, handle duplicates, convert units
+
+Output: rows in grocery_list_items
+
+This makes the logic consistent and reusable no matter which part of the app calls it.
+
+#### _2._ Calculating Nutrition Totals
+
+Suppose you want to calculate calories, protein, etc. across all recipes in a user’s plan.
+
+A procedure sp_calculate_nutrition(plan_id) could:
+
+Join recipes + ingredients + nutrition info
+
+Sum totals
+
+Store results in a summary table
+
+Now, instead of repeating a heavy multi-join query in Rails/React Native, you just call the procedure.
+
+#### _3._ Audit Logging
+
+Imagine you want to track every time a grocery list is updated (for future “undo” features or analytics).
+
+A procedure sp_update_grocery_item(item_id, new_qty) could:
+
+Update the item
+
+Insert a row into grocery_list_audit automatically
+
+This guarantees that every update also logs history — can’t be skipped by accident in app code.
+
+---
+
+### 🔹 When NOT to Use Stored Procedures
+
+If the logic is simple CRUD (insert, update, delete) → keep it in Rails.
+
+If logic changes frequently → easier to maintain in application code.
+
+If portability matters → procedures are MySQL-specific (locks you in).
+
+---
+
+<br>
+
 # MISC
 
 ![MySQL Architecture](assets/mysql-architecture.png)
@@ -106,31 +194,38 @@ Essential and important _sql_ commands
 
 ```sql
 -- Show all databases
-SHOW DATABASES;
+SHOW
+DATABASES;
 
 -- Select a database
-USE database_name;
+USE
+database_name;
 
 -- Show all tables in the selected database
-SHOW TABLES;
+SHOW
+TABLES;
 
 -- Describe a table structure
 DESCRIBE table_name;
 
 -- Show create table statement
-SHOW CREATE TABLE table_name;
+SHOW
+CREATE TABLE table_name;
 
 -- Show indexes of a table
-SHOW INDEX FROM table_name;
+SHOW
+INDEX FROM table_name;
 
 -- Show current database
 SELECT DATABASE();
 
 -- Show all columns of a table
-SHOW COLUMNS FROM table_name;
+SHOW
+COLUMNS FROM table_name;
 
 -- Show table status (engine, rows, etc.)
-SHOW TABLE STATUS;
+SHOW
+TABLE STATUS;
 
 -- Show all foreign keys for a table
 SELECT TABLE_NAME,
@@ -142,7 +237,6 @@ FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE TABLE_SCHEMA = 'database_name'
   AND TABLE_NAME = 'table_name'
   AND REFERENCED_TABLE_NAME IS NOT NULL;
-
 ```
 
 ---
