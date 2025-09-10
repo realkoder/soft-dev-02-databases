@@ -1,4 +1,8 @@
 class User < ApplicationRecord
+  self.primary_key = "id"
+
+  before_create -> { self.id ||= SecureRandom.uuid }
+
   has_many :recipes, dependent: :destroy
   has_many :llm_usages
 

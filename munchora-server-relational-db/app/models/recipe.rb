@@ -1,4 +1,8 @@
 class Recipe < ApplicationRecord
+  self.primary_key = "id"
+
+  before_create -> { self.id ||= SecureRandom.uuid }
+
   belongs_to :user
   has_many :llm_usages # dependent: :destroy -> this can make delete_on_cascade
   has_many :ingredients, dependent: :destroy

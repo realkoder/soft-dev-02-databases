@@ -1,7 +1,9 @@
 class CreateRecipes < ActiveRecord::Migration[8.0]
   def change
-    create_table :recipes, id: :string, limit: 36 do |t|
-      t.references :user, null: false, type: :string, limit: 36, foreign_key: true
+    create_table :recipes, id: false do |t|
+      t.string :id, limit: 36, null: false, primary_key: true
+
+      t.string :user_id, limit: 36, null: false
       t.string :title
       t.text :description
       t.string :image_url
@@ -17,17 +19,19 @@ class CreateRecipes < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
+    add_foreign_key :recipes, :users, column: :user_id
+
     # Create trigger to generate UUID on insert
-    execute <<~SQL
-      CREATE TRIGGER before_recipes_insert
-      BEFORE INSERT ON recipes
-      FOR EACH ROW
-      BEGIN
-        IF NEW.id IS NULL OR NEW.id = '' THEN
-          SET NEW.id = UUID();
-        END IF;
-      END;
-    SQL
+    # execute <<~SQL
+    #   CREATE TRIGGER before_recipes_insert
+    #   BEFORE INSERT ON recipes
+    #   FOR EACH ROW
+    #   BEGIN
+    #     IF NEW.id IS NULL OR NEW.id = '' THEN
+    #       SET NEW.id = UUID();
+    #     END IF;
+    #   END;
+    # SQL
 
     add_index :recipes, [:user_id, :is_public]
   end

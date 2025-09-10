@@ -1,4 +1,8 @@
 class LlmUsage < ApplicationRecord
+  self.primary_key = "id"
+
+  before_create -> { self.id ||= SecureRandom.uuid }
+
   belongs_to :user
   belongs_to :recipe
 
