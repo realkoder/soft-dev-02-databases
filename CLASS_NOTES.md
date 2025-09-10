@@ -64,15 +64,90 @@ databases (_MongoDB_, _RavenDB_) for multi-document transactions. Implementing f
 
 <br>
 
-
 # MISC
 
 ![MySQL Architecture](assets/mysql-architecture.png)
 
 ---
 
+![SQL Sub Languages](assets/sql-sub-languages.png)
+
+_(Links provided here)_
+
+[Chapter 15 SQL Statements](https://dev.mysql.com/doc/refman/8.0/en/sql-statements.html)
+
+[Relational Algebra](https://en.wikipedia.org/wiki/Relational_algebra#Left_outer_join_.28.E2.9F.95.29)
+
+[Relational Algebra in DBMS: Operations with Examples](https://www.guru99.com/relational-algebra-dbms.html)
+
+---
+
+![SQL Join Summary](assets/sql-join-summary.png)
+
+---
+
+![SQL Union](assets/sql-union.png)
+
+---
+
+![SQL Aggregate Functions](assets/sql-aggregate-functions.png)
+
+---
+
+![SQL Groupd by Having](assets/sql-group-by-having.png)
+
+---
+
 <br>
 
+# SQL commands
+
+Essential and important _sql_ commands
+
+```sql
+-- Show all databases
+SHOW DATABASES;
+
+-- Select a database
+USE database_name;
+
+-- Show all tables in the selected database
+SHOW TABLES;
+
+-- Describe a table structure
+DESCRIBE table_name;
+
+-- Show create table statement
+SHOW CREATE TABLE table_name;
+
+-- Show indexes of a table
+SHOW INDEX FROM table_name;
+
+-- Show current database
+SELECT DATABASE();
+
+-- Show all columns of a table
+SHOW COLUMNS FROM table_name;
+
+-- Show table status (engine, rows, etc.)
+SHOW TABLE STATUS;
+
+-- Show all foreign keys for a table
+SELECT TABLE_NAME,
+       COLUMN_NAME,
+       CONSTRAINT_NAME,
+       REFERENCED_TABLE_NAME,
+       REFERENCED_COLUMN_NAME
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'database_name'
+  AND TABLE_NAME = 'table_name'
+  AND REFERENCED_TABLE_NAME IS NOT NULL;
+
+```
+
+---
+
+<br>
 
 # Links
 
