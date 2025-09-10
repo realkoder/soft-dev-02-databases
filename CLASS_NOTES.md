@@ -64,6 +64,16 @@ databases (_MongoDB_, _RavenDB_) for multi-document transactions. Implementing f
 
 <br>
 
+
+# MISC
+
+![MySQL Architecture](assets/mysql-architecture.png)
+
+---
+
+<br>
+
+
 # Links
 
 [ERD, Cardinality, Relations, etc. explained](https://www.lucidchart.com/pages/er-diagrams)

@@ -18,10 +18,10 @@ class User < ApplicationRecord
 
   validates :image_src, length: { minimum: 6, maximum: 400 }, format: URI.regexp(%w[http https]), allow_blank: true
 
-  # Dont want to return password_digest - and client relies on attribute fullname instead of first_name / last_name
+  # Dont want to return password_digest
   def as_json(options = {})
     super({ except: [:password_digest] }.merge(options)).merge(
-      'fullname' => "#{first_name} #{last_name}"
+      'fullname' => "#{first_name} #{last_name}" # client relies on attribute fullname instead of first_name / last_name
     )
   end
 end

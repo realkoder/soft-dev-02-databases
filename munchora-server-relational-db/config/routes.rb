@@ -13,11 +13,11 @@ Rails.application.routes.draw do
       get "/test", to: "test#test"
 
       # AUTH
-      get '/auth/google', to: 'auth#google'
-      get '/auth/google/callback', to: 'auth#google_callback'
-      post '/auth/login', to: 'auth#login'
-      delete '/auth/logout', to: 'auth#logout'
-      get '/auth/me', to: 'auth#me'
+      get "/auth/google", to: "auth#google"
+      get "/auth/google/callback", to: "auth#google_callback"
+      post "/auth/login", to: "auth#login"
+      delete "/auth/logout", to: "auth#logout"
+      get "/auth/me", to: "auth#me"
 
       # USERS
       delete "users/delete-image", to: "users#delete_image"
@@ -27,8 +27,8 @@ Rails.application.routes.draw do
       # RECIPES
       resources :recipes, only: [:index, :show, :create, :update, :destroy] do
         member do
-          post 'upload-image', to: 'recipes#upload_image'
-          delete 'delete-image', to: 'recipes#delete_image'
+          post "upload-image", to: "recipes#upload_image"
+          delete "delete-image", to: "recipes#delete_image"
         end
       end
 
