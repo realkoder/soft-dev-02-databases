@@ -12,7 +12,8 @@ require "securerandom"
 
 users = [
   {
-    fullname: "Alice Example",
+    first_name: "Alice",
+    last_name: "Example",
     email: "alice@example.com",
     provider: "email",
     uid: "alice-uid",
@@ -22,7 +23,8 @@ users = [
     last_signed_in_at: nil
   },
   {
-    fullname: "Bob Example",
+    first_name: "Bob",
+    last_name: "Example",
     email: "bob@example.com",
     provider: "email",
     uid: "bob-uid",
@@ -32,7 +34,8 @@ users = [
     last_signed_in_at: nil
   },
   {
-    fullname: "Charlie Example",
+    first_name: "Charlie",
+    last_name: "Example",
     email: "charlie@example.com",
     provider: "email",
     uid: "charlie-uid",
@@ -48,6 +51,8 @@ users.each do |attrs|
 end
 
 users = User.all
+
+puts "Seeded #{users.size} users."
 
 # =================
 # RECIPES

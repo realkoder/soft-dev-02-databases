@@ -7,7 +7,10 @@ class Api::V1::UsersController < ApplicationController
 
     if params[:search].present?
       query = "%#{params[:search].downcase}%"
-      users = users.where("LOWER(fullname) LIKE ? OR LOWER(email) LIKE ?", query, query) # fullname and email are indexed
+      users = users.where(
+        "LOWER(first_name || ' ' || last_name) LIKE ? OR LOWER(email) LIKE ?",
+        query, query
+      )
     end
 
     paginated_users = users.page(params[:page]).per(params[:per_page] || 10)
@@ -88,11 +91,11 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_update_params
-    params.require(:user).permit(:fullname, :bio)
+    params.require(:user).permit(:first_name, :last_name, :bio)
   end
 
   def user_params
-    params.require(:user).permit(:fullname, :email, :bio, :password, :password_confirmation, :image_src, :provider, :uid)
+    params.require(:user).permit(:first_name, :last_name, :email, :bio, :password, :password_confirmation, :image_src, :provider, :uid)
   end
 
 end
