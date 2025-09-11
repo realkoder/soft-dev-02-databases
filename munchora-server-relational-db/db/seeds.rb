@@ -221,7 +221,6 @@ llm_usages_sample = [
   }
 ]
 
-# Seed multiple LlmUsage records
 20.times do
   usage_attrs = llm_usages_sample.sample
   LlmUsage.create!(
@@ -239,5 +238,36 @@ end
 puts "Seeded 20 LlmUsage records."
 
 # =================
-# NEXT_SEEDING
+# FEEDBACK
+# =================
+
+# db/seeds.rb
+
+Feedback.create!([
+                   { message: "Love the recipes! Keep up the great work.", name: "Alice Johnson", email: "alice@example.com", category: "general" },
+                   { message: "Found a bug when trying to upload an image.", name: "Bob Smith", email: "bob@example.com", category: "bug" },
+                   { message: "Could you add more vegan recipes?", name: "Carol Lee", email: "carol@example.com", category: "features" },
+                   { message: "The website is loading slowly on mobile.", name: "David Kim", email: "david@example.com", category: "general" },
+                   { message: "I appreciate the detailed cooking instructions!", name: "Eve Martinez", email: "eve@example.com", category: "general" },
+                   { message: "Would love a dark mode option.", name: "Frank Green", email: "frank@example.com", category: "features" },
+                   { message: "The login process is confusing.", name: "Grace Hopper", email: "grace@example.com", category: "interface" },
+                   { message: "Great app, but the search feature could be faster.", name: "Hannah Brown", email: "hannah@example.com", category: "general" },
+                   { message: "Images sometimes fail to upload on Safari.", name: "Ian Clarke", email: "ian@example.com", category: "bug" },
+                   { message: "Please add a category filter for recipes.", name: "Jane Doe", email: "jane@example.com", category: "features" },
+                   { message: "Really enjoy the grocery list feature.", name: "Kevin Lee", email: "kevin@example.com", category: "general" },
+                   { message: "The AI recipe generator is amazing!", name: "Laura Kim", email: "laura@example.com", category: "general" },
+                   { message: "I had trouble resetting my password.", name: "Mike Taylor", email: "mike@example.com", category: "bug" },
+                   { message: "Consider adding multi-language support.", name: "Nina Patel", email: "nina@example.com", category: "features" },
+                   { message: "Some recipes are missing nutrition info.", name: "Oliver White", email: "oliver@example.com", category: "bug" },
+                   { message: "The mobile layout looks great!", name: "Paula Adams", email: "paula@example.com", category: "general" },
+                   { message: "Notifications for saved recipes would be helpful.", name: "Quinn Martin", email: "quinn@example.com", category: "features" },
+                   { message: "Sometimes the app crashes when uploading images.", name: "Rachel Scott", email: "rachel@example.com", category: "bug" },
+                   { message: "Love the step-by-step recipe instructions.", name: "Sam Wilson", email: "sam@example.com", category: "general" },
+                   { message: "Would be great to share recipes with friends.", name: "Tina Young", email: "tina@example.com", category: "features" }
+                 ])
+
+puts "Seeded 20 Feedback records."
+
+# =================
+# NEXT SEEDING
 # =================

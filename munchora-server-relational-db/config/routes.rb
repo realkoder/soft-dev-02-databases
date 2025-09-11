@@ -19,6 +19,9 @@ Rails.application.routes.draw do
       delete "/auth/logout", to: "auth#logout"
       get "/auth/me", to: "auth#me"
 
+      # FEEDBACK
+      resources :feedbacks, only: [:index, :show, :create, :destroy]
+
       # LLM
       post 'llm/generate-recipe', to: 'llm#generate_recipe'
       post 'llm/generate-recipe-image/:id', to: 'llm#generate_recipe_image'
