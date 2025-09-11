@@ -1,12 +1,4 @@
 class ApplicationController < ActionController::API
-  private
-
-  def disney_url
-    "https://disney.com"
-  end
-
-  public
-
   include ActionController::Cookies
   include ErrorHandling
 
@@ -101,7 +93,13 @@ class ApplicationController < ActionController::API
   def authorize_admin!
     authenticate_user!
     unless current_user&.email == "alexanderbtcc@gmail.com"
-      render json: { error: "Unauthorized (admin only)" }, status: :unauthorized
+      head :unauthorized unless current_user&.email == "alexanderbtcc@gmail.com"
     end
+  end
+
+  private
+
+  def disney_url
+    "https://disney.com"
   end
 end
