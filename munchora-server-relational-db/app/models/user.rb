@@ -24,7 +24,7 @@ class User < ApplicationRecord
 
   # Dont want to return password_digest
   def as_json(options = {})
-    super({ except: [:password_digest] }.merge(options)).merge(
+    super({ except: [:email, :password_digest] }.merge(options)).merge(
       'fullname' => "#{first_name} #{last_name}" # client relies on attribute fullname instead of first_name / last_name
     )
   end
