@@ -11,7 +11,7 @@ class Recipe < ApplicationRecord
 
   validates :title, presence: true, length: { maximum: 150 }
   validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true
-  validates :description, presence: true, length: { maximum: 500 }
+  validates :description, presence: true, length: { maximum: 2_000 }
   validates :instructions, presence: true
   validate :instructions_length_limit
   validates :difficulty, inclusion: { in: %w[easy medium hard] }, allow_nil: true

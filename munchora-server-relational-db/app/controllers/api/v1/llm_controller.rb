@@ -8,7 +8,7 @@ class Api::V1::LlmController < ApplicationController
     user_prompt = params[:prompt].to_s[0...MAX_PROMPT_LENGTH]
 
     recipe_data = Llm::LlmService.new(user: @current_user).generate_recipe(prompt: user_prompt)
-    render json: recipe_data.as_json(include: { user: { only: [:image_src, :id] } })
+    render json: recipe_data.as_json(include: { ingredients: { only: [:name, :category, :amount] }, user: { only: [:image_src, :id] } })
 
   rescue LlmUsageLimitExceeded => e
     render json: { error: e.message }, status: :too_many_requests
@@ -36,7 +36,7 @@ class Api::V1::LlmController < ApplicationController
 
     recipe_data = Llm::LlmService.new(user: @current_user).update_recipe(prompt: user_prompt, recipe: @recipe)
 
-    render json: recipe_data.as_json(include: { user: { only: [:image_src, :id] } })
+    render json: recipe_data.as_json(include: { ingredients: { only: [:name, :category, :amount] }, user: { only: [:image_src, :id] } })
 
   rescue => e
     Rails.logger.error("chat_json error: #{e.message}")
@@ -46,7 +46,7 @@ class Api::V1::LlmController < ApplicationController
   private
 
   def set_recipe
-    @recipe = Recipe.find(params[:id])
+    @recipe = Recipe.includes(:ingredients).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Recipe not found" }, status: :not_found
   end

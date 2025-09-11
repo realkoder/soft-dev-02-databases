@@ -13,8 +13,6 @@ class Llm::LlmService
     recipe_reply = response.choices&.first&.message&.content || "No valid response"
     usage = response.usage
 
-    puts "LOOK HERE NOW #{recipe_reply}"
-
     recipe = validate_recipe_response(recipe_reply)
 
     recipe_attributes = {
@@ -32,8 +30,6 @@ class Llm::LlmService
     }
 
     created_recipe = Recipe.create!(recipe_attributes)
-
-    puts "LOOK HERE IMPORTANT #{created_recipe.id}"
 
     # Attach ingredients from OpenAI response
     (recipe["ingredients"] || []).each do |ingredient|
@@ -86,21 +82,37 @@ class Llm::LlmService
     recipe_reply = response.choices&.first&.message&.content || "No valid response"
     usage = response.usage
 
-    log_usage(prompt, usage, response.model)
+    log_usage(recipe.id, prompt, usage, response.model)
 
     validated_recipe = validate_recipe_response(recipe_reply)
 
-    recipe.update!(
-      title: validated_recipe["title"],
-      description: validated_recipe["description"],
-      instructions: validated_recipe["instructions"],
-      cuisine: validated_recipe["cuisine"],
-      difficulty: validated_recipe["difficulty"],
-      tags: validated_recipe["tags"],
-      prep_time: validated_recipe["prep_time"],
-      cook_time: validated_recipe["cook_time"],
-      servings: validated_recipe["servings"],
-    )
+    Recipe.transaction do
+      if validated_recipe["ingredients"]
+        # Remove old ingredients
+        recipe.ingredients.destroy_all
+
+        # Build new ingredients
+        validated_recipe["ingredients"].each do |ingredient|
+          recipe.ingredients.build(
+            name: ingredient["name"],
+            category: ingredient["category"],
+            amount: ingredient["amount"]
+          )
+        end
+      end
+
+      recipe.update!(
+        title: validated_recipe["title"],
+        description: validated_recipe["description"],
+        instructions: validated_recipe["instructions"],
+        cuisine: validated_recipe["cuisine"],
+        difficulty: validated_recipe["difficulty"],
+        tags: validated_recipe["tags"],
+        prep_time: validated_recipe["prep_time"],
+        cook_time: validated_recipe["cook_time"],
+        servings: validated_recipe["servings"],
+      )
+    end
 
     recipe
   rescue => e
