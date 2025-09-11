@@ -536,3 +536,11 @@ Percentage of the requests served within a certain time (ms)
   99%   1946
  100%   1996 (longest request)
 ```
+
+---
+
+<br>
+
+## LINKS
+
+[Medium article - Benchmarking PostgreSQL vs modern db stack](https://medium.com/@harishsingh8529/i-benchmarked-postgresql-18-vs-the-modern-database-stack-the-results-will-shock-you-4af4a6199dc0)
