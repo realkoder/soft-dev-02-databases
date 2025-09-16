@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_12_053859) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_16_134038) do
   create_table "feedbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "message"
     t.string "name"
@@ -30,6 +30,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_12_053859) do
     t.datetime "updated_at", null: false
     t.index ["added_by_id"], name: "index_grocery_list_items_on_added_by_id"
     t.index ["grocery_list_id"], name: "index_grocery_list_items_on_grocery_list_id"
+  end
+
+  create_table "grocery_list_shares", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "grocery_list_id", limit: 36, null: false
+    t.string "user_id", limit: 36, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grocery_list_id", "user_id"], name: "index_grocery_list_shares_on_grocery_list_id_and_user_id", unique: true
+    t.index ["grocery_list_id"], name: "index_grocery_list_shares_on_grocery_list_id"
+    t.index ["user_id"], name: "index_grocery_list_shares_on_user_id"
   end
 
   create_table "grocery_lists", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -102,6 +112,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_12_053859) do
 
   add_foreign_key "grocery_list_items", "grocery_lists"
   add_foreign_key "grocery_list_items", "users", column: "added_by_id"
+  add_foreign_key "grocery_list_shares", "grocery_lists"
+  add_foreign_key "grocery_list_shares", "users"
   add_foreign_key "grocery_lists", "users", column: "owner_id"
   add_foreign_key "ingredients", "recipes"
   add_foreign_key "llm_usages", "recipes"

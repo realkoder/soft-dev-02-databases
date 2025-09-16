@@ -334,6 +334,18 @@ create_items_for_random_lists([
 puts "Seeded 10 GroceryListItem records."
 
 # =================
+# GROCERY_LIST_SHARES
+# =================
+pairs = grocery_lists.product(users) # all possible [grocery_list, user] pairs
+unique_pairs = pairs.sample(20) # pick 20 unique pairs at random
+
+GroceryListShare.create!(unique_pairs.map do |list, user|
+  { grocery_list_id: list.id, user_id: user.id }
+end)
+
+puts "Seeded 20 GroceryListShare records."
+
+# =================
 # NEXT SEEDING
 # =================
 
