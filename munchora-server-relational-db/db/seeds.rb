@@ -15,8 +15,6 @@ users = [
     first_name: "Alice",
     last_name: "Example",
     email: "alice@example.com",
-    provider: "email",
-    uid: "alice-uid",
     password: "password123",
     image_src: "https://via.placeholder.com/150",
     bio: "Loves cooking and experimenting with new recipes.",
@@ -26,8 +24,6 @@ users = [
     first_name: "Bob",
     last_name: "Example",
     email: "bob@example.com",
-    provider: "email",
-    uid: "bob-uid",
     password: "password123",
     image_src: "https://via.placeholder.com/150",
     bio: "Big fan of Italian cuisine.",
@@ -37,11 +33,18 @@ users = [
     first_name: "Charlie",
     last_name: "Example",
     email: "charlie@example.com",
-    provider: "email",
-    uid: "charlie-uid",
     password: "password123",
     image_src: "https://via.placeholder.com/150",
     bio: "Enjoys baking bread on weekends.",
+    last_signed_in_at: nil
+  },
+  {
+    first_name: "Johny",
+    last_name: "Knox",
+    email: "johny@knox.com",
+    password: "password123",
+    image_src: "https://via.placeholder.com/150",
+    bio: "Enjoys baking cakes on weekends.",
     last_signed_in_at: nil
   }
 ]
@@ -346,6 +349,84 @@ end)
 puts "Seeded 20 GroceryListShare records."
 
 # =================
-# NEXT SEEDING
+# SUBSCRIPTION_PLAN
 # =================
 
+SubscriptionPlan.create!([
+                           {
+                             name: "Basic",
+                             price: 9.99,
+                             billing_cycle: "monthly",
+                             feature_description: "Access to core features, limited support, 5 projects per month."
+                           },
+                           {
+                             name: "Pro",
+                             price: 29.99,
+                             billing_cycle: "monthly",
+                             feature_description: "All core features, priority support, unlimited projects."
+                           },
+                           {
+                             name: "Enterprise",
+                             price: 99.99,
+                             billing_cycle: "monthly",
+                             feature_description: "Custom solutions, dedicated account manager, enterprise-level support."
+                           },
+                           {
+                             name: "Basic Annual",
+                             price: 99.99,
+                             billing_cycle: "yearly",
+                             feature_description: "Access to core features, limited support, 5 projects per month. Billed yearly."
+                           },
+                           {
+                             name: "Pro Annual",
+                             price: 299.99,
+                             billing_cycle: "yearly",
+                             feature_description: "All core features, priority support, unlimited projects. Billed yearly."
+                           },
+                           {
+                             name: "Enterprise Annual",
+                             price: 999.99,
+                             billing_cycle: "yearly",
+                             feature_description: "Custom solutions, dedicated account manager, enterprise-level support. Billed yearly."
+                           }
+                         ])
+
+puts "Seeded 6 SubscriptionPlan records."
+
+# =================
+# SUBSCRIPTION
+# =================
+
+plans = SubscriptionPlan.all
+users = User.all.limit(10)
+
+Subscription.create(
+  user: users.sample,
+  subscription_plan: plans.sample,
+  cancelled_at: nil,
+  status: "active"
+)
+
+Subscription.create(
+  user: users.sample,
+  subscription_plan: plans.sample,
+  cancelled_at: nil,
+  status: "active"
+)
+
+
+# users.each_with_index do |user, index|
+#   Subscription.create!(
+#     user: user,
+#     subscription_plan: plans.sample,
+#     cancelled_at: nil,
+#     status: "active"
+#   )
+# end
+
+puts "Seeded #{Subscription.count} subscriptions."
+
+# =================
+# NEXT SEEDING
+# =================
+#

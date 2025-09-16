@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_16_134038) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_16_161805) do
   create_table "feedbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "message"
     t.string "name"
@@ -60,6 +60,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_134038) do
     t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
   end
 
+  create_table "invoices", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.bigint "subscription_id", null: false
+    t.decimal "amount", precision: 10, scale: 2
+    t.string "currency"
+    t.string "status"
+    t.datetime "paid_at"
+    t.datetime "period_start"
+    t.datetime "period_end"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_id"], name: "index_invoices_on_subscription_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
   create_table "llm_usages", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "user_id", limit: 36, null: false
     t.string "recipe_id", limit: 36, null: false
@@ -92,6 +107,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_134038) do
     t.index ["user_id", "is_public"], name: "index_recipes_on_user_id_and_is_public"
   end
 
+  create_table "subscription_plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "billing_cycle"
+    t.string "feature_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "subscriptions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.bigint "subscription_plan_id", null: false
+    t.datetime "cancelled_at"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
   create_table "users", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -116,7 +151,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_134038) do
   add_foreign_key "grocery_list_shares", "users"
   add_foreign_key "grocery_lists", "users", column: "owner_id"
   add_foreign_key "ingredients", "recipes"
+  add_foreign_key "invoices", "subscriptions"
+  add_foreign_key "invoices", "users"
   add_foreign_key "llm_usages", "recipes"
   add_foreign_key "llm_usages", "users"
   add_foreign_key "recipes", "users"
+  add_foreign_key "subscriptions", "subscription_plans"
+  add_foreign_key "subscriptions", "users"
 end
