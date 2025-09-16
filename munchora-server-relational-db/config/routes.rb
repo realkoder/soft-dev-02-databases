@@ -35,6 +35,13 @@ Rails.application.routes.draw do
         end
       end
 
+      # INVOICE
+      resources :invoices, only: [:index, :show] do
+        member do
+          post :pay
+        end
+      end
+
       # LLM
       post "llm/generate-recipe", to: "llm#generate_recipe"
       post "llm/generate-recipe-image/:id", to: "llm#generate_recipe_image"
@@ -50,6 +57,13 @@ Rails.application.routes.draw do
         member do
           post "upload-image", to: "recipes#upload_image"
           delete "delete-image", to: "recipes#delete_image"
+        end
+      end
+
+      # SUBSCRIPTION
+      resources :subscriptions, only: [:index, :show, :create] do
+        member do
+          post :cancel
         end
       end
 
