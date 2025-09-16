@@ -5,6 +5,7 @@ class User < ApplicationRecord
 
   has_many :recipes, dependent: :destroy
   has_many :llm_usages
+  has_many :grocery_lists, foreign_key: :owner_id, dependent: :destroy
 
   validates :email, presence: true, length: { minimum: 4, maximum: 100 }, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { provider.blank? }
 

@@ -269,5 +269,71 @@ Feedback.create!([
 puts "Seeded 20 Feedback records."
 
 # =================
+# GROCERY_LIST
+# =================
+
+grocery_lists = GroceryList.create([
+                                     { name: "Home", owner_id: users.sample.id },
+                                     { name: "Etc", owner_id: users.sample.id },
+                                     { name: "stuff", owner_id: users.sample.id },
+                                     { name: "Dinner party", owner_id: users.sample.id },
+                                     { name: "Work", owner_id: users.sample.id },
+                                     { name: "Shared", owner_id: users.sample.id },
+                                     { name: "Random", owner_id: users.sample.id },
+                                     { name: "Sports", owner_id: users.sample.id },
+                                     { name: "Baking", owner_id: users.sample.id },
+                                     { name: "Holiday", owner_id: users.sample.id }
+                                   ])
+
+puts "Seeded 10 GroceryList records."
+
+# =================
+# GROCERY_LIST_ITEMS
+# =================
+
+def create_items_for_random_lists(items)
+  grocery_list = GroceryList.all.sample
+
+  items.each do |attrs|
+    GroceryListItem.create!(
+      attrs.merge(
+        grocery_list_id: grocery_list.id,
+        added_by_id: grocery_list.owner_id
+      )
+    )
+  end
+end
+
+create_items_for_random_lists([{ name: "Guldkorn", category: "breakfast 🥣", is_completed: true },
+                               { name: "Coco Pops", category: "breakfast 🥣", is_completed: false },
+                               { name: "Beans", category: "canned goods 🥫", is_completed: true },
+                               { name: "Bread", category: "bakery 🥖", is_completed: true },
+                               { name: "Hand soap", category: "cleaning 🧼", is_completed: true, }])
+
+create_items_for_random_lists([
+                                { name: "Salt", category: "condiments 🧂", is_completed: true, },
+                                { name: "Pepper", category: "condiments 🧂", is_completed: true },
+                                { name: "Chicken", category: "meat 🍗", is_completed: true },
+                                { name: "Beef", category: "meat 🍗", is_completed: true },
+                                { name: "Leverpostej", category: "meat 🍗", is_completed: true },
+                                { name: "Hellefisk", category: "fish 🐟", is_completed: true },
+                                { name: "Rødspætte", category: "fish 🐟", is_completed: true },
+                                { name: "Fiskefilet", category: "fish 🐟", is_completed: true }
+                              ])
+
+create_items_for_random_lists([
+                                { name: "Sild", category: "fish 🐟", is_completed: true },
+                                { name: "Cod", category: "fish 🐟", is_completed: true },
+                                { name: "Squid", category: "fish 🐟", is_completed: true },
+                                { name: "Cheese", category: "dairy 🥚", is_completed: true },
+                                { name: "Skyr", category: "dairy 🥚", is_completed: true },
+                                { name: "Egg", category: "dairy 🥚", is_completed: true },
+                                { name: "Milk", category: "dairy 🥚", is_completed: true },
+                              ])
+
+puts "Seeded 10 GroceryListItem records."
+
+# =================
 # NEXT SEEDING
 # =================
+
