@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Feedbacks", type: :request do
+RSpec.describe "Api::v1::Feedbacks", type: :request do
   describe "GET /index" do
     pending "add some examples (or delete) #{__FILE__}"
   end
