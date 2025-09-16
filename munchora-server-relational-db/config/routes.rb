@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  mount ActionCable.server => "/cable/notify"
+
   namespace :api do
     namespace :v1 do
       get "/test", to: "test#test"
@@ -22,10 +24,21 @@ Rails.application.routes.draw do
       # FEEDBACK
       resources :feedbacks, only: [:index, :show, :create, :destroy]
 
+      # GROCERY_LISTS
+      resources :grocery_lists, only: [:index, :create, :update, :destroy] do
+        member do
+          post "add-item", action: :add_item
+          delete "remove-item/:item_id", action: :remove_item
+          patch "update-item/:item_id", action: :update_item
+          post "share", action: :share
+          delete "unshare", action: :unshare
+        end
+      end
+
       # LLM
-      post 'llm/generate-recipe', to: 'llm#generate_recipe'
-      post 'llm/generate-recipe-image/:id', to: 'llm#generate_recipe_image'
-      put 'llm/update-recipe/:id', to: 'llm#update_recipe'
+      post "llm/generate-recipe", to: "llm#generate_recipe"
+      post "llm/generate-recipe-image/:id", to: "llm#generate_recipe_image"
+      put "llm/update-recipe/:id", to: "llm#update_recipe"
 
       # USERS
       delete "users/delete-image", to: "users#delete_image"
