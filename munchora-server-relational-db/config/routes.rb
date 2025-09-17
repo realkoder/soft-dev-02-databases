@@ -72,6 +72,9 @@ Rails.application.routes.draw do
       # RECIPE_SUGGESTIONS
       resources :recipe_suggestions, only: [:index]
 
+      # RECIPE_SUMMARY_VIEW
+      resources :recipe_summary, only: [:index]
+
       # SUBSCRIPTION
       resources :subscriptions, only: [:index, :show, :create] do
         member do

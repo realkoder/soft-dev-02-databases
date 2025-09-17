@@ -2,8 +2,7 @@ class AddSchedulerForGeneratingRecipeSuggestions < ActiveRecord::Migration[8.0]
   def up
     execute <<-SQL
       CREATE EVENT weekly_recipe_suggestions
---       ON SCHEDULE EVERY 1 WEEK
-      ON SCHEDULE EVERY 10 SECOND
+      ON SCHEDULE EVERY 6 HOUR
       STARTS CURRENT_TIMESTAMP
       DO
       BEGIN
