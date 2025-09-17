@@ -46,6 +46,42 @@ users = [
     image_src: "https://via.placeholder.com/150",
     bio: "Enjoys baking cakes on weekends.",
     last_signed_in_at: nil
+  },
+  {
+    first_name: "Mie",
+    last_name: "Dee",
+    email: "mie@knox.com",
+    password: "password123",
+    image_src: "https://via.placeholder.com/150",
+    bio: "Enjoys baking cakes on weekends.",
+    last_signed_in_at: nil
+  },
+  {
+    first_name: "Carl",
+    last_name: "Jackson",
+    email: "jackson@knox.com",
+    password: "password123",
+    image_src: "https://via.placeholder.com/150",
+    bio: "Enjoys baking cakes on weekends.",
+    last_signed_in_at: nil
+  },
+  {
+    first_name: "Marie",
+    last_name: "Lun",
+    email: "marie@knox.com",
+    password: "password123",
+    image_src: "https://via.placeholder.com/150",
+    bio: "Enjoys baking cakes on weekends.",
+    last_signed_in_at: nil
+  },
+  {
+    first_name: "Marc",
+    last_name: "Some",
+    email: "marc@knox.com",
+    password: "password123",
+    image_src: "https://via.placeholder.com/150",
+    bio: "Enjoys baking cakes on weekends.",
+    last_signed_in_at: nil
   }
 ]
 users.each do |attrs|
@@ -192,7 +228,6 @@ puts "Seeded ingredients for recipes."
 require "securerandom"
 
 # Make sure there are some recipes and users
-users = User.all
 recipes = Recipe.all
 
 if users.empty? || recipes.empty?
@@ -398,7 +433,6 @@ puts "Seeded 6 SubscriptionPlan records."
 # =================
 
 plans = SubscriptionPlan.all
-users = User.all.limit(10)
 
 Subscription.create(
   user: users.sample,
@@ -413,7 +447,6 @@ Subscription.create(
   cancelled_at: nil,
   status: "active"
 )
-
 
 # users.each_with_index do |user, index|
 #   Subscription.create!(
@@ -427,6 +460,34 @@ Subscription.create(
 puts "Seeded #{Subscription.count} subscriptions."
 
 # =================
+# RECIPE_LIKE
+# =================
+
+recipes.each do |recipe|
+  num_likes = rand(1..users.to_a.size)
+
+  users.sample(num_likes).each do |user|
+    RecipeLike.create(
+      user_id: user.id,
+      recipe_id: recipe.id
+    )
+  end
+end
+
+puts "Seeded some recipe_like records."
+
+# =================
+# RECIPE_COMMENT
+# =================
+
+recipes.each do |recipe|
+  rand(1..20).times do
+    RecipeComment.create(user_id: users.sample.id, recipe_id: recipe.id, comment: 'Okay it\'s delicious and MUNCHYYY!')
+  end
+end
+
+puts "Seeded some recipe_comment records."
+
+# =================
 # NEXT SEEDING
 # =================
-#

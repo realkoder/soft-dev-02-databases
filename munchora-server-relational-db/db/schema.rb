@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_16_161805) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_17_074932) do
   create_table "feedbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "message"
     t.string "name"
@@ -89,6 +89,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_161805) do
     t.index ["user_id", "created_at"], name: "index_llm_usages_on_user_id_and_created_at"
   end
 
+  create_table "recipe_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.string "recipe_id", limit: 36, null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_recipe_comments_on_recipe_id"
+    t.index ["user_id"], name: "index_recipe_comments_on_user_id"
+  end
+
+  create_table "recipe_likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.string "recipe_id", limit: 36, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_recipe_likes_on_recipe_id"
+    t.index ["user_id", "recipe_id"], name: "index_recipe_likes_on_user_id_and_recipe_id", unique: true
+    t.index ["user_id"], name: "index_recipe_likes_on_user_id"
+  end
+
   create_table "recipes", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "user_id", limit: 36, null: false
     t.string "title"
@@ -155,6 +175,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_161805) do
   add_foreign_key "invoices", "users"
   add_foreign_key "llm_usages", "recipes"
   add_foreign_key "llm_usages", "users"
+  add_foreign_key "recipe_comments", "recipes"
+  add_foreign_key "recipe_comments", "users"
+  add_foreign_key "recipe_likes", "recipes"
+  add_foreign_key "recipe_likes", "users"
   add_foreign_key "recipes", "users"
   add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"

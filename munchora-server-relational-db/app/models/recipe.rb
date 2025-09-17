@@ -6,6 +6,8 @@ class Recipe < ApplicationRecord
   belongs_to :user
   has_many :llm_usages # dependent: :destroy -> this can make delete_on_cascade
   has_many :ingredients, dependent: :destroy
+  has_many :recipe_comments, dependent: :destroy
+  has_many :recipe_likes, dependent: :destroy
 
   accepts_nested_attributes_for :ingredients, allow_destroy: true
 

@@ -1,11 +1,12 @@
 class Api::V1::RecipesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :authenticate_user_or_nil, only: [:index, :show]
-  before_action :set_recipe, only: [:show, :update, :destroy]
+  before_action :set_recipe, only: [:show, :update, :destroy, :add_comment, :add_like, :delete_comment, :delete_like]
+  before_action :set_comment, only: [:delete_comment]
+  before_action :set_like, only: [:delete_like]
 
   ADMIN_EMAIL = "alexanderbtcc@gmail.com"
 
-  # GET /api/v1/recipes?search=chicken&cuisine=italian&difficulty=easy&page=1
   def index
     recipes = if current_user&.email == ADMIN_EMAIL
                 Recipe.all
@@ -41,13 +42,19 @@ class Api::V1::RecipesController < ApplicationController
       filters_applied = true
     end
 
-    # If no filters, order by latest
     recipes = recipes.order(updated_at: :desc)
 
     paginated_recipes = recipes.page(params[:page]).per(params[:per_page] || 10)
 
     render json: {
-      data: paginated_recipes.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] } }),
+      data: paginated_recipes.as_json(
+        include: {
+          ingredients: { only: [:id, :name, :category, :amount] },
+          user: { only: [:image_src, :id] },
+          recipe_likes: {},
+          recipe_comments: {}
+        }
+      ),
       pagination: {
         current_page: paginated_recipes.current_page,
         total_pages: paginated_recipes.total_pages,
@@ -56,7 +63,6 @@ class Api::V1::RecipesController < ApplicationController
     }
   end
 
-  # GET /api/v1/recipes/:id
   def show
     if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
       render json: @recipe.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] } })
@@ -65,7 +71,6 @@ class Api::V1::RecipesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /api/v1/recipes/:id
   def update
     if @recipe.user_id != current_user.id && current_user&.email != ADMIN_EMAIL
       head :forbidden and return
@@ -99,7 +104,6 @@ class Api::V1::RecipesController < ApplicationController
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
-  # DELETE /api/v1/recipes/:id
   def destroy
     if @recipe.user_id != current_user.id && current_user&.email != ADMIN_EMAIL
       head :forbidden and return
@@ -119,7 +123,6 @@ class Api::V1::RecipesController < ApplicationController
     end
   end
 
-  # POST /api/v1/recipes/:id/upload-image
   def upload_image
     @recipe = Recipe.find(params[:id])
     return head :forbidden if @recipe.user_id != current_user.id && current_user&.email != ADMIN_EMAIL
@@ -133,7 +136,6 @@ class Api::V1::RecipesController < ApplicationController
     end
   end
 
-  # DELETE /api/v1/recipes/:id/delete-image
   def delete_image
     @recipe = Recipe.find(params[:id])
     return head :forbidden if @recipe.user_id != current_user.id && current_user&.email != ADMIN_EMAIL
@@ -147,6 +149,55 @@ class Api::V1::RecipesController < ApplicationController
       render json: { message: "OK" }
     else
       render json: { error: image_deleted.error }, status: :unprocessable_entity
+    end
+  end
+
+  def add_comment
+    comment = @recipe.recipe_comments.new(comment_params)
+    comment.user = current_user # assuming you have Devise or similar
+
+    if comment.save
+      render json: comment, status: :created
+    else
+      render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def delete_comment
+    unless @comment.user == current_user
+      head :forbidden
+      return
+    end
+
+    if @comment.destroy
+      head :no_content
+    else
+      render json: { errors: "Failed to delete comment" }, status: :unprocessable_entity
+    end
+  end
+
+  def add_like
+    like = @recipe.recipe_likes.find_or_initialize_by(user: current_user)
+
+    if like.persisted?
+      render json: { message: "Already liked" }, status: :ok
+    elsif like.save
+      render json: like, status: :created
+    else
+      render json: { errors: like.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def delete_like
+    unless @like.user == current_user
+      head :forbidden
+      return
+    end
+
+    if @like&.destroy
+      head :no_content
+    else
+      render json: { errors: "Failed to unlike" }, status: :unprocessable_entity
     end
   end
 
@@ -164,5 +215,23 @@ class Api::V1::RecipesController < ApplicationController
       :is_public, :difficulty, :prep_time, :cook_time, :servings,
       instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
     )
+  end
+
+  def set_comment
+    @comment = @recipe.recipe_comments.find_by(id: params[:comment_id])
+    unless @comment
+      render json: { error: "Comment not found" }, status: :not_found
+    end
+  end
+
+  def set_like
+    @like = @recipe.recipe_likes.find_by(user: current_user)
+    unless @like
+      render json: { error: "Like  not found" }, status: :not_found
+    end
+  end
+
+  def comment_params
+    params.require(:comment).permit(:comment)
   end
 end
