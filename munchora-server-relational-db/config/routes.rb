@@ -69,6 +69,9 @@ Rails.application.routes.draw do
         end
       end
 
+      # RECIPE_SUGGESTIONS
+      resources :recipe_suggestions, only: [:index]
+
       # SUBSCRIPTION
       resources :subscriptions, only: [:index, :show, :create] do
         member do

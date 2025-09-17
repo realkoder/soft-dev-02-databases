@@ -8,6 +8,7 @@ class Recipe < ApplicationRecord
   has_many :ingredients, dependent: :destroy
   has_many :recipe_comments, dependent: :destroy
   has_many :recipe_likes, dependent: :destroy
+  has_many :recipe_suggestions
 
   accepts_nested_attributes_for :ingredients, allow_destroy: true
 

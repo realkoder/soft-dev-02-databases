@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :shared_grocery_lists, through: :grocery_list_shares, source: :grocery_list
   has_many :subscriptions
   has_many :invoices
+  has_many :recipe_suggestions
 
   validates :email, presence: true, length: { minimum: 4, maximum: 100 }, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { provider.blank? }
 
