@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_17_074932) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_17_161057) do
   create_table "feedbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "message"
     t.string "name"
@@ -109,6 +109,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_074932) do
     t.index ["user_id"], name: "index_recipe_likes_on_user_id"
   end
 
+  create_table "recipe_suggestions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", limit: 36, null: false
+    t.string "recipe_id", limit: 36, null: false
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_recipe_suggestions_on_recipe_id"
+    t.index ["user_id", "recipe_id"], name: "index_recipe_suggestions_on_user_id_and_recipe_id", unique: true
+    t.index ["user_id"], name: "index_recipe_suggestions_on_user_id"
+  end
+
   create_table "recipes", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "user_id", limit: 36, null: false
     t.string "title"
@@ -179,6 +190,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_074932) do
   add_foreign_key "recipe_comments", "users"
   add_foreign_key "recipe_likes", "recipes"
   add_foreign_key "recipe_likes", "users"
+  add_foreign_key "recipe_suggestions", "recipes"
+  add_foreign_key "recipe_suggestions", "users"
   add_foreign_key "recipes", "users"
   add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"

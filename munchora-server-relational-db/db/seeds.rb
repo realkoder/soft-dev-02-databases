@@ -157,6 +157,158 @@ sample_recipes = [
     prep_time: 20,
     cook_time: 14,
     servings: 2
+  },
+  {
+    title: "Chicken Tikka Masala",
+    description: "Spicy and creamy Indian chicken curry served with rice.",
+    image_url: "https://example.com/chicken_tikka.jpg",
+    instructions: [
+      "Marinate chicken in yogurt and spices for at least 1 hour.",
+      "Grill or sauté chicken until cooked through.",
+      "Prepare sauce with onion, garlic, ginger, tomatoes, and cream.",
+      "Add cooked chicken to sauce and simmer for 10 minutes.",
+      "Serve hot with basmati rice or naan."
+    ],
+    is_public: true,
+    cuisine: ["Indian"],
+    difficulty: "medium",
+    tags: ["chicken", "curry", "spicy"],
+    prep_time: 20,
+    cook_time: 30,
+    servings: 2
+  },
+  {
+    title: "Caprese Salad",
+    description: "Fresh Italian salad with tomatoes, mozzarella, and basil.",
+    image_url: "https://example.com/caprese_salad.jpg",
+    instructions: [
+      "Slice tomatoes and mozzarella cheese.",
+      "Arrange on a plate alternating tomato and mozzarella slices.",
+      "Top with fresh basil leaves.",
+      "Drizzle with olive oil and balsamic vinegar.",
+      "Season with salt and pepper and serve."
+    ],
+    is_public: true,
+    cuisine: ["Italian"],
+    difficulty: "easy",
+    tags: ["salad", "vegetarian", "fresh"],
+    prep_time: 10,
+    cook_time: 0,
+    servings: 2
+  },
+  {
+    title: "Banana Pancakes",
+    description: "Fluffy pancakes with mashed bananas, perfect for breakfast.",
+    image_url: "https://example.com/banana_pancakes.jpg",
+    instructions: [
+      "Mash bananas in a bowl.",
+      "Mix in eggs, flour, milk, and a pinch of salt.",
+      "Heat a non-stick pan with butter.",
+      "Pour batter into pan and cook until bubbles form, then flip.",
+      "Serve warm with syrup or fresh fruit."
+    ],
+    is_public: true,
+    cuisine: ["Breakfast", "American"],
+    difficulty: "easy",
+    tags: ["pancakes", "banana", "breakfast"],
+    prep_time: 10,
+    cook_time: 15,
+    servings: 2
+  },
+  {
+    title: "Beef Stir-Fry",
+    description: "Quick and tasty stir-fried beef with vegetables and soy sauce.",
+    image_url: "https://example.com/beef_stirfry.jpg",
+    instructions: [
+      "Slice beef thinly and marinate in soy sauce, garlic, and ginger for 15 minutes.",
+      "Heat oil in a wok and stir-fry beef until browned.",
+      "Add vegetables and stir-fry until tender-crisp.",
+      "Add remaining sauce and cook for 2 minutes.",
+      "Serve hot with steamed rice or noodles."
+    ],
+    is_public: true,
+    cuisine: ["Asian", "Chinese"],
+    difficulty: "medium",
+    tags: ["beef", "stir-fry", "quick"],
+    prep_time: 15,
+    cook_time: 15,
+    servings: 2
+  },
+  {
+    title: "Greek Salad",
+    description: "Fresh Mediterranean salad with cucumbers, tomatoes, olives, and feta cheese.",
+    image_url: "https://example.com/greek_salad.jpg",
+    instructions: [
+      "Chop cucumbers, tomatoes, and red onion.",
+      "Combine with olives and feta cheese in a bowl.",
+      "Drizzle with olive oil and lemon juice.",
+      "Season with salt, pepper, and oregano.",
+      "Toss gently and serve."
+    ],
+    is_public: true,
+    cuisine: ["Greek", "Mediterranean"],
+    difficulty: "easy",
+    tags: ["salad", "vegetarian", "fresh"],
+    prep_time: 10,
+    cook_time: 0,
+    servings: 2
+  },
+  {
+    title: "Shrimp Tacos",
+    description: "Spicy shrimp tacos with cabbage slaw and creamy sauce.",
+    image_url: "https://example.com/shrimp_tacos.jpg",
+    instructions: [
+      "Season shrimp with chili powder, paprika, and salt.",
+      "Sauté shrimp until cooked through.",
+      "Mix cabbage with lime juice and a pinch of salt for slaw.",
+      "Warm tortillas and assemble with shrimp, slaw, and sauce.",
+      "Serve immediately."
+    ],
+    is_public: true,
+    cuisine: ["Mexican"],
+    difficulty: "medium",
+    tags: ["seafood", "tacos", "spicy"],
+    prep_time: 15,
+    cook_time: 10,
+    servings: 2
+  },
+  {
+    title: "Mushroom Risotto",
+    description: "Creamy Italian risotto with sautéed mushrooms and Parmesan cheese.",
+    image_url: "https://example.com/mushroom_risotto.jpg",
+    instructions: [
+      "Heat butter in a pan and sauté onions until translucent.",
+      "Add mushrooms and cook until soft.",
+      "Stir in arborio rice and cook for 1-2 minutes.",
+      "Gradually add warm broth, stirring constantly until rice is creamy and tender.",
+      "Stir in Parmesan cheese and season with salt and pepper."
+    ],
+    is_public: true,
+    cuisine: ["Italian"],
+    difficulty: "hard",
+    tags: ["risotto", "mushroom", "comfort food"],
+    prep_time: 15,
+    cook_time: 30,
+    servings: 2
+  },
+  {
+    title: "Avocado Toast",
+    description: "Simple and healthy avocado toast with lemon and chili flakes.",
+    image_url: "https://example.com/avocado_toast.jpg",
+    instructions: [
+      "Toast bread slices until golden.",
+      "Mash avocado and mix with lemon juice and salt.",
+      "Spread avocado mixture on toast.",
+      "Top with chili flakes and a drizzle of olive oil.",
+      "Serve immediately."
+    ],
+    is_public: true,
+    cuisine: ["Breakfast", "Vegan"],
+    difficulty: "easy",
+    tags: ["breakfast", "vegan", "quick"],
+    prep_time: 5,
+    cook_time: 5,
+    servings: 1
   }
 ]
 
@@ -178,14 +330,14 @@ sample_recipes.each do |recipe_attrs|
   )
 end
 
-puts "Seeded #{sample_recipes.size} recipes."
+puts "Seeded #{sample_recipes.size} new recipes."
 
 # =================
 # INGREDIENTS
 # =================
 
 ingredients_list = [
-  { name: "Spaghetti", category: "pasta & rice 🍝", amount: 200 },
+  { name: "Spaghetti", category: "grains 🌾", amount: 200 },
   { name: "Pancetta", category: "meat 🍗", amount: 100 },
   { name: "Eggs", category: "dairy 🥚", amount: 2 },
   { name: "Parmesan Cheese", category: "dairy 🥚", amount: 50 },
@@ -193,8 +345,46 @@ ingredients_list = [
   { name: "Mixed Vegetables", category: "vegetables 🥦", amount: 150 },
   { name: "Tahini", category: "sauces & oils 🫙", amount: 30 },
   { name: "Chocolate", category: "snacks 🍫", amount: 100 },
-  { name: "Butter", category: "dairy 🥚", amount: 50 },
-  { name: "Sugar", category: "spices & herbs 🌶️", amount: 50 }
+  { name: "Sugar", category: "spices & herbs 🌶️", amount: 50 },
+  { name: "Chicken Breast", category: "meat 🍗", amount: 200 },
+  { name: "Yogurt", category: "dairy 🥚", amount: 50 },
+  { name: "Tikka Masala Spice", category: "spices & herbs 🌶️", amount: 10 },
+  { name: "Garlic", category: "vegetables 🥦", amount: 5 },
+  { name: "Ginger", category: "vegetables 🥦", amount: 5 },
+  { name: "Cream", category: "dairy 🥚", amount: 50 },
+  { name: "Basil", category: "herbs 🌿", amount: 5 },
+  { name: "Mozzarella Cheese", category: "dairy 🥚", amount: 100 },
+  { name: "Balsamic Vinegar", category: "sauces & oils 🫙", amount: 10 },
+  { name: "Banana", category: "fruits 🍌", amount: 2 },
+  { name: "Flour", category: "grains 🌾", amount: 100 },
+  { name: "Milk", category: "dairy 🥚", amount: 50 },
+  { name: "Beef", category: "meat 🍗", amount: 200 },
+  { name: "Soy Sauce", category: "sauces & oils 🫙", amount: 30 },
+  { name: "Bell Pepper", category: "vegetables 🥦", amount: 100 },
+  { name: "Broccoli", category: "vegetables 🥦", amount: 100 },
+  { name: "Cucumber", category: "vegetables 🥦", amount: 50 },
+  { name: "Tomato", category: "vegetables 🥦", amount: 50 },
+  { name: "Red Onion", category: "vegetables 🥦", amount: 20 },
+  { name: "Olives", category: "fruits/other 🫐", amount: 30 },
+  { name: "Feta Cheese", category: "dairy 🥚", amount: 50 },
+  { name: "Olive Oil", category: "sauces & oils 🫙", amount: 20 },
+  { name: "Lemon Juice", category: "fruits 🍋", amount: 10 },
+  { name: "Oregano", category: "spices & herbs 🌶️", amount: 5 },
+  { name: "Shrimp", category: "fish 🐟", amount: 150 },
+  { name: "Tortilla", category: "grains 🌾", amount: 2 },
+  { name: "Cabbage", category: "vegetables 🥦", amount: 50 },
+  { name: "Chili Powder", category: "spices & herbs 🌶️", amount: 5 },
+  { name: "Paprika", category: "spices & herbs 🌶️", amount: 5 },
+  { name: "Lime Juice", category: "fruits 🍎", amount: 10 },
+  { name: "Arborio Rice", category: "grains 🌾", amount: 100 },
+  { name: "Mushrooms", category: "vegetables 🥦", amount: 100 },
+  { name: "Onion", category: "vegetables 🥦", amount: 50 },
+  { name: "Butter", category: "dairy 🥚", amount: 20 },
+  { name: "Parmesan Cheese", category: "dairy 🥚", amount: 50 },
+  { name: "Vegetable Broth", category: "fruits 🍎", amount: 200 },
+  { name: "Bread", category: "grains 🌾", amount: 1 },
+  { name: "Avocado", category: "fruits 🍎", amount: 1 },
+  { name: "Chili Flakes", category: "spices & herbs 🌶️", amount: 2 },
 ]
 
 Recipe.all.each do |recipe|
