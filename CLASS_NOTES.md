@@ -62,6 +62,42 @@ databases (_MongoDB_, _RavenDB_) for multi-document transactions. Implementing f
 
 ---
 
+# Deepseek on BASE
+
+### BASE Properties
+_BASE_ is a model that emerged with modern _NoSQL_ databases (like Cassandra, MongoDB, DynamoDB) and distributed systems.
+It prioritizes availability and scalability over immediate consistency.
+
+**_BA - Basically Available_**
+Concept: The system guarantees that it will respond to every request (even if it's a failure message). The system remains available for reading and writing, even during failures, perhaps by degrading performance or showing stale data.
+
+Example: If a node in a distributed database cluster fails, the system will still handle your read/write requests using the other available nodes, even if the data on those nodes isn't the very latest.
+
+**_S - Soft State_**
+
+Concept: The state of the system may change over time, even without input (e.g., during the process of replication and achieving eventual consistency). The data is not immediately consistent across all nodes.
+
+Example: After you update your profile picture, different users might see the old picture for a short period until the change is replicated to all servers around the world.
+
+**_E - Eventual Consistency_**
+
+Concept: The system guarantees that if no new updates are made to a given data item, eventually all accesses to that item will return the last updated value. Given enough time, all replicas will become consistent.
+
+Example: This is the "processing" state in a payment app. Your friend's account doesn't show the money instantly, but after a few seconds or minutes, it will appear. The system eventually becomes consistent.
+
+## Deepseek - ACID vs BASE
+
+**_ACID_** is like a traditional bank teller. The transaction is all-or-nothing. The money is deducted from one account and
+added to the other instantly and guaranteed. You wait for the confirmation before leaving the counter. It's consistent
+and safe.
+
+**_BASE_** is like writing a check or using a modern payment app. The transaction is eventual. The app might say "payment
+processing." The money leaves your account now, but it might take a few seconds, minutes, or even hours to show up in
+the recipient's account. The system is highly available and fast for you, with the promise that it will become
+consistent later. It's fast and available.
+
+---
+
 <br>
 
 ## Triggers
