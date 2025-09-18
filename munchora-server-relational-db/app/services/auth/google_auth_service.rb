@@ -42,8 +42,13 @@ class Auth::GoogleAuthService
 
     user = User.find_or_initialize_by(provider: "google", uid: user_info["id"])
 
+    name_parts = user_info["name"].split(" ")
+    first_name = name_parts[0]
+    last_name = len(name_parts) > 1 ? name_parts[1] : ""
+
     if user.new_record?
-      user.fullname = user_info["name"]
+      user.first_name = first_name
+      user.last_name = last_name
       user.email = user_info["email"]
       user.image_src = user_info["picture"]
       user.save!
