@@ -1,5 +1,9 @@
 # Short Installation Guide
 
+The following is installation guides for the different database approaches.
+Each approach does create a docker container running the specific database seeded and ready to connect and interact with
+through your favorite of use DB connector tool.
+
 ## Relational Database
 
 **Docker Compose for MySQL**
