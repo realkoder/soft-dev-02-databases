@@ -281,6 +281,12 @@ _NoSQL_ means **_not only SQL_**
 
 ---
 
+## DB Terminology
+
+[DB terminology](assets/db-terminology.png)
+
+---
+
 ![SQL Sub Languages](assets/sql-sub-languages.png)
 
 _(Links provided here)_
