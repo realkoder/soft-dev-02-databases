@@ -10,7 +10,7 @@ gem "puma", ">= 5.0"
 # gem "redis", ">= 4.0.1"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -27,10 +27,24 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
-# MongoDB
-gem 'mongoid'
-gem 'bson_ext'
+# To enable dotenv files
+gem "dotenv-rails", groups: [:development, :test]
 
+# MongoDB
+gem 'mongoid', '~> 8.0'
+
+# Pagination
+gem "kaminari"
+gem 'kaminari-mongoid'
+
+# Jwt for auth
+gem "jwt"
+
+# Google OAuth SSO
+gem "google-id-token"
+
+# OpenAI
+gem "openai"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

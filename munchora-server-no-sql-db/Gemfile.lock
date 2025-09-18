@@ -74,6 +74,7 @@ GEM
       uri (>= 0.13.1)
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
     benchmark (0.4.1)
     bigdecimal (3.2.3)
@@ -81,9 +82,7 @@ GEM
       msgpack (~> 1.2)
     brakeman (7.1.0)
       racc
-    bson (1.12.5)
-    bson_ext (1.12.5)
-      bson (~> 1.12.5)
+    bson (5.1.1)
     builder (3.3.0)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
@@ -93,13 +92,17 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     dotenv (3.1.8)
+    dotenv-rails (3.1.8)
+      dotenv (= 3.1.8)
+      railties (>= 6.1)
     drb (2.2.3)
-    durran-validatable (2.0.1)
     ed25519 (1.4.0)
     erb (5.0.2)
     erubi (1.13.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-id-token (1.4.2)
+      jwt (>= 1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.1)
@@ -108,6 +111,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.14.0)
+    jwt (3.1.2)
+      base64
     kamal (2.7.0)
       activesupport (>= 7.0)
       base64 (~> 0.2)
@@ -119,8 +124,22 @@ GEM
       sshkit (>= 1.23.0, < 2.0)
       thor (~> 1.3)
       zeitwerk (>= 2.6.18, < 3.0)
+    kaminari (1.2.2)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
+      actionview
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
+    kaminari-mongoid (1.0.2)
+      kaminari-core (~> 1.0)
+      mongoid
     language_server-protocol (3.17.0.5)
-    leshill-will_paginate (2.3.11)
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.24.1)
@@ -134,13 +153,14 @@ GEM
     marcel (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.5)
-    mongo (1.12.5)
-      bson (= 1.12.5)
-    mongoid (1.0.6)
-      activesupport (>= 2.2.2)
-      durran-validatable (>= 2.0.1)
-      leshill-will_paginate (>= 2.3.11)
-      mongo (>= 0.18.2)
+    mongo (2.21.3)
+      base64
+      bson (>= 4.14.1, < 6.0.0)
+    mongoid (8.1.11)
+      activemodel (>= 5.1, < 8.1, != 7.0.0)
+      concurrent-ruby (>= 1.0.5, < 2.0)
+      mongo (>= 2.18.0, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
     msgpack (1.8.0)
     net-imap (0.5.10)
       date
@@ -171,6 +191,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
+    openai (0.24.0)
+      connection_pool
     ostruct (0.6.3)
     parallel (1.27.0)
     parser (3.3.9.0)
@@ -260,6 +282,7 @@ GEM
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
+    ruby2_keywords (0.0.5)
     securerandom (0.4.1)
     sshkit (1.24.0)
       base64
@@ -300,12 +323,18 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  bcrypt (~> 3.1.7)
   bootsnap
   brakeman
-  bson_ext
   debug
+  dotenv-rails
+  google-id-token
+  jwt
   kamal
-  mongoid
+  kaminari
+  kaminari-mongoid
+  mongoid (~> 8.0)
+  openai
   puma (>= 5.0)
   rails (~> 8.0.2, >= 8.0.2.1)
   rubocop-rails-omakase
