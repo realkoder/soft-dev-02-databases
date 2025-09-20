@@ -40,13 +40,15 @@ class Auth::GoogleAuthService
       URI("https://www.googleapis.com/oauth2/v2/userinfo?access_token=#{access_token}")
     ))
 
-    user = User.find_or_initialize_by(provider: "google", uid: user_info["id"])
+    user = User.find_or_initialize_by(email: user_info["email"])
 
     name_parts = user_info["name"].split(" ")
     first_name = name_parts[0]
-    last_name = len(name_parts) > 1 ? name_parts[1] : ""
+    last_name = name_parts.size > 1 ? name_parts[1] : ""
 
     if user.new_record?
+      user.provider = "google"
+      user.uid = user_info["id"]
       user.first_name = first_name
       user.last_name = last_name
       user.email = user_info["email"]
