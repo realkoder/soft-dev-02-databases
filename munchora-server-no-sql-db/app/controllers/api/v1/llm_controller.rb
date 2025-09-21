@@ -46,8 +46,8 @@ class Api::V1::LlmController < ApplicationController
   private
 
   def set_recipe
-    @recipe = Recipe.includes(:ingredients).find(params[:id])
-  rescue ActiveRecord::RecordNotFound
+    @recipe = Recipe.find(params[:id])
+  rescue Mongoid::Errors::DocumentNotFound
     render json: { error: "Recipe not found" }, status: :not_found
   end
 

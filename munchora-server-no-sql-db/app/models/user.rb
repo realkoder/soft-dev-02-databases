@@ -12,6 +12,14 @@ class User
   field :bio, type: String
   field :last_signed_in_at, type: Time
 
+  # Owned grocery lists
+  has_many :grocery_lists, class_name: "GroceryList", foreign_key: :owner_id, inverse_of: :owner
+
+  # Lists shared with this user
+  has_and_belongs_to_many :shared_grocery_lists,
+                          class_name: "GroceryList",
+                          inverse_of: :shared_users
+
   # Virtual attribute for password confirmation (not persisted)
   attr_accessor :password, :password_confirmation
 

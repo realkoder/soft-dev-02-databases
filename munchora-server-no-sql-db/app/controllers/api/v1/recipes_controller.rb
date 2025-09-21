@@ -76,23 +76,7 @@ class Api::V1::RecipesController < ApplicationController
       head :forbidden and return
     end
 
-    Recipe.transaction do
-      if recipe_params[:ingredients]
-        # Remove old ingredients
-        @recipe.ingredients.destroy_all
-
-        # Build new ingredients
-        recipe_params[:ingredients].each do |ingredient|
-          @recipe.ingredients.build(
-            name: ingredient[:name],
-            category: ingredient[:category],
-            amount: ingredient[:amount]
-          )
-        end
-      end
-
-      @recipe.update!(recipe_params.except(:ingredients))
-    end
+    @recipe.update!(recipe_params)
 
     render json: @recipe.as_json(
       include: {
@@ -100,8 +84,8 @@ class Api::V1::RecipesController < ApplicationController
         user: { only: [:image_src, :id] }
       }
     )
-  rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue Mongoid::Errors::ValidationError => e
+    render json: { error: "Recipe not found" }, status: :not_found
   end
 
   def destroy
@@ -205,7 +189,7 @@ class Api::V1::RecipesController < ApplicationController
 
   def set_recipe
     @recipe = Recipe.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
+  rescue Mongoid::Errors::DocumentNotFound
     head :not_found
   end
 
@@ -213,7 +197,7 @@ class Api::V1::RecipesController < ApplicationController
     params.require(:recipe).permit(
       :title, :description, :cuisine,
       :is_public, :difficulty, :prep_time, :cook_time, :servings,
-      instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
+      instructions: [], ingredients: [:name, :category, :amount], tags: []
     )
   end
 

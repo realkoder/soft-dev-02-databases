@@ -78,11 +78,21 @@ class Llm::LlmService
 
     validated_recipe = validate_recipe_response(recipe_reply)
 
+    # Convert ingredient hashes to Ingredient objects
+    ingredient_objects = validated_recipe["ingredients"].map do |ingredient_hash|
+      amount = ingredient_hash["amount"] == 0 ? 1 : ingredient_hash["amount"]
+      Ingredient.new(
+        name: ingredient_hash["name"],
+        amount: amount,
+        category: ingredient_hash["category"]
+      )
+    end
+
     recipe.update!(
       title: validated_recipe["title"],
       description: validated_recipe["description"],
       instructions: validated_recipe["instructions"],
-      ingredients: validated_recipe["ingredients"],
+      ingredients: ingredient_objects,
       cuisine: validated_recipe["cuisine"],
       difficulty: validated_recipe["difficulty"],
       tags: validated_recipe["tags"],
