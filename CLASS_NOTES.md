@@ -322,6 +322,8 @@ that directs all incoming queries to the correct **MySQL** instance within the *
 - Transactions across shards are tricky – Multi-shard transactions often need two-phase commits or application-level
   handling.
 
+![Sharding Approaches](assets/sharding-approaches.png)
+
 ---
 
 ## Replication
@@ -346,11 +348,13 @@ _Replication_ is **NOT** the same as _sharding_, but they are often used togethe
 - **_Replication_**: Copies each shard (or the entire database) to multiple nodes to increase reliability and read
   capacity.
 
+![Replication](assets/replication.png)
+
 <br>
 
 ---
 
-# NoSQL
+# NoSQL | MongoDB
 
 _NoSQL_ means **_not only SQL_**
 
@@ -366,6 +370,10 @@ is available through cloud using **_MongoDB Atlas_**
 ![MongoDB vs SQL](assets/mongodb-vs-sql.png)
 
 ![Mean Full Stack](assets/mean-full-stack.png)
+
+![MongoDB Security](assets/mongodb-security.png)
+
+[MongoDB Security Checklist](https://www.mongodb.com/docs/manual/administration/security-checklist/)
 
 ### MongoDB Features
 
