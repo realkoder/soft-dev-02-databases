@@ -271,6 +271,108 @@ If portability matters → procedures are MySQL-specific (locks you in).
 
 # MISC
 
+## Partitioning & Sharding
+
+### Partitioning
+
+Partitioning a relational database means splitting a single large table into smaller,
+more manageable chunks (partitions), but keeping them logically as one table for queries.
+
+[How to Partition Your Tables in MySQL](https://planetscale.com/blog/what-is-mysql-partitioning#how-to-partition-your-tables-in-mysql)
+
+#### Benefits
+
+1. **Performance on Large Tables**
+    - Queries filtering partition key can scan only relevant partition instead of the entire table (partition pruning).
+        - Most useful for range queries (e.g., dates) or list queries (e.g., region IDs).
+
+2. **Easier Data Management**
+    - Old partitions can be dropped or archived quickly (e.g., drop last year’s data instead of deleting row by row).
+    - Adding new partitions can prepare a table for future data without heavy **ALTER** operations.
+
+3. **Parallelism**
+    - MySQL can sometimes process queries in parallel across partitions.
+    - Indexes inside partitions are smaller, which can improve cache efficiency.
+
+4. **Maintenance**
+    - Maintenance operations (rebuild, optimize, backup) can be done per partition instead of the entire table.
+
+#### Trade-offs / Limitations
+
+1. **Limited Indexing Options**
+    - Only indexes that include the partition key are allowed.
+    - **_No foreign keys in partitioned tables._**
+        - Partitioning a table, MySQL doesn’t really store it as one physical table. Instead, each partition is
+          essentially its own separate table, with its own data and indexes.
+        - Foreign keys, however, require a single, consistent relational structure where the engine can enforce
+          constraints across all rows.
+
+2. **Complexity**
+    - Adds operational overhead (planning partitions, adjusting them as data grows).
+    - If you pick the wrong partitioning strategy, queries might perform worse.
+
+3. **Not Always Needed**
+    - If your data set fits comfortably in memory or your queries don’t filter by partition keys, partitioning won’t
+      help.
+
+4. **No automatic rebalancing**
+    - Unlike sharding, partitioning is still inside one server. If the server is overloaded, partitioning alone won’t
+      solve scalability.
+
+---
+
+##### Inner Workings of InnoDB (MySQL default Storage Engine)
+
+**Normal (non-partitioned table)**
+
+- Stored in a single `.ibd` file (_tablespace_ / in _InnoDB_, that means a single `.ibd` file).
+- All rows share the same data pages and indexes.
+- Queries always traverse one global structure.
+
+**Partitioned table**
+
+- Split into multiple partitions, each with its own `.ibd` file, pages, and indexes.
+- Rows are routed to a partition based on the partition key.
+- Queries can skip entire partitions (partition pruning), making lookups and maintenance faster.
+
+---
+
+### Sharding
+
+Sharding = splitting one logical database into multiple physical databases (shards),
+usually across multiple servers.
+
+[Database Sharding in MySQL a guide](https://dev.to/wallacefreitas/database-sharding-in-mysql-a-comprehensive-guide-2hag)
+
+There are several ways to shard a database,
+and the strategy you choose will depend on your specific use case.
+The two most common sharding strategies are range-based sharding and hash-based sharding.
+
+To enable **sharding**, you need a **_shard router_** (also called a **_shard manager_**)
+that directs all incoming queries to the correct **MySQL** instance within the **shard cluster**.
+
+#### Pros
+
+- Horizontal scaling – Distribute data across multiple servers, avoiding single-server bottlenecks.
+- Improved performance – Each shard contains fewer rows, making queries, inserts, and indexes faster.
+- Increased storage capacity – Total database size can exceed what one server can handle.
+- Fault isolation – If one shard fails, others can continue operating.
+- Parallel processing – Some operations can run concurrently across shards.
+
+#### Cons
+
+- Increased complexity – App or middleware must route queries correctly; schema changes must be applied across shards.
+- No global foreign keys – Referential integrity cannot be enforced across shards.
+- Cross-shard queries are difficult – Joins or aggregates across shards require manual merging or fan-out queries.
+- Rebalancing challenges – Adding/removing shards requires moving data and updating routing logic.
+- Operational overhead – More servers, monitoring, backups, and failover management are required.
+- Transactions across shards are tricky – Multi-shard transactions often need two-phase commits or application-level
+  handling.
+
+---
+
+<br>
+
 ## NoSQL
 
 _NoSQL_ means **_not only SQL_**
