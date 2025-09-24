@@ -1,38 +1,42 @@
 # Short Installation Guide
 
-The following is installation guides for the different database approaches.
-Each approach does create a docker container running the specific database seeded and ready to connect and interact with
-through your favorite of use DB connector tool.
+The following is an installation guide for the different database approaches.
 
-## Relational Database
+It's required to `git clone https://github.com/realkoder/soft-dev-02-databases.git`
 
-**Docker Compose for MySQL**
-_Create a docker-compose.mysql.yml file:_
+---
 
-```yml
-version: '3.8'
-services:
-  mysql_db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: munchora
-      MYSQL_USER: developer
-      MYSQL_PASSWORD: dev-pswd
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./db/mysql-dump.sql:/docker-entrypoint-initdb.d/dump.sql
-volumes:
-  mysql_data:
-```
+## Relational Database - munchora-server-relational-db
+
+### Start MySQL seeded and ready to query using docker-compose
+
+In terminal cd to  `./munchora-server-relational-db`
+
+Start MySQL by `docker-compose -f docker-compose.mysql-seeded.yml up -d`
+
+Enter the docker based Mysql by `docker exec -it mysql_db mysql -udeveloper -pdev-pswd munchora`
+
+---
+
+### Use Ruby on Rails app for seeding and querying MySQL DB
+
+In terminal cd to **root** of project and start _docker-compose MySQL_
+`docker-compose -f docker-compose.dev.mysql.yml up -d`
+
+Cd to  `./munchora-server-relational-db` and start **_Ruby on Rails API server_** `bin/rails s`
+
+Then migrate and seed MySQL database by `bin/rails db:migrate` & `bin/rails db:seed`
+
+Enter Ruby in Rails Console mode to interact througub ActiveRecord with models and query DB.
+
 
 ---
 
 <br>
 
 ## NoSQL Document Based Database
+
+
 
 ---
 
