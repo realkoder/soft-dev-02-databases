@@ -110,6 +110,8 @@ consistent later. It's fast and available.
 
 <br>
 
+# SQL
+
 ## Triggers
 
 **🔹 What Triggers Do**
@@ -322,9 +324,33 @@ that directs all incoming queries to the correct **MySQL** instance within the *
 
 ---
 
+## Replication
+
+Replication is the process of copying and maintaining the same data across multiple database servers.
+
+- **Purpose**
+    - _High availability_: If one server fails, others can continue serving data.
+    - _Read scalability_: Reads can be distributed across replicas.
+    - _Disaster recovery_: Protects against data loss.
+
+
+- **How it works**
+    - _Primary/secondary (master/slave)_: One primary server handles writes; secondaries replicate data from it.
+    - _Multi-master replication_: Multiple nodes can accept writes (more complex).
+
+**Relation to Partitioning / Sharding**
+
+_Replication_ is **NOT** the same as _sharding_, but they are often used together:
+
+- **_Sharding/Partitioning_**: Splits a dataset across multiple servers to scale writes and storage horizontally.
+- **_Replication_**: Copies each shard (or the entire database) to multiple nodes to increase reliability and read
+  capacity.
+
 <br>
 
-## NoSQL
+---
+
+# NoSQL
 
 _NoSQL_ means **_not only SQL_**
 
@@ -379,9 +405,23 @@ MongoDB do have stored functions, but they're not recommended
 
 ---
 
+### Document Schema Design
+
+![Prefer Embedding](assets/no-sql-prefer-embedding.png)
+
+![When not to Embed](assets/nosql-when-not-to-embed.png)
+
+![Embrace Duplication](assets/nosql-embrace-duplication.png)
+
+![Dont be scared to relate](assets/nosql-dont-be-scared-to-relate.png)
+
+---
+
 ![MySQL Architecture](assets/mysql-architecture.png)
 
 ---
+
+<br>
 
 ## DB Terminology
 
