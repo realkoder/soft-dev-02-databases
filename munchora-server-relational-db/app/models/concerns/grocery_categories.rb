@@ -18,6 +18,6 @@ module GroceryCategories
     "snacks 🍫",
     "spices & herbs 🌶️",
     "vegetables 🥦",
-    "sauces & oils 🫙",
+    "sauces & oils 🫙"
   ].freeze
 end

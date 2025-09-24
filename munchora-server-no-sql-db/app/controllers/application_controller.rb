@@ -33,7 +33,7 @@ class ApplicationController < ActionController::API
     if !@current_user
       return render json: { error: 'Unauthorized' }, status: :unauthorized
     end
-  rescue JWT::DecodeError, ActiveRecord::RecordNotFound
+  rescue JWT::DecodeError, Mongoid::Errors::DocumentNotFound
     return render json: { error: 'Unauthorized' }, status: :unauthorized
   end
 
@@ -59,7 +59,7 @@ class ApplicationController < ActionController::API
 
     @current_user = User.find_by(id: decoded[:user_id])
 
-  rescue JWT::DecodeError, ActiveRecord::RecordNotFound
+  rescue JWT::DecodeError, Mongoid::Errors::DocumentNotFound
     return nil
   end
 

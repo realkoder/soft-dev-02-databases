@@ -345,17 +345,17 @@ ingredients_list = [
   { name: "Mixed Vegetables", category: "vegetables 🥦", amount: 150 },
   { name: "Tahini", category: "sauces & oils 🫙", amount: 30 },
   { name: "Chocolate", category: "snacks 🍫", amount: 100 },
-  { name: "Sugar", category: "spices & herbs 🌶️", amount: 50 },
+  { name: "Sugar", category: "meat 🍗", amount: 50 },
   { name: "Chicken Breast", category: "meat 🍗", amount: 200 },
   { name: "Yogurt", category: "dairy 🥚", amount: 50 },
-  { name: "Tikka Masala Spice", category: "spices & herbs 🌶️", amount: 10 },
+  { name: "Tikka Masala Spice", category: "meat 🍗", amount: 10 },
   { name: "Garlic", category: "vegetables 🥦", amount: 5 },
   { name: "Ginger", category: "vegetables 🥦", amount: 5 },
   { name: "Cream", category: "dairy 🥚", amount: 50 },
-  { name: "Basil", category: "herbs 🌿", amount: 5 },
+  { name: "Basil", category: "spices & herbs 🌶️", amount: 5 },
   { name: "Mozzarella Cheese", category: "dairy 🥚", amount: 100 },
   { name: "Balsamic Vinegar", category: "sauces & oils 🫙", amount: 10 },
-  { name: "Banana", category: "fruits 🍌", amount: 2 },
+  { name: "Banana", category: "fruits 🍎", amount: 2 },
   { name: "Flour", category: "grains 🌾", amount: 100 },
   { name: "Milk", category: "dairy 🥚", amount: 50 },
   { name: "Beef", category: "meat 🍗", amount: 200 },
@@ -365,16 +365,16 @@ ingredients_list = [
   { name: "Cucumber", category: "vegetables 🥦", amount: 50 },
   { name: "Tomato", category: "vegetables 🥦", amount: 50 },
   { name: "Red Onion", category: "vegetables 🥦", amount: 20 },
-  { name: "Olives", category: "fruits/other 🫐", amount: 30 },
+  { name: "Olives", category: "fruits 🍎", amount: 30 },
   { name: "Feta Cheese", category: "dairy 🥚", amount: 50 },
   { name: "Olive Oil", category: "sauces & oils 🫙", amount: 20 },
-  { name: "Lemon Juice", category: "fruits 🍋", amount: 10 },
-  { name: "Oregano", category: "spices & herbs 🌶️", amount: 5 },
+  { name: "Lemon Juice", category: "fruits 🍎", amount: 10 },
+  { name: "Oregano", category: "meat 🍗", amount: 5 },
   { name: "Shrimp", category: "fish 🐟", amount: 150 },
   { name: "Tortilla", category: "grains 🌾", amount: 2 },
   { name: "Cabbage", category: "vegetables 🥦", amount: 50 },
-  { name: "Chili Powder", category: "spices & herbs 🌶️", amount: 5 },
-  { name: "Paprika", category: "spices & herbs 🌶️", amount: 5 },
+  { name: "Chili Powder", category: "meat 🍗", amount: 5 },
+  { name: "Paprika", category: "meat 🍗", amount: 5 },
   { name: "Lime Juice", category: "fruits 🍎", amount: 10 },
   { name: "Arborio Rice", category: "grains 🌾", amount: 100 },
   { name: "Mushrooms", category: "vegetables 🥦", amount: 100 },
@@ -384,7 +384,7 @@ ingredients_list = [
   { name: "Vegetable Broth", category: "fruits 🍎", amount: 200 },
   { name: "Bread", category: "grains 🌾", amount: 1 },
   { name: "Avocado", category: "fruits 🍎", amount: 1 },
-  { name: "Chili Flakes", category: "spices & herbs 🌶️", amount: 2 },
+  { name: "Chili Flakes", category: "meat 🍗", amount: 2 },
 ]
 
 Recipe.all.each do |recipe|
@@ -396,7 +396,7 @@ Recipe.all.each do |recipe|
   when "Chocolate Lava Cake"
     ingredients_for_recipe = ingredients_list.select { |i| ["Chocolate", "Butter", "Eggs", "Sugar"].include?(i[:name]) }
   else
-    ingredients_for_recipe = []
+    ingredients_for_recipe = ingredients_list.sample(5)
   end
 
   ingredients_for_recipe.each do |ing|
