@@ -210,53 +210,6 @@ They can reduce network round-trips (one procedure call instead of many small qu
 
 ---
 
-### 🔹 Where They Could Be Used in Munchora
-
-#### _1._ Generating a User’s Grocery List
-
-Suppose you want to build a grocery list from all recipes a user selected.
-
-Without a procedure: your backend has to query ingredients, sum quantities, normalize units, and then insert into
-_grocery_lists_.
-
-With a procedure: you could encapsulate that logic in _sp_generate_grocery_list(user_id)_.
-
-**Input**: _user_id_
-
-**Logic**: _aggregate ingredients across recipes, handle duplicates, convert units_
-
-**Output**: _rows in grocery_list_items_
-
-This makes the logic consistent and reusable no matter which part of the app calls it.
-
-#### _2._ Calculating Nutrition Totals
-
-Suppose you want to calculate calories, protein, etc. across all recipes in a user’s plan.
-
-A procedure _sp_calculate_nutrition(plan_id)_ could:
-
-Join recipes + ingredients + nutrition info
-
-Sum totals
-
-Store results in a summary table
-
-Now, instead of repeating a heavy multi-join query in Rails, you just call the _procedure_.
-
-#### _3._ Audit Logging
-
-Imagine you want to track every time a grocery list is updated (for future “undo” features or analytics).
-
-A procedure _sp_update_grocery_item(item_id, new_qty)_ could:
-
-Update the item
-
-Insert a row into _grocery_list_audit_ automatically
-
-This guarantees that every update also logs history — can’t be skipped by accident in app code.
-
----
-
 ### 🔹 When NOT to Use Stored Procedures
 
 If the logic is simple CRUD (insert, update, delete) → keep it in Rails.
