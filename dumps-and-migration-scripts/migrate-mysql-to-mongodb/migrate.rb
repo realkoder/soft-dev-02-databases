@@ -61,7 +61,7 @@ mongodb_client[:feedbacks].drop
 
 feedbacks = mysql_client.query("SELECT * FROM feedbacks")
 feedbacks.each do |row|
-  mongodb_client[:feedback].insert_one({
+  mongodb_client[:feedbacks].insert_one({
                                          name: row['name'],
                                          email: row['email'],
                                          message: row['message'],
@@ -94,8 +94,8 @@ recipes.each do |row|
   end
 
   instructions = JSON.parse(row['instructions']) rescue [row['instructions']]
-  tags = JSON.parse(row['instructions']) rescue [row['tags']]
-  cuisine = JSON.parse(row['instructions']) rescue [row['cuisine']]
+  tags = JSON.parse(row['tags']) rescue [row['tags']]
+  cuisine = JSON.parse(row['cuisine']) rescue [row['cuisine']]
 
   mongodb_client[:recipes].insert_one({
                                         user_id: random_user(mongodb_client)[:_id],
@@ -106,7 +106,7 @@ recipes.each do |row|
                                         is_public: row['is_public'],
                                         ingredients: ingredients,
                                         cuisine: cuisine,
-                                        difficulty: row[''],
+                                        difficulty: row['difficulty'],
                                         tags: tags,
                                         prep_time: row['prep_time'],
                                         cook_time: row['cook_time'],

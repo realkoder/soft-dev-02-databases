@@ -224,16 +224,14 @@ If portability matters → procedures are MySQL-specific (locks you in).
 
 # MISC
 
-## Partitioning & Sharding
-
-### Partitioning
+## Partitioning
 
 Partitioning a relational database means splitting a single large table into smaller,
 more manageable chunks (partitions), but keeping them logically as one table for queries.
 
 [How to Partition Your Tables in MySQL](https://planetscale.com/blog/what-is-mysql-partitioning#how-to-partition-your-tables-in-mysql)
 
-#### Benefits
+### Benefits
 
 1. **Performance on Large Tables**
     - Queries filtering partition key can scan only relevant partition instead of the entire table (partition pruning).
@@ -250,7 +248,7 @@ more manageable chunks (partitions), but keeping them logically as one table for
 4. **Maintenance**
     - Maintenance operations (rebuild, optimize, backup) can be done per partition instead of the entire table.
 
-#### Trade-offs / Limitations
+### Trade-offs / Limitations
 
 1. **Limited Indexing Options**
     - Only indexes that include the partition key are allowed.
@@ -274,7 +272,7 @@ more manageable chunks (partitions), but keeping them logically as one table for
 
 ---
 
-##### Inner Workings of InnoDB (MySQL default Storage Engine)
+### Inner Workings of InnoDB (MySQL default Storage Engine)
 
 **Normal (non-partitioned table)**
 
@@ -290,7 +288,7 @@ more manageable chunks (partitions), but keeping them logically as one table for
 
 ---
 
-### Sharding
+## Sharding
 
 Sharding = splitting one logical database into multiple physical databases (shards),
 usually across multiple servers.
@@ -304,7 +302,7 @@ The two most common sharding strategies are range-based sharding and hash-based 
 To enable **sharding**, you need a **_shard router_** (also called a **_shard manager_**)
 that directs all incoming queries to the correct **MySQL** instance within the **shard cluster**.
 
-#### Pros
+### Pros
 
 - Horizontal scaling – Distribute data across multiple servers, avoiding single-server bottlenecks.
 - Improved performance – Each shard contains fewer rows, making queries, inserts, and indexes faster.
@@ -312,7 +310,7 @@ that directs all incoming queries to the correct **MySQL** instance within the *
 - Fault isolation – If one shard fails, others can continue operating.
 - Parallel processing – Some operations can run concurrently across shards.
 
-#### Cons
+### Cons
 
 - Increased complexity – App or middleware must route queries correctly; schema changes must be applied across shards.
 - No global foreign keys – Referential integrity cannot be enforced across shards.
@@ -329,6 +327,55 @@ that directs all incoming queries to the correct **MySQL** instance within the *
 ## NoSQL
 
 _NoSQL_ means **_not only SQL_**
+
+![MongoDB](assets/mongo-db.png)
+
+MongoDB can be hosted locally using the **_CommunityServer_** or else _MongoDB_
+is available through cloud using **_MongoDB Atlas_**
+
+![MongoDB Software](assets/mongo-db-software.png)
+
+![MongoDB vs SQL](assets/mongodb-vs-sql.png)
+
+![Mean Full Stack](assets/mean-full-stack.png)
+
+### MongoDB Features
+
+- **Indexes**
+    - Special data structures that speed up queries by avoiding full collection scans.
+    - Can be single-field, compound, text, geospatial, or unique
+- **Views**
+    - Read-only virtual collections defined by an aggregation query.
+    - Do not store data, just present it in a specific format.
+- **Materialized Views**
+    - Precomputed, stored results of a query for faster reads.
+    - MongoDB doesn’t have native materialized views,
+      but you can simulate them using collections + scheduled aggregation pipelines.
+- **Transactions**
+    - Ensure atomic operations across multiple documents or collections.
+    - Supports ACID properties in replica sets or sharded clusters.
+- **Security**
+    - Controls access to your database via authentication, roles, and permissions.
+    - Supports encryption at rest, TLS, auditing, and field-level encryption.
+- **Time Series Collections**
+    - Optimized for storing time-stamped data efficiently.
+    - Minimizes storage and indexing overhead for sequential, high-volume data.
+- **Triggers/Events**
+    - React automatically to database changes (like SQL triggers).
+    - In MongoDB, typically implemented via Change Streams or Realm Functions.
+- **Change Streams**
+    - Let applications listen for inserts, updates, deletes in real time.
+    - Useful for event-driven apps, caching, and push notifications.
+- **Aggregations Pipelines**
+    - Powerful data processing framework using stages ($match, $group, $project, etc.).
+    - Transforms, filters, and aggregates documents efficiently.
+- **Lookup**
+    - Performs a left join between collections within an aggregation pipeline.
+    - Allows combining related documents, replacing SQL foreign key joins.
+
+No **_Stored Procedures_** in **_MongoDB_**
+
+MongoDB do have stored functions, but they're not recommended
 
 ---
 
