@@ -35,19 +35,20 @@ mongodb_client[:users].drop
 
 users = mysql_client.query("SELECT * FROM users")
 users.each do |row|
-  mongodb_client[:users].insert_one({
-                                      first_name: row['first_name'],
-                                      last_name: row['last_name'],
-                                      email: row['email'],
-                                      provider: row['provider'],
-                                      uid: row['uid'],
-                                      password_digest: row['password_digest'],
-                                      image_src: row['image_src'],
-                                      bio: row['bio'],
-                                      last_signed_in_at: row['last_signed_in_at'],
-                                      created_at: row['created_at'],
-                                      updated_at: row['updated_at']
-                                    })
+  mongodb_client[:users]
+    .insert_one({
+                  first_name: row['first_name'],
+                  last_name: row['last_name'],
+                  email: row['email'],
+                  provider: row['provider'],
+                  uid: row['uid'],
+                  password_digest: row['password_digest'],
+                  image_src: row['image_src'],
+                  bio: row['bio'],
+                  last_signed_in_at: row['last_signed_in_at'],
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at']
+                })
 end
 
 puts "#{users.size} users migrated from MySQL to MongoDB"
@@ -61,14 +62,15 @@ mongodb_client[:feedbacks].drop
 
 feedbacks = mysql_client.query("SELECT * FROM feedbacks")
 feedbacks.each do |row|
-  mongodb_client[:feedbacks].insert_one({
-                                          name: row['name'],
-                                          email: row['email'],
-                                          message: row['message'],
-                                          category: row['category'],
-                                          created_at: row['created_at'],
-                                          updated_at: row['updated_at']
-                                        })
+  mongodb_client[:feedbacks]
+    .insert_one({
+                  name: row['name'],
+                  email: row['email'],
+                  message: row['message'],
+                  category: row['category'],
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at']
+                })
 end
 
 puts "#{feedbacks.size} feedbacks migrated from MySQL to MongoDB"
@@ -97,23 +99,24 @@ recipes.each do |row|
   tags = JSON.parse(row['tags']) rescue [row['tags']]
   cuisine = JSON.parse(row['cuisine']) rescue [row['cuisine']]
 
-  mongodb_client[:recipes].insert_one({
-                                        user_id: random_user(mongodb_client)[:_id],
-                                        title: row['title'],
-                                        description: row['description'],
-                                        image_url: row['image_url'],
-                                        instructions: instructions,
-                                        is_public: row['is_public'],
-                                        ingredients: ingredients,
-                                        cuisine: cuisine,
-                                        difficulty: row['difficulty'],
-                                        tags: tags,
-                                        prep_time: row['prep_time'],
-                                        cook_time: row['cook_time'],
-                                        servings: row['servings'],
-                                        created_at: row['created_at'],
-                                        updated_at: row['updated_at'],
-                                      })
+  mongodb_client[:recipes]
+    .insert_one({
+                  user_id: random_user(mongodb_client)[:_id],
+                  title: row['title'],
+                  description: row['description'],
+                  image_url: row['image_url'],
+                  instructions: instructions,
+                  is_public: row['is_public'],
+                  ingredients: ingredients,
+                  cuisine: cuisine,
+                  difficulty: row['difficulty'],
+                  tags: tags,
+                  prep_time: row['prep_time'],
+                  cook_time: row['cook_time'],
+                  servings: row['servings'],
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at'],
+                })
 end
 
 puts "#{recipes.size} recipes migrated from MySQL to MongoDB"
@@ -126,21 +129,47 @@ mongodb_client[:llm_usages].drop
 
 llm_usages = mysql_client.query("SELECT * FROM llm_usages")
 llm_usages.each do |row|
-  mongodb_client[:llm_usages].insert_one({
-                                           user_id: random_user(mongodb_client)[:_id],
-                                           recipe_id: random_user(mongodb_client)[:_id],
-                                           id: "0533930f-dcaa-4508-b14e-26485d401673",
-                                           provider: row['provider'],
-                                           model: row['model'],
-                                           prompt: row['prompt'],
-                                           prompt_tokens: row['prompt_tokens'],
-                                           completion_tokens: row['completion_tokens'],
-                                           created_at: row['created_at'],
-                                           updated_at: row['updated_at'],
-                                         })
+  mongodb_client[:llm_usages]
+    .insert_one({
+                  user_id: random_user(mongodb_client)[:_id],
+                  recipe_id: random_user(mongodb_client)[:_id],
+                  id: "0533930f-dcaa-4508-b14e-26485d401673",
+                  provider: row['provider'],
+                  model: row['model'],
+                  prompt: row['prompt'],
+                  prompt_tokens: row['prompt_tokens'],
+                  completion_tokens: row['completion_tokens'],
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at'],
+                })
 end
 
 puts "#{llm_usages.size} llm_usages migrated from MySQL to MongoDB"
+
+# =====================
+# RECIPE_LIKES
+# =====================
+
+mongodb_client[:recipe_likes].drop
+
+recipe_likes = mysql_client.query("SELECT * FROM recipe_likes")
+recipe_likes.each do |row|
+  mongodb_client[:recipe_likes]
+    .insert_one({
+                  user_id: random_user(mongodb_client)[:_id],
+                  recipe_id: random_user(mongodb_client)[:_id],
+                  id: "0533930f-dcaa-4508-b14e-26485d401673",
+                  provider: row['provider'],
+                  model: row['model'],
+                  prompt: row['prompt'],
+                  prompt_tokens: row['prompt_tokens'],
+                  completion_tokens: row['completion_tokens'],
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at'],
+                })
+end
+
+puts "#{recipe_likes.size} recipe_likes migrated from MySQL to MongoDB"
 
 # =====================
 # GROCERY_LISTS
@@ -167,14 +196,15 @@ grocery_lists.each do |row|
     }
   end
 
-  mongodb_client[:grocery_lists].insert_one({
-                                              _id: grocery_list_id,
-                                              owner_id: owner_id,
-                                              name: row['name'],
-                                              items: grocery_list_items,
-                                              created_at: row['created_at'],
-                                              updated_at: row['updated_at'],
-                                            })
+  mongodb_client[:grocery_lists]
+    .insert_one({
+                  _id: grocery_list_id,
+                  owner_id: owner_id,
+                  name: row['name'],
+                  items: grocery_list_items,
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at'],
+                })
 
   grocery_list_shares = mysql_client.query("SELECT * from grocery_list_shares WHERE grocery_list_id = '#{row['id']}'")
 
