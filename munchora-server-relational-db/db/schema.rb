@@ -10,12 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_17_191147) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
   create_table "feedbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "message"
     t.string "name"
     t.string "email"
     t.string "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "grocery_list_audits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "grocery_list_id"
+    t.string "owner_id"
+    t.string "operation"
+    t.json "old_data"
+    t.json "changed_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "grocery_list_item_audits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "grocery_list_item_id"
+    t.string "added_by_id"
+    t.string "operation"
+    t.json "old_data"
+    t.json "changed_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -156,6 +176,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_191147) do
     t.datetime "updated_at", null: false
     t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
+  create_table "user_audits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id"
+    t.string "operation"
+    t.json "old_data"
+    t.json "changed_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

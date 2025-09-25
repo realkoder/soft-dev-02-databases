@@ -1,0 +1,3 @@
+class GroceryListItemAudit < ApplicationRecord
+
+end

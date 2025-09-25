@@ -14,6 +14,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "/test", to: "test#test"
 
+      # AUDITS
+      resources :grocery_list_audits, only: [:index]
+      resources :grocery_list_item_audits, only: [:index]
+      resources :user_audits, only: [:index]
+
       # AUTH
       get "/auth/google", to: "auth#google"
       get "/auth/google/callback", to: "auth#google_callback"
