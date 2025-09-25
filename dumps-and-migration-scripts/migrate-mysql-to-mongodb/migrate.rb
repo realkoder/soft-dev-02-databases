@@ -62,13 +62,13 @@ mongodb_client[:feedbacks].drop
 feedbacks = mysql_client.query("SELECT * FROM feedbacks")
 feedbacks.each do |row|
   mongodb_client[:feedbacks].insert_one({
-                                         name: row['name'],
-                                         email: row['email'],
-                                         message: row['message'],
-                                         category: row['category'],
-                                         created_at: row['created_at'],
-                                         updated_at: row['updated_at']
-                                       })
+                                          name: row['name'],
+                                          email: row['email'],
+                                          message: row['message'],
+                                          category: row['category'],
+                                          created_at: row['created_at'],
+                                          updated_at: row['updated_at']
+                                        })
 end
 
 puts "#{feedbacks.size} feedbacks migrated from MySQL to MongoDB"
