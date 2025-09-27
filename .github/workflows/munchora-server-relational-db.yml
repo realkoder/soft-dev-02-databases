@@ -1,0 +1,82 @@
+# .github/workflows/rails-ci.yml
+name: Rails CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "munchora-server-relational-db/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "munchora-server-relational-db/**"
+
+jobs:
+  rubocop:
+    name: Lint with RuboCop
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: munchora-server-relational-db
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.2
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: bundle exec rubocop --parallel
+
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: munchora-server-relational-db
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.2
+          bundler-cache: true
+
+      - name: Run Brakeman
+        run: bundle exec brakeman -q -w2
+
+      - name: Run Bundler Audit
+        run: bundle exec bundler-audit check --update
+
+  test:
+    name: RSpec Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: munchora-server-relational-db
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.2
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Setup DB
+        run: |
+          bin/rails db:create db:schema:load --trace
+
+      - name: Run RSpec
+        run: bundle exec rspec --format progress

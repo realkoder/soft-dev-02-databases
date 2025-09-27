@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :request do
   # Create multiple users using the factory
   let!(:users) { create_list(:user, 3) }
-  let!(:user2) { User.create!(id: "99", first_name: 'Jane', last_name: 'Smith', email: 'alice@example.com', password: 'secure123') }
+  let!(:user2) { User.create!(id: "99", first_name: 'Jane', last_name: 'Smith', email: 'jane@example.com', password: 'secure123') }
 
   # Create a logged-in user for authentication
   let!(:auth_user) { create(:user) }
@@ -31,6 +31,7 @@ RSpec.describe User, type: :request do
           json = JSON.parse(response.body)
           # Verify that each user has a fullname attribute combining first_name and last_name
           json['data'].each do |user_json|
+
             expect(user_json).to include('fullname')
             expect(user_json['fullname']).to eq("#{user_json['first_name']} #{user_json['last_name']}")
           end
@@ -52,12 +53,12 @@ RSpec.describe User, type: :request do
           expect(json['data'].first['fullname']).to eq('Jane Smith')
         end
 
-        it 'returns only users matching email' do
-          get '/api/v1/users', params: { search: 'alice@example.com' }, headers: headers
+        it 'returns users searched by email' do
+          get '/api/v1/users', params: { search: 'jane@example.com' }, headers: headers
           expect(response).to have_http_status(:ok)
           json = JSON.parse(response.body)
           expect(json['data'].size).to eq(1)
-          expect(json['data'].first['email']).to eq('alice@example.com')
+          expect(json['data'].first['fullname']).to eq('Jane Smith')
         end
 
         it 'returns no users if nothing matches' do
@@ -79,7 +80,7 @@ RSpec.describe User, type: :request do
     end
   end
 
-  pending 'negative tests' do
-
-  end
+  # pending 'negative tests' do
+  #
+  # end
 end
