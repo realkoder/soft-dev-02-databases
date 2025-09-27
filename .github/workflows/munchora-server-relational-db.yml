@@ -4,8 +4,8 @@ name: Rails CI
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - "munchora-server-relational-db/**"
+#    paths:
+#      - "munchora-server-relational-db/**"
   pull_request:
     branches: [ "main" ]
     paths:
