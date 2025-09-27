@@ -28,11 +28,8 @@ jobs:
           ruby-version: 3.4.2
           bundler-cache: true
 
-      - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
-
       - name: Run RuboCop
-        run: bundle exec rubocop --parallel
+        run: bin/bundle exec rubocop --parallel
 
   security:
     name: Security Checks
@@ -50,14 +47,11 @@ jobs:
           ruby-version: 3.4.2
           bundler-cache: true
 
-      - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
-
       - name: Run Brakeman
         run: bundle exec brakeman -q -w2
 
       - name: Run Bundler Audit
-        run: bundle exec bundler-audit check --update
+        run: bin/bundle exec bundler-audit check --update
 
   test:
     name: RSpec Tests
@@ -80,12 +74,9 @@ jobs:
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
-
       - name: Setup DB
         run: |
           bin/rails db:create db:schema:load --trace
 
       - name: Run RSpec
-        run: bundle exec rspec --format progress
+        run: bin/bundle exec rspec --format progress
