@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
 
   attr_reader :current_user
 
-  # === Strict 3 requests per minute for sensitive API endpoints ===
+  # Strict 3 requests per minute for sensitive API endpoints
   rate_limit to: 3,
              within: 1.minute,
              by: -> { request.domain },
