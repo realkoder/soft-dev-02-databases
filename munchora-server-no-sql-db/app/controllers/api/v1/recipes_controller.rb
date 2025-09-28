@@ -51,8 +51,8 @@ class Api::V1::RecipesController < ApplicationController
         include: {
           ingredients: { only: [:id, :name, :category, :amount] },
           user: { only: [:image_src, :id] },
-          recipe_likes: {},
-          recipe_comments: {}
+          likes: {},
+          comments: {}
         }
       ),
       pagination: {
@@ -65,7 +65,7 @@ class Api::V1::RecipesController < ApplicationController
 
   def show
     if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
-      render json: @recipe.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] } })
+      render json: @recipe.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] }, comments: {}, likes: {} })
     else
       head :forbidden
     end
@@ -137,8 +137,8 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_comment
-    comment = @recipe.recipe_comments.new(comment_params)
-    comment.user = current_user # assuming you have Devise or similar
+    comment = @recipe.comments.build(comment_params)
+    comment.user = current_user
 
     if comment.save
       render json: comment, status: :created
@@ -161,7 +161,7 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_like
-    like = @recipe.recipe_likes.find_or_initialize_by(user: current_user)
+    like = @recipe.likes.find_or_initialize_by(user: current_user)
 
     if like.persisted?
       render json: { message: "Already liked" }, status: :ok
@@ -202,14 +202,14 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def set_comment
-    @comment = @recipe.recipe_comments.find_by(id: params[:comment_id])
+    @comment = @recipe.comments.find_by(id: params[:comment_id])
     unless @comment
       render json: { error: "Comment not found" }, status: :not_found
     end
   end
 
   def set_like
-    @like = @recipe.recipe_likes.find_by(user: current_user)
+    @like = @recipe.likes.find_by(user: current_user)
     unless @like
       render json: { error: "Like  not found" }, status: :not_found
     end

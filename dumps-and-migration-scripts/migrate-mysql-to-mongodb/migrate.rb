@@ -26,6 +26,10 @@ def random_user(db, exclude_id: nil)
   db[:users].aggregate(pipeline).first
 end
 
+def random_recipe(db)
+  db[:recipes].aggregate([{ "$sample" => { size: 1 } }]).first
+end
+
 # =====================
 # MIGRATE USERS
 # =====================
@@ -157,19 +161,33 @@ recipe_likes.each do |row|
   mongodb_client[:recipe_likes]
     .insert_one({
                   user_id: random_user(mongodb_client)[:_id],
-                  recipe_id: random_user(mongodb_client)[:_id],
-                  id: "0533930f-dcaa-4508-b14e-26485d401673",
-                  provider: row['provider'],
-                  model: row['model'],
-                  prompt: row['prompt'],
-                  prompt_tokens: row['prompt_tokens'],
-                  completion_tokens: row['completion_tokens'],
+                  recipe_id: random_recipe(mongodb_client)[:_id],
                   created_at: row['created_at'],
                   updated_at: row['updated_at'],
                 })
 end
 
 puts "#{recipe_likes.size} recipe_likes migrated from MySQL to MongoDB"
+
+# =====================
+# RECIPE_COMMENTS
+# =====================
+
+mongodb_client[:recipe_comments].drop
+
+recipe_comments = mysql_client.query("SELECT * FROM recipe_comments")
+recipe_comments.each do |row|
+  mongodb_client[:recipe_comments]
+    .insert_one({
+                  user_id: random_user(mongodb_client)[:_id],
+                  recipe_id: random_recipe(mongodb_client)[:_id],
+                  comment: row['comment'],
+                  created_at: row['created_at'],
+                  updated_at: row['updated_at'],
+                })
+end
+
+puts "#{recipe_comments.size} recipe_comments migrated from MySQL to MongoDB"
 
 # =====================
 # GROCERY_LISTS

@@ -19,6 +19,9 @@ class Recipe
   # Reference to user (instead of foreign key)
   belongs_to :user
 
+  has_many :likes, class_name: "RecipeLike", inverse_of: :recipe
+  has_many :comments, class_name: "RecipeComment", inverse_of: :recipe
+
   # Indexes for performance
   index({ user_id: 1, is_public: 1 })
   index({ is_public: 1 })

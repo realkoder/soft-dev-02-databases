@@ -52,6 +52,9 @@ Rails.application.routes.draw do
         end
       end
 
+      # RECIPE_SUMMARY_VIEW
+      resources :recipe_summary, only: [:index]
+
       # USERS
       resources :users, only: [:index, :show, :create, :update, :destroy]
 
