@@ -4,8 +4,8 @@ name: Rails CI
 on:
   push:
     branches: [ "main" ]
-#    paths:
-#      - "munchora-server-relational-db/**"
+  #    paths:
+  #      - "munchora-server-relational-db/**"
   pull_request:
     branches: [ "main" ]
     paths:
@@ -50,9 +50,13 @@ jobs:
           ruby-version: 3.4.2
           bundler-cache: true
 
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
       - name: Run Brakeman
         run: bin/brakeman -q -w2
 
+      # checks Gemfile.lock for known vulnerabilities
       - name: Run Bundler Audit
         run: bin/bundle exec bundler-audit check --update
 
