@@ -87,5 +87,5 @@ Rails.application.configure do
 
   # Enabling action cable
   config.action_cable.url = "wss://munchora.pro/cable/notify"
-  config.action_cable.allowed_request_origins = ['https://munchora.pro', nil]
+  config.action_cable.allowed_request_origins = ["https://munchora.pro", nil]
 end

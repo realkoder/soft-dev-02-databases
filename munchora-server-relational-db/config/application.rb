@@ -3,8 +3,8 @@ require_relative "boot"
 require "rails/all"
 
 # Enables usage of dotenv files
-require 'dotenv'
-Dotenv.load('.env.dev') if Rails.env.development?
+require "dotenv"
+Dotenv.load(".env.dev") if Rails.env.development?
 
 
 # Require the gems listed in Gemfile, including any gems

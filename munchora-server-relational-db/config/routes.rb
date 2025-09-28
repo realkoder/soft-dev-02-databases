@@ -65,12 +65,12 @@ Rails.application.routes.draw do
           delete "delete-image", to: "recipes#delete_image"
 
           # comments
-          post 'comments', to: 'recipes#add_comment'
-          delete 'comments/:comment_id', to: 'recipes#delete_comment'
+          post "comments", to: "recipes#add_comment"
+          delete "comments/:comment_id", to: "recipes#delete_comment"
 
           # likes
-          post 'likes', to: 'recipes#add_like'
-          delete 'likes', to: 'recipes#delete_like'
+          post "likes", to: "recipes#add_like"
+          delete "likes", to: "recipes#delete_like"
         end
       end
 
@@ -86,7 +86,6 @@ Rails.application.routes.draw do
           post :cancel
         end
       end
-
     end
   end
 

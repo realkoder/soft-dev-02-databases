@@ -36,7 +36,7 @@ class Recipe < ApplicationRecord
 
   def instructions_length_limit
     if instructions.is_a?(Array)
-      total_length = instructions.join(' ').length
+      total_length = instructions.join(" ").length
       if total_length > 3000
         errors.add(:instructions, "combined length must be less than 3000 characters")
       end

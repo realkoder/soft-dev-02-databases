@@ -113,7 +113,7 @@ sample_recipes = [
     is_public: true,
     cuisine: ["Italian"],
     difficulty: "medium",
-    tags: ["pasta", "quick", "classic"],
+    tags: %w[pasta quick classic],
     prep_time: 10,
     cook_time: 20,
     servings: 2
@@ -130,9 +130,9 @@ sample_recipes = [
       "Serve warm or cold."
     ],
     is_public: true,
-    cuisine: ["Vegan", "Fusion"],
+    cuisine: %w[Vegan Fusion],
     difficulty: "easy",
-    tags: ["vegan", "healthy", "bowl"],
+    tags: %w[vegan healthy bowl],
     prep_time: 15,
     cook_time: 25,
     servings: 1
@@ -153,7 +153,7 @@ sample_recipes = [
     is_public: false,
     cuisine: ["Dessert"],
     difficulty: "hard",
-    tags: ["chocolate", "dessert", "bake"],
+    tags: %w[chocolate dessert bake],
     prep_time: 20,
     cook_time: 14,
     servings: 2
@@ -172,7 +172,7 @@ sample_recipes = [
     is_public: true,
     cuisine: ["Indian"],
     difficulty: "medium",
-    tags: ["chicken", "curry", "spicy"],
+    tags: %w[chicken curry spicy],
     prep_time: 20,
     cook_time: 30,
     servings: 2
@@ -227,9 +227,9 @@ sample_recipes = [
       "Serve hot with steamed rice or noodles."
     ],
     is_public: true,
-    cuisine: ["Asian", "Chinese"],
+    cuisine: %w[Asian Chinese],
     difficulty: "medium",
-    tags: ["beef", "stir-fry", "quick"],
+    tags: %w[beef stir-fry quick],
     prep_time: 15,
     cook_time: 15,
     servings: 2
@@ -246,9 +246,9 @@ sample_recipes = [
       "Toss gently and serve."
     ],
     is_public: true,
-    cuisine: ["Greek", "Mediterranean"],
+    cuisine: %w[Greek Mediterranean],
     difficulty: "easy",
-    tags: ["salad", "vegetarian", "fresh"],
+    tags: %w[salad vegetarian fresh],
     prep_time: 10,
     cook_time: 0,
     servings: 2
@@ -267,7 +267,7 @@ sample_recipes = [
     is_public: true,
     cuisine: ["Mexican"],
     difficulty: "medium",
-    tags: ["seafood", "tacos", "spicy"],
+    tags: %w[seafood tacos spicy],
     prep_time: 15,
     cook_time: 10,
     servings: 2
@@ -303,9 +303,9 @@ sample_recipes = [
       "Serve immediately."
     ],
     is_public: true,
-    cuisine: ["Breakfast", "Vegan"],
+    cuisine: %w[Breakfast Vegan],
     difficulty: "easy",
-    tags: ["breakfast", "vegan", "quick"],
+    tags: %w[breakfast vegan quick],
     prep_time: 5,
     cook_time: 5,
     servings: 1
@@ -384,7 +384,7 @@ ingredients_list = [
   { name: "Vegetable Broth", category: "fruits 🍎", amount: 200 },
   { name: "Bread", category: "grains 🌾", amount: 1 },
   { name: "Avocado", category: "fruits 🍎", amount: 1 },
-  { name: "Chili Flakes", category: "meat 🍗", amount: 2 },
+  { name: "Chili Flakes", category: "meat 🍗", amount: 2 }
 ]
 
 Recipe.all.each do |recipe|
@@ -536,10 +536,10 @@ create_items_for_random_lists([{ name: "Guldkorn", category: "breakfast 🥣", i
                                { name: "Coco Pops", category: "breakfast 🥣", is_completed: false },
                                { name: "Beans", category: "canned goods 🥫", is_completed: true },
                                { name: "Bread", category: "bakery 🥖", is_completed: true },
-                               { name: "Hand soap", category: "cleaning 🧼", is_completed: true, }])
+                               { name: "Hand soap", category: "cleaning 🧼", is_completed: true }])
 
 create_items_for_random_lists([
-                                { name: "Salt", category: "condiments 🧂", is_completed: true, },
+                                { name: "Salt", category: "condiments 🧂", is_completed: true },
                                 { name: "Pepper", category: "condiments 🧂", is_completed: true },
                                 { name: "Chicken", category: "meat 🍗", is_completed: true },
                                 { name: "Beef", category: "meat 🍗", is_completed: true },
@@ -556,7 +556,7 @@ create_items_for_random_lists([
                                 { name: "Cheese", category: "dairy 🥚", is_completed: true },
                                 { name: "Skyr", category: "dairy 🥚", is_completed: true },
                                 { name: "Egg", category: "dairy 🥚", is_completed: true },
-                                { name: "Milk", category: "dairy 🥚", is_completed: true },
+                                { name: "Milk", category: "dairy 🥚", is_completed: true }
                               ])
 
 puts "Seeded 10 GroceryListItem records."

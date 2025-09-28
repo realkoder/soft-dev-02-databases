@@ -50,5 +50,4 @@ class Api::V1::LlmController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Recipe not found" }, status: :not_found
   end
-
 end

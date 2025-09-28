@@ -17,7 +17,7 @@ module ApplicationCable
 
     def redis
       @redis ||= begin
-                   Redis.new(url: ENV['UPSTASH_REDIS_URL'])
+                   Redis.new(url: ENV["UPSTASH_REDIS_URL"])
                  end
     end
 

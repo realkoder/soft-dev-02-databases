@@ -17,7 +17,7 @@ class ImageUpload::Processor
     return error("Invalid image file") unless FastImage.type(@file.tempfile)
 
     FileUtils.mkdir_p(@upload_dir) unless Dir.exist?(@upload_dir)
-    
+
     sanitized_filename = sanitize_filename(@file.original_filename)
     filename = "#{SecureRandom.uuid}_#{sanitized_filename}"
     filepath = @upload_dir.join(filename)

@@ -9,10 +9,10 @@ on:
       - "munchora-server-relational-db/lib/**"
   push:
     branches: [ "main" ]
-#    paths:
-#      - "munchora-server-relational-db/app/**"
-#      - "munchora-server-relational-db/config/**"
-#      - "munchora-server-relational-db/lib/**"
+    paths:
+      - "munchora-server-relational-db/app/**"
+      - "munchora-server-relational-db/config/**"
+      - "munchora-server-relational-db/lib/**"
 
 jobs:
   rubocop:

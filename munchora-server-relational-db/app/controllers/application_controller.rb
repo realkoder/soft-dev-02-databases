@@ -40,37 +40,37 @@ class ApplicationController < ActionController::API
 
     # If no cookie, check for Bearer token in Authorization header
     if token.nil?
-      auth_header = request.headers['Authorization']
-      if auth_header.present? && auth_header.start_with?('Bearer ')
-        token = auth_header.split(' ').last
+      auth_header = request.headers["Authorization"]
+      if auth_header.present? && auth_header.start_with?("Bearer ")
+        token = auth_header.split(" ").last
       end
     end
 
     if token.nil?
-      return render json: { error: 'Unauthorized' }, status: :unauthorized
+      return render json: { error: "Unauthorized" }, status: :unauthorized
     end
 
     decoded = Auth::JsonWebToken.decode(token)
     if decoded.nil? || !decoded[:user_id]
-      return render json: { error: 'Unauthorized' }, status: :unauthorized
+      return render json: { error: "Unauthorized" }, status: :unauthorized
     end
 
     @current_user = User.find_by(id: decoded[:user_id])
 
     if !@current_user
-      return render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-    return render json: { error: 'Unauthorized' }, status: :unauthorized
+    render json: { error: "Unauthorized" }, status: :unauthorized
   end
 
   def authenticate_user_or_nil
     token = cookies[:jwt_auth]
 
     if token.nil?
-      auth_header = request.headers['Authorization']
-      if auth_header.present? && auth_header.start_with?('Bearer ')
-        token = auth_header.split(' ').last
+      auth_header = request.headers["Authorization"]
+      if auth_header.present? && auth_header.start_with?("Bearer ")
+        token = auth_header.split(" ").last
       end
     end
 
@@ -87,7 +87,7 @@ class ApplicationController < ActionController::API
     @current_user = User.find_by(id: decoded[:user_id])
 
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-    return nil
+    nil
   end
 
   def authorize_admin!

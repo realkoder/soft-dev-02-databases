@@ -31,7 +31,6 @@ RSpec.describe User, type: :request do
           json = JSON.parse(response.body)
           # Verify that each user has a fullname attribute combining first_name and last_name
           json['data'].each do |user_json|
-
             expect(user_json).to include('fullname')
             expect(user_json['fullname']).to eq("#{user_json['first_name']} #{user_json['last_name']}")
           end
@@ -40,7 +39,6 @@ RSpec.describe User, type: :request do
           json['data'].each do |user_json|
             expect(user_json).not_to include('password_digest')
           end
-
         end
       end
 

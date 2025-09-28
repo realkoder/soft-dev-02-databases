@@ -91,7 +91,7 @@ class Api::V1::GroceryListsController < ApplicationController
     @grocery_list = GroceryList
                       .left_outer_joins(:shared_users)
                       .where(
-                        'grocery_lists.owner_id = :user_id OR users.id = :user_id',
+                        "grocery_lists.owner_id = :user_id OR users.id = :user_id",
                         user_id: current_user.id
                       )
                       .distinct

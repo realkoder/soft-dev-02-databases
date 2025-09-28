@@ -8,13 +8,14 @@ class Api::V1::RecipesController < ApplicationController
   ADMIN_EMAIL = "alexanderbtcc@gmail.com"
 
   def index
-    recipes = if current_user&.email == ADMIN_EMAIL
-                Recipe.all
-              elsif current_user
-                Recipe.where("is_public = ? OR user_id = ?", true, current_user.id)
-              else
-                Recipe.where(is_public: true)
-              end
+    recipes =
+      if current_user&.email == ADMIN_EMAIL
+        Recipe.all
+      elsif current_user
+        Recipe.where("is_public = ? OR user_id = ?", true, current_user.id)
+      else
+        Recipe.where(is_public: true)
+      end
 
     filters_applied = false
 

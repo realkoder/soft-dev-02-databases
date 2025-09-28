@@ -16,7 +16,7 @@ class Users::UsersUploadsService
   end
 
   def self.delete_old_image(user:)
-    return unless user.image_src.present? && user.image_src.include?('uploads/user-profile-pics')
+    return unless user.image_src.present? && user.image_src.include?("uploads/user-profile-pics")
 
     image_path = URI.parse(user.image_src).path
     full_path = Rails.root.join("public", image_path.delete_prefix("/"))

@@ -67,7 +67,7 @@ class Llm::LlmService
     }.to_json
 
     update_instruction = <<~PROMPT
-      Please improve or modify the following recipe based on the user prompt below. 
+      Please improve or modify the following recipe based on the user prompt below.
       Return the updated recipe in the same JSON format. Do not change the format, only the content.
 
       USER PROMPT:

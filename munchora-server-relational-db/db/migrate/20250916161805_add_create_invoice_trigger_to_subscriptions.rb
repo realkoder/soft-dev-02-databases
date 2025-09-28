@@ -15,14 +15,14 @@ class AddCreateInvoiceTriggerToSubscriptions < ActiveRecord::Migration[8.0]
         created_at,
         updated_at
       )
-      SELECT 
+      SELECT
         NEW.user_id,
         NEW.id,
         sp.price,
         'USD',
         'draft',
         NOW(),
-        CASE 
+        CASE
           WHEN sp.billing_cycle = 'monthly' THEN DATE_ADD(NOW(), INTERVAL 1 MONTH)
           WHEN sp.billing_cycle = 'yearly' THEN DATE_ADD(NOW(), INTERVAL 1 YEAR)
           ELSE NOW()

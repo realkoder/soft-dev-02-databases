@@ -32,12 +32,12 @@ class AddGenerateRecipeSuggestionsProcedure < ActiveRecord::Migration[8.0]
         SELECT
           p_user_id,
           r.id,
-          CASE 
+          CASE
             WHEN favorite_cuisines IS NOT NULL
-                 AND JSON_OVERLAPS(r.cuisine, JSON_ARRAY(favorite_cuisines)) 
+                 AND JSON_OVERLAPS(r.cuisine, JSON_ARRAY(favorite_cuisines))
                  THEN 'matches your favorite cuisine'
-            WHEN favorite_tags IS NOT NULL 
-                 AND JSON_OVERLAPS(r.tags, JSON_ARRAY(favorite_tags)) 
+            WHEN favorite_tags IS NOT NULL
+                 AND JSON_OVERLAPS(r.tags, JSON_ARRAY(favorite_tags))
                  THEN 'matches your favorite tags'
             WHEN (SELECT COUNT(*) FROM recipe_likes WHERE recipe_id = r.id) > 50
                  THEN 'highly popular recipe'
@@ -57,11 +57,11 @@ class AddGenerateRecipeSuggestionsProcedure < ActiveRecord::Migration[8.0]
         )
         AND r.is_public = true
         ORDER BY
-          CASE WHEN favorite_cuisines IS NOT NULL 
+          CASE WHEN favorite_cuisines IS NOT NULL
                AND JSON_OVERLAPS(r.cuisine, JSON_ARRAY(favorite_cuisines)) THEN 1
                ELSE 0
           END DESC,
-          CASE WHEN favorite_tags IS NOT NULL 
+          CASE WHEN favorite_tags IS NOT NULL
                AND JSON_OVERLAPS(r.tags, JSON_ARRAY(favorite_tags)) THEN 1
                ELSE 0
           END DESC,
