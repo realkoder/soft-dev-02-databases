@@ -10,11 +10,11 @@ on:
       - "munchora-server-relational-db/config/**"
   push:
     branches: [ "main" ]
-#    paths:
-#      - "munchora-server-relational-db/app/**"
-#      - "munchora-server-relational-db/spec/**"
-#      - "munchora-server-relational-db/db/**"
-#      - "munchora-server-relational-db/config/**"
+    paths:
+      - "munchora-server-relational-db/app/**"
+      - "munchora-server-relational-db/spec/**"
+      - "munchora-server-relational-db/db/**"
+      - "munchora-server-relational-db/config/**"
 
 jobs:
   rspec:
