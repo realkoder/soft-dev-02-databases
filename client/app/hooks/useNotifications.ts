@@ -35,13 +35,11 @@ const useNotifications = () => {
   useEffect(() => {
     if (cable) return;
     const newCable = createConsumer(WEBSOCKET_URL);
-    console.log('Connection established with action cable!');
 
     const subscription = newCable.subscriptions.create(
       { channel: 'NotificationsChannel' },
       {
         received: (data) => {
-          console.log('GONNA HANDLE THIS EVENT', data.type);
           handleNotifyEvent(data);
         },
       }
@@ -52,7 +50,6 @@ const useNotifications = () => {
     return () => {
       subscription.unsubscribe();
       newCable.disconnect();
-      console.log('Connection closed with action cable!');
     };
   }, []);
 

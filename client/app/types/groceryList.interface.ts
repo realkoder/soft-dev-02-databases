@@ -33,7 +33,7 @@ export interface IGroceryListItem {
 }
 
 export interface IGroceryList {
-  id: number;
+  id: string;
   name: string;
   items: IGroceryListItem[];
   owner_id: string;
@@ -49,7 +49,7 @@ export interface IGroceryList {
 // CREATE OBJECTS
 
 export interface IGroceryListItemInput {
-  name: string;
+  name: number;
   category?: TCategory;
   added_by?: string;
   is_completed: boolean;

@@ -26,7 +26,7 @@ interface GroceryListProps {
 export const GroceryList = ({ list, setListToShare, setShowShareModal }: GroceryListProps) => {
   const { updateListName, addItemToList, deleteGroceryListItem, toggleItemCompleted, updateItem, isAddingItem } = useGroceryLists();
   const [newItemName, setNewItemName] = useState('');
-  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const [newItemCategory, setNewItemCategory] = useState<TCategory>('no category 📦');
   const curUser = useAtomValue(curUserAtom);
   const navigate = useNavigate();

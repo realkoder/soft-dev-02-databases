@@ -13,7 +13,7 @@ const useGroceryLists = () => {
     const [groceryLists, setGroceryLists] = useAtom(groceryListsAtom);
     const [isAddingItem, setIsAddingItem] = useState(false);
 
-    const updateListName = async (listId: number, name: string) => {
+    const updateListName = async (listId: string, name: string) => {
         if (!name.trim() || name.length > 50) return;
 
         try {
@@ -23,7 +23,7 @@ const useGroceryLists = () => {
         }
     };
 
-    const addItemToList = async (listId: number, name: string, category?: TCategory) => {
+    const addItemToList = async (listId: string, name: string, category?: TCategory) => {
         if (!name.trim() || name.length > 50) return;
         setIsAddingItem(true);
         try {
@@ -54,7 +54,7 @@ const useGroceryLists = () => {
         }
     };
 
-    const deleteGroceryList = async (listId: number) => {
+    const deleteGroceryList = async (listId: string) => {
         try {
             await fetchData(`/grocery_lists/${listId}`, {method: 'DELETE'});
         } catch {
@@ -62,7 +62,7 @@ const useGroceryLists = () => {
         }
     };
 
-    const deleteGroceryListItem = async (listId: number, itemId: number) => {
+    const deleteGroceryListItem = async (listId: string, itemId: number) => {
         try {
             await fetchGroceryList(`/grocery_lists/${listId}/remove-item/${itemId}`, {method: 'DELETE'});
         } catch {
@@ -70,7 +70,7 @@ const useGroceryLists = () => {
         }
     };
 
-    const shareList = async (listId: number, selectedUsers: IUser[]) => {
+    const shareList = async (listId: string, selectedUsers: IUser[]) => {
         try {
             const userIds = selectedUsers.map((user) => user.id);
             await fetchGroceryList(`/grocery_lists/${listId}/share`, {method: 'POST', data: {user_ids: userIds}});
@@ -80,7 +80,7 @@ const useGroceryLists = () => {
         }
     };
 
-    const unShareList = async (listId: number, selectedUserId: string) => {
+    const unShareList = async (listId: string, selectedUserId: string) => {
         try {
             await fetchGroceryList(`/grocery_lists/${listId}/unshare`, {
                 method: 'DELETE',
@@ -92,9 +92,8 @@ const useGroceryLists = () => {
         }
     };
 
-    const toggleItemCompleted = async (listId: number, itemId: number, is_completed: boolean) => {
+    const toggleItemCompleted = async (listId: string, itemId: number, is_completed: boolean) => {
         try {
-            console.log('LOOK', is_completed);
             await fetchGroceryList(`/grocery_lists/${listId}/update-item/${itemId}`, {
                 method: 'PATCH',
                 data: {is_completed: !is_completed}
@@ -104,7 +103,7 @@ const useGroceryLists = () => {
         }
     };
 
-    const updateItem = async (listId: number, itemId: number, name: string, category: TCategory) => {
+    const updateItem = async (listId: string, itemId: number, name: string, category: TCategory) => {
         try {
             await fetchGroceryList(`/grocery_lists/${listId}/update-item/${itemId}`, {
                 method: 'PATCH',

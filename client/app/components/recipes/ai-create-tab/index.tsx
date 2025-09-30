@@ -184,13 +184,13 @@ export const AICreateTab = () => {
                   </div>
                   <div className="space-y-2">
                     {curRecipe.ingredients.map((ingredient, index) => (
-                      <div key={index} className="flex items-center space-x-3 group">
+                      <div key={ingredient.id} className="flex items-center space-x-3 group">
                         <div className="w-2 h-2 bg-third rounded-full flex-shrink-0"></div>
                         <Input
-                          value={ingredient.ingredient}
+                          value={ingredient.name}
                           onChange={(e) => {
                             const newIngredients = [...curRecipe.ingredients];
-                            newIngredients[index].ingredient = e.target.value;
+                            newIngredients[index].name = e.target.value;
                             handleEditRecipe('ingredients', newIngredients);
                           }}
                           className="flex-1 border-0 bg-transparent hover:bg-slate-50 focus:bg-white focus:border focus:border-third rounded-lg transition-all"
@@ -253,7 +253,6 @@ export const AICreateTab = () => {
                             className="text-red-500 hover:text-red-600 hover:bg-red-50 p-1  mt-1"
                             onClick={() => {
                               const filteredInstructions = curRecipe.instructions.filter((_, i) => i !== index);
-                              console.log(index);
                               handleEditRecipe('instructions', filteredInstructions);
                             }}
                           >

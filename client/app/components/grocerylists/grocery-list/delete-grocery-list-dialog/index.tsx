@@ -7,7 +7,7 @@ import useGroceryLists from '~/hooks/useGrocerylist';
 
 interface DeleteRecipeDialogProps {
   isOwner: boolean;
-  groceryListId: number;
+  groceryListId: string;
 }
 
 export const DeleteGroceryListDialog = ({ isOwner, groceryListId }: DeleteRecipeDialogProps) => {

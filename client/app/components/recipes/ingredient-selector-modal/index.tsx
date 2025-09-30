@@ -19,10 +19,10 @@ interface IngredientSelectorModalProps {
 export default function IngredientSelectorModal({ isOpen, onClose, ingredient }: IngredientSelectorModalProps) {
   const [newListName, setNewListName] = useState('');
   const [isCreatingList, setIsCreatingList] = useState(false);
-  const [addedToLists, setAddedToLists] = useState<number[]>([]);
+  const [addedToLists, setAddedToLists] = useState<string[]>([]);
   const { groceryLists, addItemToList, createNewList } = useGroceryLists();
 
-  const handleAddToList = async (listId: number) => {
+  const handleAddToList = async (listId: string) => {
     if (!ingredient) return;
 
     setAddedToLists([...addedToLists, listId]);

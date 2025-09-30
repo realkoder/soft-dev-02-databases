@@ -85,7 +85,7 @@ const useRecipes = () => {
         }
     };
 
-    const deleteRecipe = async (recipeId: number) => {
+    const deleteRecipe = async (recipeId: string) => {
         try {
             await fetchRecipe(`/recipes/${recipeId}`, {method: 'DELETE'});
             setCurRecipe(null);

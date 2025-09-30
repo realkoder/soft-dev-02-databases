@@ -1,12 +1,14 @@
 import { type TCategory } from './groceryList.interface';
 
 export interface IIngredient {
-  ingredient: string;
+  id: number;
+  name: string;
   category: TCategory;
+  amount: number;
 }
 
 export interface IRecipe {
-  id: number;
+  id: string;
   title: string;
   author: string;
   image_url?: string;

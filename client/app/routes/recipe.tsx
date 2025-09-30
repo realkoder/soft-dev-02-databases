@@ -55,10 +55,7 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export function loader({ params }: Route.LoaderArgs) {
-  const recipeId = Number(params.recipeId);
-  if (isNaN(recipeId)) {
-    throw new Error('Invalid recipe ID');
-  }
+  const recipeId = params.recipeId;
 
   return (async () => {
     try {
@@ -220,15 +217,16 @@ export default function Recipe({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               {recipe?.ingredients.map((ingredient, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleIngredientClick(ingredient)}
-                  className="flex items-center p-3 rounded-lg border border-border hover:bg-secondary cursor-pointer transition-all duration-200 group"
-                >
-                  <div className="w-2 h-2 bg-final rounded-full mr-3 flex-shrink-0"></div>
-                  <span className="text-slate-700 transition-colors">{ingredient.ingredient}</span>
-                  <ShoppingCart className="h-6 w-6 text-slate-400 group-hover:text-final ml-auto opacity-0 group-hover:opacity-100 transition-all duration-200" />
-                </div>
+                  <div
+                      key={index}
+                      onClick={() => handleIngredientClick(ingredient)}
+                      className="flex items-center p-3 rounded-lg border border-border hover:bg-secondary cursor-pointer transition-all duration-200 group"
+                  >
+                    <div className="w-2 h-2 bg-final rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-slate-700 transition-colors">{ingredient.name} x{ingredient.amount}</span>
+                    <ShoppingCart
+                        className="h-6 w-6 text-slate-400 group-hover:text-final ml-auto opacity-0 group-hover:opacity-100 transition-all duration-200"/>
+                  </div>
               ))}
             </CardContent>
           </Card>

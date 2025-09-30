@@ -46,7 +46,7 @@ module ApplicationCable
 
       raise "No token" unless token
 
-      decoded = JsonWebToken.decode(token)
+      decoded = Auth::JsonWebToken.decode(token)
       raise "Invalid token" unless decoded && decoded[:user_id]
 
       user = User.find_by(id: decoded[:user_id])

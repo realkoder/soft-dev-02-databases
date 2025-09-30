@@ -103,7 +103,6 @@ export default function Profile() {
   const handleDeleteProfileImg = async () => {
     try {
       const res = await fetchDelImage('/users/delete-image', { method: 'DELETE' });
-      console.log('RES', res);
       if (res.message === 'OK') {
         setCurUser((cur) => {
           if (!cur?.user?.id) return cur;
