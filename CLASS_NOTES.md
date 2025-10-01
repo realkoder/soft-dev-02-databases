@@ -433,6 +433,26 @@ MongoDB do have stored functions, but they're not recommended
 
 <br>
 
+## No SQL Graph DB
+
+The main reason for graph databases is that relational db's lack relations.
+For RDBMS JOIN operations can be very memory intensive.
+
+For graph db faster and more economical queries.
+Relationships are already predetermined based on connected nodes.
+
+For document oriented dbs they also do lack the relationships such as friends, friends.
+To determine which customers bought a given product a full scan of the customers is
+required if the orders are embedded within customer object.
+
+![Graph DB](assets/graph-db.png)
+
+![Graph vs RDBMS](assets/graph-vs-rdbms.png)
+
+---
+
+<br>
+
 ## DB Terminology
 
 ![DB terminology](assets/db-terminology.png)
