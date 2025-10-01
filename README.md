@@ -14,6 +14,18 @@ This full stack webapp is builded in the following way:
 
 [React Router v7](https://reactrouter.com/start/framework/installation)
 
+E2E test tool - Cypress
+
+Run the cypress tests by using scripts from `./client`
+
+```bash
+# Just running in headless mode
+npm run cypress:open
+
+# Interactive mode
+npm run cypress:run
+```
+
 ### Backend
 
 `Ruby` with `Ruby on Rails` as webframework.

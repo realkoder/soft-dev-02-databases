@@ -16,7 +16,8 @@ import useAuth from "~/hooks/useAuth";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    fullname: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -44,7 +45,8 @@ export default function SignUp() {
     setIsLoading(true);
 
     const newUser = {
-      fullname: formData.fullname,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
       email: formData.email,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
@@ -72,30 +74,44 @@ export default function SignUp() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="first_name">First Name</Label>
             <Input
-              id="fullname"
-              name="fullname"
-              type="text"
-              autoComplete="additional-name"
-              placeholder="Enter your full name"
-              value={formData.fullname}
-              onChange={handleChange}
-              required
+                id="first_name"
+                name="first_name"
+                type="text"
+                autoComplete="additional-name"
+                placeholder="Enter your first name"
+                value={formData.first_name}
+                onChange={handleChange}
+                required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="last_name">First Name</Label>
+            <Input
+                id="last_name"
+                name="last_name"
+                type="text"
+                autoComplete="additional-name"
+                placeholder="Enter your last name"
+                value={formData.last_name}
+                onChange={handleChange}
+                required
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              autoComplete="email"
-              required
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                autoComplete="email"
+                required
             />
           </div>
 
@@ -103,26 +119,26 @@ export default function SignUp() {
             <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Create a password"
-                value={formData.password}
-                autoComplete="new-password"
-                onChange={handleChange}
-                required
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a password"
+                  value={formData.password}
+                  autoComplete="new-password"
+                  onChange={handleChange}
+                  required
               />
               <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowPassword(!showPassword)}
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-gray-400" />
+                    <EyeOff className="h-4 w-4 text-gray-400"/>
                 ) : (
-                  <Eye className="h-4 w-4 text-gray-400" />
+                    <Eye className="h-4 w-4 text-gray-400"/>
                 )}
               </Button>
             </div>
@@ -132,26 +148,26 @@ export default function SignUp() {
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
               <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                autoComplete="current-password"
-                onChange={handleChange}
-                required
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  autoComplete="current-password"
+                  onChange={handleChange}
+                  required
               />
               <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4 text-gray-400" />
+                    <EyeOff className="h-4 w-4 text-gray-400"/>
                 ) : (
-                  <Eye className="h-4 w-4 text-gray-400" />
+                    <Eye className="h-4 w-4 text-gray-400"/>
                 )}
               </Button>
             </div>
@@ -161,15 +177,15 @@ export default function SignUp() {
             <p>
               By creating an account, you agree to our{" "}
               <NavLink
-                to="/privacy"
-                className="text-fourth hover:text-fourth/80 underline"
+                  to="/privacy"
+                  className="text-fourth hover:text-fourth/80 underline"
               >
                 Privacy Policy
               </NavLink>{" "}
               and{" "}
               <NavLink
-                to="/terms"
-                className="text-fourth hover:text-fourth/80 underline"
+                  to="/terms"
+                  className="text-fourth hover:text-fourth/80 underline"
               >
                 Terms of Service
               </NavLink>
@@ -179,8 +195,8 @@ export default function SignUp() {
           </div>
 
           <Button
-            type="submit"
-            disabled={isLoading}
+              type="submit"
+              disabled={isLoading}
           >
             {isLoading ? "Creating Account..." : "Create Account"}
           </Button>

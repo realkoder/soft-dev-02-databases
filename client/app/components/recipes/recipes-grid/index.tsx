@@ -22,6 +22,7 @@ export const RecipesGrid = ({ recipes }: RecipesGridProps) => {
           <Card key={recipe.id} className="group border bg-secondary/50  hover:shadow-xl transition-all duration-300 overflow-hidden">
             <div className="aspect-[4/3] overflow-hidden cursor-pointer" onClick={() => navigate(`/recipe/${recipe.id}`)}>
               <img
+                data-cy="recipe-card-link"
                 className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 src={recipe.image_url || '/placeholder.png'}
                 alt={recipe.title}

@@ -45,6 +45,7 @@ export const SignIn = () => {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="Enter your email"
               value={email}
@@ -59,6 +60,7 @@ export const SignIn = () => {
             <div className="relative">
               <Input
                 id="password"
+                name="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 value={password}
@@ -93,7 +95,7 @@ export const SignIn = () => {
             </p>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading || !credentialsProvided}>
+          <Button name="signinbtn" type="submit" className="w-full" disabled={isLoading || !credentialsProvided}>
             {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>

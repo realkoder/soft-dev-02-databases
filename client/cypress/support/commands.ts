@@ -35,3 +35,26 @@
 //     }
 //   }
 // }
+// cypress/support/commands.ts
+
+Cypress.Commands.add("login", (email: string, password: string) => {
+    cy.visit("/");
+    cy.contains("Sign In").click();
+    cy.get('input[name="email"]').type(email);
+    cy.get('input[name="password"]').type(password);
+    cy.get('button[name="signinbtn"]').click();
+
+    // confirm login worked
+    cy.contains("What would you like to cook today?").should("exist");
+});
+
+// Optional: fast login via API (skips UI)
+Cypress.Commands.add("loginByApi", (email: string, password: string) => {
+    cy.request("POST", "http://localhost:3000/api/v1/auth/sign_in", {
+        email,
+        password,
+    }).then((resp) => {
+        expect(resp.status).to.eq(200);
+        // set cookies/localStorage here if your app needs them
+    });
+});
