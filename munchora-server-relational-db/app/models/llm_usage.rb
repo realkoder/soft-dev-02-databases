@@ -3,7 +3,7 @@ class LlmUsage < ApplicationRecord
 
   before_create -> { self.id ||= SecureRandom.uuid }
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :recipe, optional: true
 
   validates :model, presence: true

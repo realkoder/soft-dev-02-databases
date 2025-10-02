@@ -4,7 +4,7 @@ class User < ApplicationRecord
   before_create -> { self.id ||= SecureRandom.uuid }
 
   has_many :recipes, dependent: :destroy
-  has_many :llm_usages
+  has_many :llm_usages, dependent: :nullify
   has_many :grocery_lists, foreign_key: :owner_id, dependent: :destroy
   has_many :grocery_list_shares, dependent: :destroy
   has_many :shared_grocery_lists, through: :grocery_list_shares, source: :grocery_list

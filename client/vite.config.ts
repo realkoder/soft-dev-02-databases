@@ -10,6 +10,7 @@ export default defineConfig({
     exclude: ['com.chrome.devtools.json']
   },
   server: {
+    host: true,
     warmup: {
       clientFiles: [
         './app/**/!(*.server|*.test)*.tsx', // Include all .tsx files except server and test files (add more patterns if required)

@@ -1,6 +1,6 @@
 describe('User Delete From Profile', () => {
   before(() => {
-    cy.login();
+    cy.loginOrSignUpByApi();
   });
 
   it('should allow user to delete', () => {

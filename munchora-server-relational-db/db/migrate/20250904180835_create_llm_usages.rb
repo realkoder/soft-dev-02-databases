@@ -3,7 +3,7 @@ class CreateLlmUsages < ActiveRecord::Migration[8.0]
     create_table :llm_usages, id: false do |t|
       t.string :id, limit: 36, null: false, primary_key: true
 
-      t.string :user_id, limit: 36, null: false
+      t.string :user_id, limit: 36, null: true
       t.string :recipe_id, limit: 36, null: true
       t.string :provider
       t.string :model
