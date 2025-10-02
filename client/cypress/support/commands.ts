@@ -80,10 +80,10 @@ Cypress.Commands.add('checkPageLoadedCorrectly', (pageName: PageName) => {
 
 Cypress.Commands.add('signUp', (firstName: string, lastName: string, email: string, password: string) => {
   cy.loadPage('signIn');
-  cy.wait(500);
 
   cy.contains('Create account').click();
 
+  cy.wait(100); // If now waiting input it disabled
   cy.get('input[name="first_name"]').type(firstName);
   cy.get('input[name="last_name"]').type(lastName);
   cy.get('input[name="email"]').type(email);
