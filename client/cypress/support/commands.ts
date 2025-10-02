@@ -78,82 +78,6 @@ Cypress.Commands.add('checkPageLoadedCorrectly', (pageName: PageName) => {
   pages[pageName].check();
 });
 
-// Cypress.Commands.add('signUp', (firstName: string, lastName: string, email: string, password: string) => {
-//   cy.loadPage('signIn');
-//
-//   cy.contains('Create account').click();
-//
-//   cy.wait(250); // If now waiting input it disabled
-//   cy.get('input[name="first_name"]').type(firstName);
-//   cy.get('input[name="last_name"]').type(lastName);
-//   cy.get('input[name="email"]').type(email);
-//   cy.get('input[name="password"]').type(password);
-//   cy.get('input[name="confirmPassword"]').type(password);
-//
-//   cy.contains('button', 'Create Account').click();
-//
-//   cy.checkPageLoadedCorrectly('indexAuth');
-// });
-
-// Cypress.Commands.add(
-//   "signUpByApi",
-//   (firstName: string, lastName: string, email: string, password: string) => {
-//     cy.request("POST", "http://localhost:3000/api/v1/auth/signup", {
-//       first_name: firstName,
-//       last_name: lastName,
-//       email,
-//       password,
-//       password_confirmation: password,
-//     }).then((resp) => {
-//       expect(resp.status).to.be.oneOf([200, 201]);
-//
-//       const cookie = resp.headers["set-cookie"]?.find((c) =>
-//         c.startsWith("jwt_auth")
-//       );
-//
-//       if (!cookie) throw new Error("No jwt_auth cookie returned from Rails");
-//
-//       const match = cookie.match(/jwt_auth=([^;]+)/);
-//       if (match) {
-//         cy.setCookie("jwt_auth", match[1], {
-//           domain: "localhost",
-//           httpOnly: false,
-//         });
-//       }
-//     });
-//   }
-// );
-//
-// Cypress.Commands.add("loginByApi", () => {
-//   cy.request("POST", "http://localhost:3000/api/v1/auth/login", {
-//     email: "cypress-user@example.com",
-//     password: "SuperSecret123!"
-//   }).then((resp) => {
-//     // Ensure success
-//     expect(resp.status).to.eq(200);
-//
-//     // Grab jwt_auth cookie from response
-//     const cookie = resp.headers["set-cookie"]?.find((c) =>
-//       c.startsWith("jwt_auth")
-//     );
-//
-//     if (!cookie) {
-//       throw new Error("No jwt_auth cookie returned from Rails");
-//     }
-//
-//     // Extract just the value
-//     const match = cookie.match(/jwt_auth=([^;]+)/);
-//     if (match) {
-//       cy.setCookie("jwt_auth", match[1], {
-//         domain: "localhost",
-//         httpOnly: false,
-//       });
-//     }
-//   });
-//
-// });
-
-
 Cypress.Commands.add("loginOrSignUpByApi", () => {
   const email = "cypress-user@example.com";
   const password = "SuperSecret123!";
@@ -167,7 +91,6 @@ Cypress.Commands.add("loginOrSignUpByApi", () => {
     if (resp.status === 200 && resp.body.token) {
       setAuthFromResponse(resp);
     } else if (resp.status === 401) {
-      // signup then login
       cy.request("POST", "http://localhost:3000/api/v1/users", {
         user: {
           first_name: "Test",
@@ -201,36 +124,3 @@ const setAuthFromResponse = (resp: any) => {
     secure: false,
   });
 };
-
-//   const firstName = 'Test';
-//   const lastName = 'User';
-//   const email = 'cypress-user@example.com';
-//   const password = 'SuperSecret123!';
-//
-//   cy.getCookie('jwt_auth').then((cookie) => {
-//     if (cookie) {
-//       cy.loadPage('indexAuth');
-//     } else {
-//       cy.loadPage('signIn');
-//
-//       cy.intercept('POST', '/api/v1/auth/login').as('loginRequest');
-//
-//       cy.wait(250); // If now waiting input it disabled
-//       cy.get('input[name="email"]').type(email);
-//       cy.get('input[name="password"]').type(password);
-//       cy.get('button[name="signinbtn"]').click();
-//
-//       cy.wait('@loginRequest').then((interception) => {
-//         const status = interception.response?.statusCode;
-//
-//         if (status === 401) {
-//           console.log('Login denied - will sign-up');
-//           cy.signUp(firstName, lastName, email, password);
-//         } else {
-//           // cy.getCookie('jwt_auth').should('exist');
-//           cy.checkPageLoadedCorrectly('indexAuth');
-//         }
-//       });
-//     }
-//   });
-// });
