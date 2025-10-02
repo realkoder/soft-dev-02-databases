@@ -6,6 +6,7 @@ describe('Signup and login', () => {
   it('should signup new user', () => {
     cy.loadPage('signIn');
 
+    cy.wait(250);
     cy.contains('Create account').click();
 
     cy.wait(250); // If now waiting input it disabled
