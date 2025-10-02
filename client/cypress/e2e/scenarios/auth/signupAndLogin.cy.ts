@@ -1,12 +1,10 @@
 describe('Signup and login', () => {
-  before(() => cy.loginOrSignUpByApi());
   const email = 'cypress-user2@example.com';
   const password = 'SuperSecret123!';
 
   it('should signup new user', () => {
     cy.loadPage('signIn');
 
-    cy.wait(250);
     cy.contains('Create account').click();
 
     cy.wait(250); // If now waiting input it disabled
