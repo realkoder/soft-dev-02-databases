@@ -115,7 +115,7 @@ export default function Recipe({ loaderData }: Route.ComponentProps) {
           <div className="p-4 bg-secondary/50">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{recipe?.title}</h1>
+                <h1 data-cy="recipe-title" className="text-3xl font-bold text-gray-900 mb-2">{recipe?.title}</h1>
                 <p className="text-gray-600 text-lg leading-relaxed">{recipe?.description}</p>
               </div>
             </div>

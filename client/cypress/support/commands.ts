@@ -37,24 +37,46 @@
 // }
 // cypress/support/commands.ts
 
+const pages = {
+  index: {
+    url: "/",
+    check: () => cy.contains(/Discover Your Next Culinary Adventure|What would you like to cook today\?/).should("be.visible"),
+  },
+  groceryLists: {
+    url: "/grocery-lists",
+    check: () => cy.contains("Grocery List").should("be.visible"),
+  },
+  profile: {
+    url: "/profile",
+    check: () => cy.get("h1").contains("Profile").should("be.visible"),
+  },
+  recipe: {
+    url: "/recipe",
+    check: () => cy.get('[data-cy="recipe-title"]').should("be.visible"),
+  },
+  recipes: {
+    url: "/recipes",
+    check: () => cy.get("h1").contains("Recipe Studio").should("be.visible"),
+  },
+  signIn: {
+    url: "/sign-in",
+    check: () => cy.get("h1").contains("Profile Settings").should("be.visible"),
+  },
+};
+
+Cypress.Commands.add("loadPage", (pageName: PageName) => {
+  cy.visit(pages[pageName].url);
+});
+
+Cypress.Commands.add("checkPageLoadedCorrectly", (pageName: PageName) => {
+  pages[pageName].check();
+});
+
 Cypress.Commands.add("login", (email: string, password: string) => {
-    cy.visit("/");
-    cy.contains("Sign In").click();
-    cy.get('input[name="email"]').type(email);
-    cy.get('input[name="password"]').type(password);
-    cy.get('button[name="signinbtn"]').click();
-
-    // confirm login worked
-    cy.contains("What would you like to cook today?").should("exist");
+  cy.visit("/sign-in");
+  cy.get('input[name="email"]').type(email);
+  cy.get('input[name="password"]').type(password);
+  cy.get('button[name="signinbtn"]').click();
+  cy.contains("What would you like to cook today?").should("exist");
 });
 
-// Optional: fast login via API (skips UI)
-Cypress.Commands.add("loginByApi", (email: string, password: string) => {
-    cy.request("POST", "http://localhost:3000/api/v1/auth/sign_in", {
-        email,
-        password,
-    }).then((resp) => {
-        expect(resp.status).to.eq(200);
-        // set cookies/localStorage here if your app needs them
-    });
-});
