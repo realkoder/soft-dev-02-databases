@@ -70,7 +70,7 @@ jobs:
       # Wait for servers to boot
       # ---------------------
       - name: Wait for servers
-        run: sleep 10
+        run: sleep 30
 
       # ---------------------
       # Run Cypress

@@ -83,7 +83,7 @@ Cypress.Commands.add('signUp', (firstName: string, lastName: string, email: stri
 
   cy.contains('Create account').click();
 
-  cy.wait(100); // If now waiting input it disabled
+  cy.wait(250); // If now waiting input it disabled
   cy.get('input[name="first_name"]').type(firstName);
   cy.get('input[name="last_name"]').type(lastName);
   cy.get('input[name="email"]').type(email);
@@ -109,7 +109,7 @@ Cypress.Commands.add('login', () => {
 
       cy.intercept('POST', '/api/v1/auth/login').as('loginRequest');
 
-      cy.wait(100); // If now waiting input it disabled
+      cy.wait(250); // If now waiting input it disabled
       cy.get('input[name="email"]').type(email);
       cy.get('input[name="password"]').type(password);
       cy.get('button[name="signinbtn"]').click();
@@ -121,7 +121,7 @@ Cypress.Commands.add('login', () => {
           console.log('Login denied - will sign-up');
           cy.signUp(firstName, lastName, email, password);
         } else {
-          // cy.getCookie('jwt_auth').should('exist');
+          cy.getCookie('jwt_auth').should('exist');
           cy.checkPageLoadedCorrectly('indexAuth');
         }
       });
