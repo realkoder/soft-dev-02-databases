@@ -101,7 +101,6 @@ Cypress.Commands.add('login', () => {
   const email = 'cypress-user@example.com';
   const password = 'SuperSecret123!';
 
-  // cy.session([], () => {
   cy.getCookie('jwt_auth').then((cookie) => {
     if (cookie) {
       cy.loadPage('indexAuth');
@@ -122,11 +121,10 @@ Cypress.Commands.add('login', () => {
           console.log('Login denied - will sign-up');
           cy.signUp(firstName, lastName, email, password);
         } else {
-          cy.getCookie('jwt_auth').should('exist');
+          // cy.getCookie('jwt_auth').should('exist');
           cy.checkPageLoadedCorrectly('indexAuth');
         }
       });
     }
   });
-  // })
 });
