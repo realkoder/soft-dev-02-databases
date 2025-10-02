@@ -1,11 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
-import type { Route } from './+types/index';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
-import { Camera, Mail, Save, Shield, Trash2, User } from 'lucide-react';
-import { Badge } from '~/components/ui/badge';
-import { Label } from '~/components/ui/label';
-import { Input } from '~/components/ui/input';
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '~/components/ui/card';
+import type {Route} from './+types/index';
+import {Avatar, AvatarFallback, AvatarImage} from '~/components/ui/avatar';
+import {Button} from '~/components/ui/button';
+import {Camera, Mail, Save, Shield, Trash2, User} from 'lucide-react';
+import {Badge} from '~/components/ui/badge';
+import {Label} from '~/components/ui/label';
+import {Input} from '~/components/ui/input';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,33 +17,35 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '~/components/ui/alert-dialog';
-import { useAtom } from 'jotai';
-import { curUserAtom } from '~/atoms/curUserAtom';
-import { useEffect, useRef, useState } from 'react';
-import { Textarea } from '~/components/ui/textarea';
+import {useAtom} from 'jotai';
+import {curUserAtom} from '~/atoms/curUserAtom';
+import {useEffect, useRef, useState} from 'react';
+import {Textarea} from '~/components/ui/textarea';
 import useAuth from '~/hooks/useAuth';
-import { useFetch } from '~/lib/api-client';
-import { toast } from 'sonner';
-import { processImageUpload } from '~/utils/imageUpload';
+import {useFetch} from '~/lib/api-client';
+import {toast} from 'sonner';
+import {processImageUpload} from '~/utils/imageUpload';
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: 'Profile' }, { name: 'Profile', content: 'Welcome to Munchora!' }];
+  return [{title: 'Profile'}, {name: 'Profile', content: 'Welcome to Munchora!'}];
 }
 
 export default function Profile() {
   const [curUser, setCurUser] = useAtom(curUserAtom);
-  const { deleteUserNoReturn, updateUser } = useAuth();
-  const [updatedFullname, setUpdatedFullname] = useState('');
+  const {deleteUserNoReturn, updateUser} = useAuth();
+  const [updatedFirstName, setUpdatedFirstName] = useState('');
+  const [updatedLastName, setUpdatedLastName] = useState('');
   const [updatedBio, setUpdatedBio] = useState('');
-  const { fetchData } = useFetch<{ image_url: string }>();
-  const { fetchData: fetchDelImage } = useFetch<{ message: string }>();
+  const {fetchData} = useFetch<{ image_url: string }>();
+  const {fetchData: fetchDelImage} = useFetch<{ message: string }>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   useEffect(() => {
-    if (curUser?.user?.fullname && updatedFullname?.length === 0 && updatedBio?.length === 0) {
-      setUpdatedFullname(curUser.user.fullname);
+    if (curUser?.user?.fullname && updatedFirstName?.length === 0 && updatedLastName?.length === 0 && updatedBio?.length === 0) {
+      setUpdatedFirstName(curUser.user.first_name);
+      setUpdatedLastName(curUser.user.last_name);
       setUpdatedBio(curUser?.user?.bio || '');
     }
   }, [curUser?.user]);
@@ -59,7 +61,7 @@ export default function Profile() {
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    updateUser(updatedFullname, updatedBio);
+    updateUser(updatedFirstName, updatedLastName, updatedBio);
     setIsLoading(false);
   };
 
@@ -86,7 +88,7 @@ export default function Profile() {
       if (response.image_url) {
         setCurUser((cur) => {
           if (!cur?.user?.id) return cur;
-          return { ...cur, user: { ...cur.user, image_src: response.image_url } };
+          return {...cur, user: {...cur.user, image_src: response.image_url}};
         });
         toast.success('Image uploaded successfully!');
       }
@@ -102,11 +104,11 @@ export default function Profile() {
 
   const handleDeleteProfileImg = async () => {
     try {
-      const res = await fetchDelImage('/users/delete-image', { method: 'DELETE' });
+      const res = await fetchDelImage('/users/delete-image', {method: 'DELETE'});
       if (res.message === 'OK') {
         setCurUser((cur) => {
           if (!cur?.user?.id) return cur;
-          return { ...cur, user: { ...cur.user, image_src: undefined } };
+          return {...cur, user: {...cur.user, image_src: undefined}};
         });
       }
     } catch (e) {
@@ -129,7 +131,7 @@ export default function Profile() {
             <CardContent className="p-6 text-center">
               <div className="relative inline-block mb-4">
                 <Avatar className="w-24 h-24">
-                  <AvatarImage src={curUser?.user?.image_src || '/placeholder.png?height=96&width=96'} alt="Profile" />
+                  <AvatarImage src={curUser?.user?.image_src || '/placeholder.png?height=96&width=96'} alt="Profile"/>
                   <AvatarFallback className="bg-secondary/50 text-fourth text-xl">AJ</AvatarFallback>
                 </Avatar>
                 <input
@@ -144,11 +146,12 @@ export default function Profile() {
                   className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full p-0"
                   onClick={handleCameraClick} // Trigger the file input on click
                 >
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-4 w-4"/>
                 </Button>
                 {curUser?.user?.image_src && (
-                  <Button size="sm" variant="destructive" onClick={handleDeleteProfileImg} className="absolute -bottom-2 -left-2 w-8 h-8 rounded-full p-0">
-                    <Trash2 className="h-4 w-4" />
+                  <Button size="sm" variant="destructive" onClick={handleDeleteProfileImg}
+                          className="absolute -bottom-2 -left-2 w-8 h-8 rounded-full p-0">
+                    <Trash2 className="h-4 w-4"/>
                   </Button>
                 )}
               </div>
@@ -173,7 +176,7 @@ export default function Profile() {
           <Card className="border backdrop-blur-sm shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <User className="h-5 w-5 text-slate-600" />
+                <User className="h-5 w-5 text-slate-600"/>
                 <span>Personal Information</span>
               </CardTitle>
               <CardDescription>Update your personal details and bio</CardDescription>
@@ -182,8 +185,14 @@ export default function Profile() {
               <form onSubmit={handleProfileUpdate} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" type="text" value={updatedFullname || ''} onChange={(e) => setUpdatedFullname(e.target.value)} />
+                    <Label htmlFor="first_name">First Name</Label>
+                    <Input id="first_name" type="text" value={updatedFirstName || ''}
+                           onChange={(e) => setUpdatedFirstName(e.target.value)}/>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="last_name">Last Name</Label>
+                    <Input id="last_name" type="text" value={updatedLastName || ''}
+                           onChange={(e) => setUpdatedLastName(e.target.value)}/>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -196,8 +205,9 @@ export default function Profile() {
                     placeholder="Tell us about yourself and your cooking interests..."
                   />
                 </div>
-                <Button type="submit" disabled={isLoading || (updatedFullname === curUser?.user?.fullname && updatedBio === (curUser.user?.bio || ''))}>
-                  <Save className="h-4 w-4 mr-2" />
+                <Button type="submit"
+                        disabled={isLoading || (updatedFirstName === curUser?.user?.first_name && updatedLastName === curUser.user.last_name && updatedBio === (curUser.user?.bio || ''))}>
+                  <Save className="h-4 w-4 mr-2"/>
                   {isLoading ? 'Saving...' : 'Save Changes'}
                 </Button>
               </form>
@@ -208,7 +218,7 @@ export default function Profile() {
           <Card className="border backdrop-blur-sm shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <Mail className="h-5 w-5 text-slate-600" />
+                <Mail className="h-5 w-5 text-slate-600"/>
                 <span>Email Settings</span>
               </CardTitle>
               <CardDescription>Manage your email address and communication preferences</CardDescription>
@@ -216,7 +226,7 @@ export default function Profile() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" value={curUser?.user?.email || ''} disabled className="bg-slate-50" />
+                <Input id="email" value={curUser?.user?.email || ''} disabled className="bg-slate-50"/>
                 <p className="text-xs text-slate-500">Contact support to change your email address</p>
               </div>
             </CardContent>
@@ -232,7 +242,7 @@ export default function Profile() {
           <Card className="border backdrop-blur-sm shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-lg">
-                <Shield className="h-5 w-5 text-slate-600" />
+                <Shield className="h-5 w-5 text-slate-600"/>
                 <span>Data & Privacy</span>
               </CardTitle>
               <CardDescription>Manage your data and account settings</CardDescription>
@@ -257,7 +267,7 @@ export default function Profile() {
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" className="border-red-200 text-red-600 hover:bg-red-50">
-                      <Trash2 className="h-4 w-4 mr-2" />
+                      <Trash2 className="h-4 w-4 mr-2"/>
                       Delete
                     </Button>
                   </AlertDialogTrigger>
@@ -265,7 +275,8 @@ export default function Profile() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your account and remove all your data from our servers, including recipes,
+                        This action cannot be undone. This will permanently delete your account and remove all your data
+                        from our servers, including recipes,
                         grocery lists, and account information.
                       </AlertDialogDescription>
                     </AlertDialogHeader>

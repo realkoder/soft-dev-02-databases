@@ -1,8 +1,10 @@
-declare type PageName = "index" | "recipe" | "recipes" | "groceryLists" | "profile" | "signIn";
+declare type PageName = "indexNoAuth" | "indexAuth" | "recipe" | "recipes" | "groceryLists" | "profile" | "signIn";
 
 declare namespace Cypress {
   interface Chainable {
-    login(email: string, password: string): Chainable<void>;
+    signUp(first_name: string, last_name: string, email: string, password: string): Chainable<void>;
+
+    login(): Chainable<void>;
 
     loadPage(pageName: PageName): Chainable<void>;
 

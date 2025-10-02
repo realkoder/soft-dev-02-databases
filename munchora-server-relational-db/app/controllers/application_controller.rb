@@ -4,31 +4,33 @@ class ApplicationController < ActionController::API
 
   attr_reader :current_user
 
-  # strict 3 requests per minute for sensitive API endpoints
-  rate_limit to: 3,
-             within: 1.minute,
-             by: -> { request.domain },
-             with: -> { redirect_to disney_url, alert: "Too many requests. Please try again later.", allow_other_host: true },
-             if: -> do
-               (request.post? || request.put?) &&
-                 [
-                   "/api/v1/users",
-                   "/api/v1/auth/login",
-                   "/api/v1/llm/generate-recipe",
-                   %r{^/api/v1/llm/generate-recipe-image/\d+},
-                   %r{^/api/v1/llm/update-recipe/\d+},
-                   "/api/v1/users/upload-image",
-                   "/api/v1/recipes/upload-image"
-                 ].any? do |path|
-                   path.is_a?(Regexp) ? request.path.match?(path) : request.path == path
-                 end
-             end
+  if Rails.env.production?
+    # strict 3 requests per minute for sensitive API endpoints
+    rate_limit to: 3,
+               within: 1.minute,
+               by: -> { request.domain },
+               with: -> { redirect_to disney_url, alert: "Too many requests. Please try again later.", allow_other_host: true },
+               if: -> do
+                 (request.post? || request.put?) &&
+                   [
+                     "/api/v1/users",
+                     "/api/v1/auth/login",
+                     "/api/v1/llm/generate-recipe",
+                     %r{^/api/v1/llm/generate-recipe-image/\d+},
+                     %r{^/api/v1/llm/update-recipe/\d+},
+                     "/api/v1/users/upload-image",
+                     "/api/v1/recipes/upload-image"
+                   ].any? do |path|
+                     path.is_a?(Regexp) ? request.path.match?(path) : request.path == path
+                   end
+               end
 
-  # === More lenient 100 requests per minute for all other requests ===
-  rate_limit to: 20,
-             within: 1.minute,
-             by: -> { request.domain },
-             with: -> { redirect_to disney_url, alert: "Too many requests. Please try again later.", allow_other_host: true }
+    # More lenient 100 requests per minute for all other requests ===
+    rate_limit to: 20,
+               within: 1.minute,
+               by: -> { request.domain },
+               with: -> { redirect_to disney_url, alert: "Too many requests. Please try again later.", allow_other_host: true }
+  end
 
   # To be used as a fallback for unknown routes - directed from config/routes.rb
   def route_not_found

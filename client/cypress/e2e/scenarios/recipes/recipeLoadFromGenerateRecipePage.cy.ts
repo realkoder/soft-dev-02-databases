@@ -7,12 +7,14 @@
 
 describe("Load recipe from recipes", () => {
   before(() => {
-    cy.login("cypress-user@example.com", "SuperSecret123!");
+    cy.login();
   })
 
   it("should display recipe when first recipeCard is clicked", () => {
     cy.loadPage("recipes");
+
     cy.get('[data-cy="recipe-card-link"]').first().click();
+
     cy.checkPageLoadedCorrectly("recipe");
   });
 });

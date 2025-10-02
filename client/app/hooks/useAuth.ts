@@ -70,9 +70,9 @@ const useAuth = () => {
     }
   };
 
-  const updateUser = async (fullname: string, bio: string) => {
+  const updateUser = async (first_name: string, last_name: string, bio: string) => {
     try {
-      const res = await putUser(`/users/${curUser?.user?.id}`, { method: 'PUT', data: { fullname, bio } });
+      const res = await putUser(`/users/${curUser?.user?.id}`, { method: 'PUT', data: { first_name, last_name, bio } });
       setCurUser((cur) => {
         if (!cur || !cur.user) return undefined;
         return { ...cur, user: { ...cur.user, fullname: res.fullname, bio: res.bio } };
