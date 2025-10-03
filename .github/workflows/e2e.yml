@@ -1,9 +1,20 @@
 name: E2E Tests
 
 on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "munchora-server-relational-db/app/**"
+      - "munchora-server-relational-db/config/**"
+      - "munchora-server-relational-db/lib/**"
+      - "client/**"
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+    paths:
+      - "munchora-server-relational-db/app/**"
+      - "munchora-server-relational-db/config/**"
+      - "munchora-server-relational-db/lib/**"
+      - "client/**"
 
 jobs:
   e2e:
