@@ -6,7 +6,7 @@
 // Then the recipe page should display
 
 describe('Load recipe from recipes', () => {
-  before(() => {
+  beforeEach(() => {
     cy.loginOrSignUpByApi();
   });
 

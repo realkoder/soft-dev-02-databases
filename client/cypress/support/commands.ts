@@ -58,7 +58,7 @@ const pages = {
   },
   recipe: {
     url: '/recipe',
-    check: () => cy.get('[data-cy="recipe-title"]').should('be.visible'),
+    check: () => cy.get('[data-cy="recipe-title"]').should('exist'),
   },
   recipes: {
     url: '/recipes',

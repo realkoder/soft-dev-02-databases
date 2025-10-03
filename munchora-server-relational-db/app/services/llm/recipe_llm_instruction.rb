@@ -25,7 +25,7 @@ class Llm::RecipeLlmInstruction
           "string"
         ],
         "ingredients": [
-          { "name": "string", "amount": "integer", "category": "bakery 🥖" | "beverages 🧋" | "breakfast 🥣" | "canned goods 🥫" | "cleaning 🧼" | "condiments 🧂" | "dairy 🥚" | "fish 🐟" | "frozen foods ❄️" | "fruits 🍎" | "grains 🌾" | "meat 🍗" | "no category 📦" | "pasta & rice 🍝" | "personal care 🧴" | "snacks 🍫" | "spices & herbs 🌶️" | "vegetables 🥦" | "sauces & oils 🫙" }
+          { "name": "string", "amount": "integer > 0", "category": "bakery 🥖" | "beverages 🧋" | "breakfast 🥣" | "canned goods 🥫" | "cleaning 🧼" | "condiments 🧂" | "dairy 🥚" | "fish 🐟" | "frozen foods ❄️" | "fruits 🍎" | "grains 🌾" | "meat 🍗" | "no category 📦" | "pasta & rice 🍝" | "personal care 🧴" | "snacks 🍫" | "spices & herbs 🌶️" | "vegetables 🥦" | "sauces & oils 🫙" }
         ],
         "cuisine": "string",
         "difficulty": "easy|medium|hard",
