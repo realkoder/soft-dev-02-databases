@@ -21,8 +21,8 @@ class User < ApplicationRecord
   validates :bio, presence: false, length: { maximum: 2000 }
 
   # If provider is present, uid must be present (for OAuth)
-  validates :uid, presence: true, if: -> { provider.present? }
-  validates :provider, presence: true, if: -> { uid.present? }
+  validates :uid, presence: true, if: -> { provider.present? }, length: { maximum: 100 }
+  validates :provider, presence: true, if: -> { uid.present? }, length: { maximum: 100 }
 
   # For manual signup (no provider), password must be present on create
   has_secure_password validations: false
