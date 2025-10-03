@@ -32,7 +32,7 @@ const UserMenu = () => {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className='bg-background'>
+      <DropdownMenuContent align="end" className="bg-background">
         <DropdownMenuLabel>{(curUser?.user && curUser?.user.fullname) ?? 'Account'}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/profile')}>

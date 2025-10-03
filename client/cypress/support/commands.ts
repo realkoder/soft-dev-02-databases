@@ -64,6 +64,13 @@ const pages = {
     url: '/recipes',
     check: () => cy.get('h1').contains('Recipe Studio').should('be.visible'),
   },
+  recipeUpdate: {
+    url: '/recipes',
+    check: () => {
+      cy.get('h2').contains('Your AI Recipe').should('be.visible');
+      cy.get('h3').contains('Refine with AI').scrollIntoView().should('be.visible');
+    },
+  },
   signIn: {
     url: '/sign-in',
     check: () => cy.get('h1').contains('Profile Settings').should('be.visible'),
@@ -71,43 +78,47 @@ const pages = {
 };
 
 Cypress.Commands.add('loadPage', (pageName: PageName) => {
+  cy.intercept('GET', '/api/v1/auth/me').as('getUser');
   cy.visit(pages[pageName].url);
+  cy.wait('@getUser'); // This triggers a lot of state changes which is why we want to wait for this request to have finished
 });
 
 Cypress.Commands.add('checkPageLoadedCorrectly', (pageName: PageName) => {
   pages[pageName].check();
 });
 
-Cypress.Commands.add("loginOrSignUpByApi", () => {
-  const email = "cypress-user@example.com";
-  const password = "SuperSecret123!";
+Cypress.Commands.add('loginOrSignUpByApi', () => {
+  const email = 'cypress-user@example.com';
+  const password = 'SuperSecret123!';
 
   cy.request({
-    method: "POST",
-    url: "http://localhost:3000/api/v1/auth/login",
+    method: 'POST',
+    url: 'http://localhost:3000/api/v1/auth/login',
     body: { email, password },
     failOnStatusCode: false,
   }).then((resp) => {
     if (resp.status === 200 && resp.body.token) {
       setAuthFromResponse(resp);
     } else if (resp.status === 401) {
-      cy.request("POST", "http://localhost:3000/api/v1/users", {
+      cy.request('POST', 'http://localhost:3000/api/v1/users', {
         user: {
-          first_name: "Test",
-          last_name: "User",
+          first_name: 'Test',
+          last_name: 'User',
           email,
           password,
           password_confirmation: password,
         },
-      }).then(() => {
-        return cy.request("POST", "http://localhost:3000/api/v1/auth/login", {
-          email,
-          password,
+      })
+        .then(() => {
+          return cy.request('POST', 'http://localhost:3000/api/v1/auth/login', {
+            email,
+            password,
+          });
+        })
+        .then((loginResp) => {
+          expect(loginResp.status).to.eq(200);
+          setAuthFromResponse(loginResp);
         });
-      }).then((loginResp) => {
-        expect(loginResp.status).to.eq(200);
-        setAuthFromResponse(loginResp);
-      });
     } else {
       throw new Error(`Unexpected login status: ${resp.status}`);
     }
@@ -116,10 +127,10 @@ Cypress.Commands.add("loginOrSignUpByApi", () => {
 
 const setAuthFromResponse = (resp: any) => {
   const token = resp.body.token;
-  if (!token) throw new Error("No token returned from Rails login");
+  if (!token) throw new Error('No token returned from Rails login');
 
-  cy.setCookie("jwt_auth", token, {
-    domain: "localhost",
+  cy.setCookie('jwt_auth', token, {
+    domain: 'localhost',
     httpOnly: false,
     secure: false,
   });

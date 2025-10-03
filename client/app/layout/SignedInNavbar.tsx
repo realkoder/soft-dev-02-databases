@@ -77,7 +77,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop user menu */}
-          <div className="hidden md:block">
+          <div data-cy="user-menu" className="hidden md:block">
             <UserMenu />
           </div>
 

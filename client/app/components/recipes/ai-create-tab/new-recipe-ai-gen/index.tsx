@@ -79,6 +79,7 @@ export const NewRecipeAIGen = ({ aiPrompt, setAiPrompt, isGenerating, setIsGener
             onClick={handleAIGenerate}
             disabled={!aiPrompt.trim() || isGenerating}
             className="w-full py-6 text-lg"
+            cy-data="generate-recipe"
           >
             {isGenerating ? (
               <>
