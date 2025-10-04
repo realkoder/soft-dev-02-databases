@@ -42,6 +42,10 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Enabling action cable
+  config.action_cable.url = "wss://localhost:3000/cable/notify"
+  config.action_cable.allowed_request_origins = ["http://localhost:3000", "http://localhost:5173", nil]
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

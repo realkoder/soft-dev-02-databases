@@ -91,5 +91,5 @@ function addItem(name: string, category: string) {
 
   cy.get('button[cy-data="add-item"]').click();
 
-  // cy.get('div[cy-data="list-item"]').should('exist');
+  cy.get('div[cy-data="list-item"]').should('exist');
 }
