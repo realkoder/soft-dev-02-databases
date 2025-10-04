@@ -5,6 +5,8 @@
 # docker-compose logs:  docker-compose -f docker-compose.dev.yml logs -f
 # docker-compose down:  docker-compose -f docker-compose.dev.yml down --rmi all --remove-orphans
 #                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
+#
+# Generate a mysql dump file: docker exec -i mysqldb mysqldump -u root -padmin munchora > ./munchora_dump.sql
 
 services:
   mysqldb:

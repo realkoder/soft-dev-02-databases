@@ -14,7 +14,7 @@ class User < ApplicationRecord
   has_many :recipe_likes, dependent: :destroy
   has_many :recipe_suggestions, dependent: :destroy
 
-  validates :email, presence: true, length: { minimum: 4, maximum: 100 }, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { provider.blank? }
+  validates :email, presence: true, length: { minimum: 6, maximum: 100 }, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { provider.blank? }
 
   validates :first_name, presence: true, length: { minimum: 2, maximum: 40 }
   validates :last_name, presence: true, length: { minimum: 2, maximum: 40 }
