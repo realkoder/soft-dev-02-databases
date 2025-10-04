@@ -16,7 +16,7 @@ export const DeleteGroceryListDialog = ({ isOwner, groceryListId }: DeleteRecipe
 
   return (
     <>
-      <Button variant="destructive" onClick={() => setShowDeleteModal(true)}>
+      <Button cy-data="delete-list-btn" variant="destructive" onClick={() => setShowDeleteModal(true)}>
         {isOwner ? <Trash2 className="h-4 w-4" /> : <DoorOpen className="h-4 w-4" />}
       </Button>
 

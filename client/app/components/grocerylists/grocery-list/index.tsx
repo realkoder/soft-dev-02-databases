@@ -131,6 +131,7 @@ export const GroceryList = ({ list, setListToShare, setShowShareModal }: Grocery
             <LoaderSpinner />
           ) : (
             <Button
+              cy-data="add-item"
               size="sm"
               disabled={isAddingItem}
               onClick={() => {
@@ -154,7 +155,7 @@ export const GroceryList = ({ list, setListToShare, setShowShareModal }: Grocery
               return (a?.category || 'no category 📦').localeCompare(b.category || 'no category 📦');
             })
             .map((item) => (
-              <div key={item.id} className="flex items-center p-2 border-b border-secondary">
+              <div key={item.id} cy-data="list-item" className="flex items-center p-2 border-b border-secondary">
                 <Checkbox checked={item.is_completed} onCheckedChange={() => toggleItemCompleted(list.id, item.id, item.is_completed)} />
                 <span
                   className={`flex-1 text-left break-all mx-2 ${item.is_completed ? 'line-through text-gray-500' : 'text-gray-900'}`}

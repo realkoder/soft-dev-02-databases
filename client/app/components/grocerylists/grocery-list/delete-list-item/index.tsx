@@ -34,6 +34,7 @@ export const DeleteListItem: React.FC<DeleteListItemProps> = ({ item, handleDele
 
   return confirmingId === item.id ? (
     <Button
+      cy-data="confirm-delete-item-btn"
       variant={'ghost'}
       size={'sm'}
       onClick={() => handleConfirmDelete(item.id)}
@@ -43,6 +44,7 @@ export const DeleteListItem: React.FC<DeleteListItemProps> = ({ item, handleDele
     </Button>
   ) : (
     <Button
+      cy-data="delete-item-btn"
       variant={'ghost'}
       size={'sm'}
       onClick={() => handlePressTrash(item.id)}
