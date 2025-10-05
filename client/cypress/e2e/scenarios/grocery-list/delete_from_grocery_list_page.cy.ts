@@ -1,13 +1,14 @@
+import { deleteListIfExist } from '../../../support/test_utils.cy';
+
 describe('Grocery List - Delete', () => {
   beforeEach(() => {
     cy.loginOrSignUpByApi();
     cy.loadPage('groceryLists');
-    cy.contains('button', 'Create Your First List').click(); // Ensure a list exists
+    cy.contains('button', 'Create Your First List').click();
   });
 
   it('deletes grocery list successfully', () => {
-    cy.get('button[cy-data="delete-list-btn"]').click({ force: true });
-    cy.contains('button', 'Delete').click();
+    deleteListIfExist();
     cy.contains('h3', 'No grocery lists yet').should('be.visible');
   });
 });

@@ -1,4 +1,4 @@
-export function deleteAllListsIfExist() {
+export function deleteListIfExist() {
   cy.get('body').then(($body) => {
     const deleteBtn = $body.find('button[cy-data="delete-list-btn"]');
     if (deleteBtn.length) {

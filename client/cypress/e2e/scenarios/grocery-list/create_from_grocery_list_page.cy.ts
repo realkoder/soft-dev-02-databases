@@ -1,4 +1,4 @@
-import { deleteAllListsIfExist } from '../../../support/test_utils.cy';
+import { deleteListIfExist } from '../../../support/test_utils.cy';
 
 describe('Grocery List - Create', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('Grocery List - Create', () => {
   });
 
   afterEach(() => {
-    deleteAllListsIfExist();
+    deleteListIfExist();
   });
 
   it('shows no lists on first load', () => {

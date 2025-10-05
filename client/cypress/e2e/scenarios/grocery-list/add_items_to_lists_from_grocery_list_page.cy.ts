@@ -1,4 +1,4 @@
-import { deleteAllListsIfExist } from '../../../support/test_utils.cy';
+import { deleteListIfExist } from '../../../support/test_utils.cy';
 
 describe('Grocery List - Add Items', () => {
   beforeEach(() => {
@@ -8,7 +8,7 @@ describe('Grocery List - Add Items', () => {
   });
 
   afterEach(() => {
-    deleteAllListsIfExist();
+    deleteListIfExist();
   });
 
   it('adds and deletes a single item', () => {
