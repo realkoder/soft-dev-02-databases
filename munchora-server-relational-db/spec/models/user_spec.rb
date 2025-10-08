@@ -65,7 +65,6 @@ RSpec.describe User, type: :model do
           user = User.new(valid_attributes.merge(email: email))
           example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
         end
-
       end
     end
 
@@ -267,7 +266,6 @@ RSpec.describe User, type: :model do
           user = User.new(valid_attributes.merge(password: password))
           example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
         end
-
       end
     end
 
@@ -275,6 +273,41 @@ RSpec.describe User, type: :model do
     # IMAGE_SRC_VALIDATIONS
     # ==========================
     context 'image_src', :image_src_context do
+      [
+        # Invalid image_src partition 0 - 14: lower boundary
+        { image_src: '', is_valid: true }, # valid since nil is acceptable for image_src
+        { image_src: 'h', is_valid: false }, # +1 char
+        { image_src: 'http://s.d', is_valid: false }, # equivalence partition
+        { image_src: 'http://img.dk', is_valid: false }, # -1 char from valid lower boundary
+
+        # Valid image_src partition 14-400
+        { image_src: 'http://img.dk/', is_valid: true }, # valid lower
+        { image_src: 'http://img.dk/1', is_valid: true }, # +1 char
+        { image_src: 'https://munchora.pro/uploads/recipes/3r93xhue938383.jpg', is_valid: true }, # equivalence partition
+        { image_src: "http://img.dk/uploads/#{'x' * 377}", is_valid: true }, # -1 char from valid upper
+        { image_src: "http://img.dk/uploads/#{'x' * 378}", is_valid: true }, # valid upper
+
+        # Invalid image_src partition > 400
+        { image_src: "http://img.dk/uploads/#{'x' * 379}", is_valid: false }, # +1 char
+        { image_src: "http://img.dk/uploads/#{'x' * 778}", is_valid: false }, # equivalence partition
+
+        # Edge cases: unexpected data type, wrong http/https URL format
+        { image_src: nil, is_valid: true },
+        { image_src: 1, is_valid: false },
+        { image_src: true, is_valid: false },
+        { image_src: 'a.com', is_valid: false },
+        { image_src: 'invalid_url', is_valid: false },
+        { image_src: 'http://a.co', is_valid: false },
+        { image_src: 'htp://site.com/uploads/x.jpg', is_valid: false },
+      ].each do |example|
+        image_src = example[:image_src]
+        size_or_datatype = image_src.is_a?(String) ? "length #{image_src.size}" : image_src.class
+
+        it "#{example[:is_valid] ? 'accepts ' : 'rejects in'}valid image_src with #{size_or_datatype}" do
+          user = User.new(valid_attributes.merge(image_src: image_src))
+          example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
+        end
+      end
     end
   end
 
