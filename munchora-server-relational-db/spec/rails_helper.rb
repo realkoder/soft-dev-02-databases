@@ -13,6 +13,18 @@ require 'rspec/rails'
 # Enabling webmock for mocking external requests such as Google & Apple SSO validations
 require 'webmock/rspec'
 
+# require 'simplecov'
+#
+# SimpleCov.start do
+#   # Track only the User model
+#   track_files "app/models/user.rb"
+#
+#   # Optionally, ignore everything else
+#   add_filter do |source_file|
+#     !source_file.filename.end_with?("app/models/user.rb")
+#   end
+# end
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end

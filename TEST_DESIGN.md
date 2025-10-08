@@ -1,10 +1,8 @@
 # Test Design for munchora-server-relational-db
 
-This document outlines the design techniques and testing process
-for the **_Munchora_** application.
+This document outlines the design techniques and testing process for the **_Munchora_** application.
 
-The core functionalities of **_Munchora_** have been prioritized
-to achieve high test coverage, which will include:
+The core functionalities of **_Munchora_** have been prioritized to achieve high test coverage, which will include:
 
 - **MODELS**
     - _GroceryList_
@@ -27,7 +25,14 @@ to achieve high test coverage, which will include:
 
 # Black Box Design Techniques
 
+Specification based.
+
 ## User model
+
+The **User model** is managed by _ActiveRecord_ (_Ruby on Rails ORM_) and it defines the core data structure,
+associations, and validations for _user accounts_, handling both _manual signup_ and _OAuth flows_ (currently only
+_Google_), enforcing field formats and lengths, managing relationships, and customizing JSON output to exclude
+sensitive data like **password_digest** and **email**.
 
 ### Equivalence Partitions
 
@@ -62,6 +67,8 @@ to achieve high test coverage, which will include:
 
 ---
 
+<br>
+
 ### 3-value Boundary Value Analyse
 
 | Field          | Boundary Condition          | Boundary Values | 3 Test Case Values (below, on, above)                                                                                                      |
@@ -95,9 +102,9 @@ to achieve high test coverage, which will include:
 |                | 14 - 400 _(string length)_  | 14              | `'http://img.dk' (13)`, `'http://img.dk/' (14)`, `'http://img.dk/1' (15)`                                                                  |
 |                | 14 - 400 _(string length)_  | 400             | `'http://img.dk/uploads/' + 'x'*377 (399)`,<br/>`'http://img.dk/uploads/' + 'x'*378 (400)`,<br/>`'http://img.dk/uploads/' + 'x'*379 (401)` |
 
-<br>
-
 ---
+
+<br>
 
 ## Edge Cases
 
@@ -115,9 +122,9 @@ values to ensure robust validation against **incorrect types**, **malformed emai
 | **password**   | `UTF-8 encoded Unicode` string | `wrong data types`                                                                           |
 | **image_src**  | `URI - :http/https`            | `a.com`, `invalid_url`, `http://a.co`, `htp://site.com/uploads/x.jpg`                        |
 
-<br>
-
 ---
+
+<br>
 
 ## Decision table
 
@@ -136,10 +143,80 @@ and _OAuth flows_, and highlights which combinations of field validity result in
 | **Actions**                     |               |               |               |               |              |              |              |              |
 | User created (valid)?           | ❌             | ❌             | ❌             | ✅             | ❌            | ❌            | ❌            | ✅            |
 
-<br>
-
 ---
 
 <br>
 
 # White Box Design Techniques
+
+Focuses on the code and the structural elements.
+
+---
+
+**Statement Coverage**: Measures whether each line of code has been executed by the test suite at least once.
+**decision coverage**: Measures whether **each decision (true/false outcome) of every conditional statement** has been
+exercised at least once.
+
+## User creation | User #initialize
+
+### Test cases 100% statement coverage
+
+```text
+#1. first_name="John", last_name="Doe", email="john@doe.com", provider=nil, uid=nil, password="secret123"
+    # TRUE path provider.blank? & TRUE :password is_a?(String)
+    
+#2. first_name="John", last_name="Doe", email="john@doe.com", provider="google", uid="abc123", password=nil
+    # TRUE branch of both provider.present? and uid.present?
+```
+
+### Test cases 100% decision coverage
+
+```text
+#1. first_name="John", last_name="Doe", email="john@doe.com", provider=nil, uid=nil, password="secret123"
+    # TRUE path for provider.blank? and TRUE for :password is_a?(String)
+
+#2. first_name="John", last_name="Doe", email="john@doe.com", provider=nil, uid=nil, password=1234
+    # FALSE branch of :pasword is_a?(String)
+
+#3. first_name="John", last_name="Doe", email="john@doe.com", provider="google", uid=nil, password=nil
+    # FALSE branch of uid.present? when provider.present?
+
+#3. first_name="John", last_name="Doe", email="john@doe.com", provider="google", uid="abc123", password=nil
+    # TRUE branch of both provider.present? and uid.present?
+```
+
+---
+
+<br>
+
+# MISC
+
+Simplecov for test coverage analyze
+
+Defined in `./munchora-server-relational-db/spec/rails_helper.rb`
+
+```ruby
+require 'simplecov'
+
+SimpleCov.start do
+  # Track only the User model
+  track_files "app/models/user.rb"
+
+  # Optionally, ignore everything else
+  add_filter do |source_file|
+    !source_file.filename.end_with?("app/models/user.rb")
+  end
+end
+```
+
+Just run specs `bundle exec rspec` and simplecov will also do its job - then check the coverage report after running,
+_SimpleCov_ generates an HTML report in `./munchora-server-relational-db/coverage/index.html` showing line-by-line
+coverage and totals.
+
+---
+
+<br>
+
+# Static Testing
+
+Rubocop, SonarQube
