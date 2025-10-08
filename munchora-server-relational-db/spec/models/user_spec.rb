@@ -59,7 +59,7 @@ RSpec.describe User, type: :model do
 
           # Invalid email partition 6-100: upper boundary
           { email: "#{'a' * 89}@example.com" }, # +1 char
-          { email: "#{'a' * 200}@example.com" }, # middle boundary
+          { email: "#{'a' * 200}@example.com" } # middle boundary
         ].each do |example|
           it "rejects invalid email with length #{example[:email].size}" do
             user = User.new(valid_attributes.merge(email: example[:email]))
@@ -90,7 +90,22 @@ RSpec.describe User, type: :model do
       end
 
       context "invalid cases" do
+        [
+          # Invalid email partition 0 - 6: lower boundary
+          { email: '' },
+          { email: 't' }, # +1 char
+          { email: 't.d' }, # middle value
+          { email: "u@t.d" }, # -1 char from valid lower boundary
 
+          # Invalid email partition 6-100: upper boundary
+          { email: "#{'a' * 89}@example.com" }, # +1 char
+          { email: "#{'a' * 200}@example.com" } # middle boundary
+        ].each do |example|
+          it "rejects invalid email with length #{example[:email].size}" do
+            user = User.new(valid_attributes.merge(email: example[:email]))
+            expect(user).to_not be_valid
+          end
+        end
       end
     end
 
