@@ -31,6 +31,9 @@ The core functionalities of **_Munchora_** have been prioritized to achieve high
     - [User creation / User initialize](#user-creation--user-initialize)
         - [Test cases 100% statement coverage](#test-cases-100-statement-coverage)
         - [Test cases 100% decision coverage](#test-cases-100-decision-coverage)
+- [Integration tests](#Integration-tests)
+- [System tests / End-to-end tests](#System-tests--End-to-end-tests)
+- [Acceptance tests](#Acceptance-tests)
 - [CI pipeline](#ci-pipeline)
     - [Rubocop](#rubocop)
     - [SonarQube](#sonarqube)
@@ -201,6 +204,36 @@ exercised at least once.
 #3. first_name="John", last_name="Doe", email="john@doe.com", provider="google", uid="abc123", password=nil
     # TRUE branch of both provider.present? and uid.present?
 ```
+
+---
+
+<br>
+
+# Integration tests
+
+london vs detroit approach
+
+DB - sqlite3 - both london and detorit not hardly mocked not hardly integrated
+
+Third part OAtuh Google and OpenAI
+
+---
+
+<br>
+
+# System tests / End-to-end tests
+
+Cypress
+
+---
+
+<br>
+
+# Acceptance tests
+
+Real users...
+
+Test templates
 
 ---
 
