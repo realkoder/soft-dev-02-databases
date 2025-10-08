@@ -16,8 +16,8 @@ class User < ApplicationRecord
 
   validates :email, presence: true, length: { minimum: 6, maximum: 100 }, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { provider.blank? }
 
-  validates :first_name, presence: true, length: { minimum: 2, maximum: 40 }
-  validates :last_name, presence: true, length: { minimum: 2, maximum: 40 }
+  validates :first_name, presence: true, length: { minimum: 2, maximum: 60 }
+  validates :last_name, presence: true, length: { minimum: 2, maximum: 60 }
   validates :bio, presence: false, length: { maximum: 2000 }
 
   # If provider is present, uid must be present (for OAuth)
@@ -28,7 +28,7 @@ class User < ApplicationRecord
   has_secure_password validations: false
   validates :password, presence: true, length: { minimum: 6, maximum: 50 }, if: -> { provider.blank? }, on: :create
 
-  validates :image_src, length: { minimum: 6, maximum: 400 }, format: URI.regexp(%w[http https]), allow_blank: true
+  validates :image_src, length: { minimum: 14, maximum: 400 }, format: URI.regexp(%w[http https]), allow_blank: true
 
   # Dont want to return password_digest
   def as_json(options = {})
