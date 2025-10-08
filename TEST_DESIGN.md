@@ -21,6 +21,23 @@ The core functionalities of **_Munchora_** have been prioritized to achieve high
 
 ---
 
+## Table of Contents
+
+- [Black Box Design Techniques](#black-box-design-techniques)
+    - [User model](#user-model)
+        - [Equivalence Partitions](#equivalence-partitions)
+        - [3-value Boundary Value Analyse](#3-value-boundary-value-analyse)
+- [White Box Design Techniques](#white-box-design-techniques)
+    - [User creation / User initialize](#user-creation--user-initialize)
+        - [Test cases 100% statement coverage](#test-cases-100-statement-coverage)
+        - [Test cases 100% decision coverage](#test-cases-100-decision-coverage)
+- [CI pipeline](#ci-pipeline)
+    - [Rubocop](#rubocop)
+    - [SonarQube](#sonarqube)
+- [MISC](#misc)
+
+---
+
 <br>
 
 # Black Box Design Techniques
@@ -106,7 +123,7 @@ sensitive data like **password_digest** and **email**.
 
 <br>
 
-## Edge Cases
+### Edge Cases
 
 This outlines the field-level test cases for the **User model**, specifying expected formats and example invalid
 values to ensure robust validation against **incorrect types**, **malformed emails**, and **invalid URLs**.
@@ -126,7 +143,7 @@ values to ensure robust validation against **incorrect types**, **malformed emai
 
 <br>
 
-## Decision table
+### Decision table
 
 This table summarizes the key conditions and expected outcomes for **user creation**, covering both _manual signup_
 and _OAuth flows_, and highlights which combinations of field validity result in a successful account creation.
@@ -189,6 +206,50 @@ exercised at least once.
 
 <br>
 
+# CI pipeline
+
+4 different flows defined
+
+1. **E2E Tests**
+    - **_cypress_**: end-to-end tests with cypress
+2. **Lint**
+    - **_rubocop_**: ensuring linting
+3. **Security Checks**
+    - **_brakeman_**: check for known vulnerabilities based on Gemfile
+4. Tests
+    - rspec: running all specs
+
+### Brakeman
+
+Brakeman action caught a
+vulnerability [CVE-2025-61594 - URI Credential Leakage Bypass over CVE-2025-27221](https://github.com/realkoder/soft-dev-02-databases/actions/runs/18355733587/job/52287122522)
+
+---
+
+<br>
+
+# Static Testing
+
+## Rubocop
+
+Linting and style enforcement. Rules are defined in `./munchora-server-relational-db/.rubocop.yml`.
+
+```
+# analyze project
+bundle exec rubocop
+
+# Run analyzer and make rubocop automatically fix linting issues
+bundle exec rubocop -a
+```
+
+---
+
+## SonarQube
+
+---
+
+<br>
+
 # MISC
 
 Simplecov for test coverage analyze
@@ -212,11 +273,3 @@ end
 Just run specs `bundle exec rspec` and simplecov will also do its job - then check the coverage report after running,
 _SimpleCov_ generates an HTML report in `./munchora-server-relational-db/coverage/index.html` showing line-by-line
 coverage and totals.
-
----
-
-<br>
-
-# Static Testing
-
-Rubocop, SonarQube

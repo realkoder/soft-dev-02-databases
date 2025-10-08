@@ -298,7 +298,7 @@ RSpec.describe User, type: :model do
         { image_src: 'a.com', is_valid: false },
         { image_src: 'invalid_url', is_valid: false },
         { image_src: 'http://a.co', is_valid: false },
-        { image_src: 'htp://site.com/uploads/x.jpg', is_valid: false },
+        { image_src: 'htp://site.com/uploads/x.jpg', is_valid: false }
       ].each do |example|
         image_src = example[:image_src]
         size_or_datatype = image_src.is_a?(String) ? "length #{image_src.size}" : image_src.class
