@@ -246,6 +246,31 @@ bundle exec rubocop -a
 
 ## SonarQube
 
+[SonarQube](https://www.sonarsource.com/) a _static code analysis tool_ that automatically inspects code for bugs,
+vulnerabilities, code smells, and test coverage without running the program.
+
+[SonarQube can be run through the use of Docker](https://medium.com/@index23/start-sonarqube-server-and-run-analyses-locally-with-docker-4550eb7112a3)
+
+```bash
+cd munchora-server-relational-db
+docker-compose -f docker-compose-sonar-qube.yml up
+```
+
+Go to **SonarQube dashboard** on `http://localhost:9090` - default credentials are login: `admin` password: `admin`
+
+Use following command to scan project with _SonnarScanner_:
+
+```bash
+docker run \
+    --rm \
+    -v "$(pwd):/usr/src" \
+    --network="host" \
+    -e SONAR_HOST_URL="http://localhost:9000" \
+    -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=munchora-server-relational-db -Dsonar.sources=./ -Dsonar.test=test -Dsonar.javascript.lcov.reportPaths=test/coverage/lcov.info" \
+    -e SONAR_TOKEN="${SONAR_TOKEN}" \
+    sonarsource/sonar-scanner-cli
+```
+
 ---
 
 <br>
