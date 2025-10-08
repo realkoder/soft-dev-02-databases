@@ -22,9 +22,18 @@ class User < ApplicationRecord
 
   # If provider is present, uid must be present (for OAuth)
   validates :uid, presence: true, if: -> { provider.present? }, length: { maximum: 100 }
-  validates :provider, presence: true, if: -> { uid.present? }, length: { maximum: 100 }
+  validates :provider, presence: true, if: -> { uid.present? }, length: { maximum: 40 }
 
   # For manual signup (no provider), password must be present on create
+  def password=(unencrypted_password)
+    # Only assign string values, otherwise nil
+    if unencrypted_password.is_a?(String)
+      super(unencrypted_password)
+    else
+      super(nil)
+    end
+  end
+
   has_secure_password validations: false
   validates :password, presence: true, length: { minimum: 6, maximum: 50 }, if: -> { provider.blank? }, on: :create
 
