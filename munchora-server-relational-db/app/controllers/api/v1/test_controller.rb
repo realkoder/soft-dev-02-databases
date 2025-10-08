@@ -1,6 +1,6 @@
 class Api::V1::TestController < ApplicationController
   def test
-    puts "logged"
+    puts 'logged'
     # render json: { data: "hey" }
     arr = []
     100.times do

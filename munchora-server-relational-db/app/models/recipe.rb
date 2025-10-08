@@ -1,5 +1,5 @@
 class Recipe < ApplicationRecord
-  self.primary_key = "id"
+  self.primary_key = 'id'
 
   before_create -> { self.id ||= SecureRandom.uuid }
 
@@ -13,7 +13,7 @@ class Recipe < ApplicationRecord
   accepts_nested_attributes_for :ingredients, allow_destroy: true
 
   validates :title, presence: true, length: { maximum: 150 }
-  validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true
+  validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: 'must be a valid URL' }, allow_blank: true
   validates :description, presence: true, length: { maximum: 2_000 }
   validates :instructions, presence: true
   validate :instructions_length_limit
@@ -36,12 +36,12 @@ class Recipe < ApplicationRecord
 
   def instructions_length_limit
     if instructions.is_a?(Array)
-      total_length = instructions.join(" ").length
+      total_length = instructions.join(' ').length
       if total_length > 3000
-        errors.add(:instructions, "combined length must be less than 3000 characters")
+        errors.add(:instructions, 'combined length must be less than 3000 characters')
       end
     else
-      errors.add(:instructions, "must be an array of steps")
+      errors.add(:instructions, 'must be an array of steps')
     end
   end
 end

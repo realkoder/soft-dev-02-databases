@@ -11,10 +11,10 @@ class ImageUpload::Processor
   end
 
   def process
-    return error("No file uploaded") unless @file
-    return error("Unsupported image format") unless ALLOWED_TYPES.include?(@file.content_type)
-    return error("Image size must be less than 5MB") if @file.size > MAX_FILE_SIZE
-    return error("Invalid image file") unless FastImage.type(@file.tempfile)
+    return error('No file uploaded') unless @file
+    return error('Unsupported image format') unless ALLOWED_TYPES.include?(@file.content_type)
+    return error('Image size must be less than 5MB') if @file.size > MAX_FILE_SIZE
+    return error('Invalid image file') unless FastImage.type(@file.tempfile)
 
     FileUtils.mkdir_p(@upload_dir) unless Dir.exist?(@upload_dir)
 
@@ -22,9 +22,9 @@ class ImageUpload::Processor
     filename = "#{SecureRandom.uuid}_#{sanitized_filename}"
     filepath = @upload_dir.join(filename)
 
-    File.open(filepath, "wb") { |f| f.write(@file.read) }
+    File.open(filepath, 'wb') { |f| f.write(@file.read) }
 
-    public_path = filepath.to_s.sub(Rails.root.join("public").to_s, "")
+    public_path = filepath.to_s.sub(Rails.root.join('public').to_s, '')
     full_url = "#{@request.base_url}#{public_path}"
 
     Result.new(success?: true, public_url: full_url)
@@ -37,6 +37,6 @@ class ImageUpload::Processor
   end
 
   def sanitize_filename(filename)
-    Pathname.new(filename).basename.to_s.gsub(/[^a-zA-Z0-9.\-_]/, "_")
+    Pathname.new(filename).basename.to_s.gsub(/[^a-zA-Z0-9.\-_]/, '_')
   end
 end

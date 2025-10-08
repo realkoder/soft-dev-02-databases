@@ -48,6 +48,6 @@ class Api::V1::LlmController < ApplicationController
   def set_recipe
     @recipe = Recipe.includes(:ingredients).find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Recipe not found" }, status: :not_found
+    render json: { error: 'Recipe not found' }, status: :not_found
   end
 end

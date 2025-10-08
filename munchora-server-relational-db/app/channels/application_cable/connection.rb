@@ -17,18 +17,18 @@ module ApplicationCable
 
     def redis
       @redis ||= begin
-                   Redis.new(url: ENV["UPSTASH_REDIS_URL"])
+                   Redis.new(url: ENV['UPSTASH_REDIS_URL'])
                  end
     end
 
     def track_connection!
       value = "user_id:#{current_user.id};connection_uuid:#{connection_uuid}"
-      redis.sadd("action_cable:connections", value)
+      redis.sadd('action_cable:connections', value)
     end
 
     def untrack_connection!
       value = "user_id:#{current_user.id};connection_uuid:#{connection_uuid}"
-      redis.srem("action_cable:connections", value)
+      redis.srem('action_cable:connections', value)
     end
 
     def find_verified_user
@@ -36,21 +36,21 @@ module ApplicationCable
 
       # Fallback to Bearer token in query param or headers
       if token.nil?
-        auth_header = request.headers["Authorization"]
-        if auth_header&.start_with?("Bearer ")
-          token = auth_header.split(" ").last
+        auth_header = request.headers['Authorization']
+        if auth_header&.start_with?('Bearer ')
+          token = auth_header.split(' ').last
         elsif (param_token = request.params[:token])
           token = param_token
         end
       end
 
-      raise "No token" unless token
+      raise 'No token' unless token
 
       decoded = Auth::JsonWebToken.decode(token)
-      raise "Invalid token" unless decoded && decoded[:user_id]
+      raise 'Invalid token' unless decoded && decoded[:user_id]
 
       user = User.find_by(id: decoded[:user_id])
-      raise "User not found" unless user
+      raise 'User not found' unless user
 
       user
     rescue => e

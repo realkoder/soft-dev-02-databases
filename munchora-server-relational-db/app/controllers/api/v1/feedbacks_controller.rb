@@ -26,7 +26,7 @@ class Api::V1::FeedbacksController < ApplicationController
   def create
     feedback = Feedback.new(feedback_params)
     if feedback.save
-      render json: { message: "Feedback submitted successfully." }, status: :created
+      render json: { message: 'Feedback submitted successfully.' }, status: :created
     else
       render json: { errors: feedback.errors.full_messages }, status: :unprocessable_entity
     end
@@ -43,7 +43,7 @@ class Api::V1::FeedbacksController < ApplicationController
   def set_feedback
     @feedback = Feedback.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Feedback not found" }, status: :not_found
+    render json: { error: 'Feedback not found' }, status: :not_found
   end
 
   def feedback_params

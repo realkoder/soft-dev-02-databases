@@ -10,33 +10,33 @@ class Llm::LlmService
 
     response = prompt_to_generate_recipe(prompt)
 
-    recipe_reply = response.choices&.first&.message&.content || "No valid response"
+    recipe_reply = response.choices&.first&.message&.content || 'No valid response'
     usage = response.usage
 
     recipe = validate_recipe_response(recipe_reply)
 
     recipe_attributes = {
-      title: recipe["title"],
-      description: recipe["description"],
-      instructions: recipe["instructions"],
+      title: recipe['title'],
+      description: recipe['description'],
+      instructions: recipe['instructions'],
       is_public: false,
-      cuisine: recipe["cuisine"],
-      difficulty: recipe["difficulty"],
-      tags: recipe["tags"],
-      prep_time: recipe["prep_time"],
-      cook_time: recipe["cook_time"],
-      servings: recipe["servings"],
+      cuisine: recipe['cuisine'],
+      difficulty: recipe['difficulty'],
+      tags: recipe['tags'],
+      prep_time: recipe['prep_time'],
+      cook_time: recipe['cook_time'],
+      servings: recipe['servings'],
       user: @user
     }
 
     created_recipe = Recipe.create!(recipe_attributes)
 
     # Attach ingredients from OpenAI response
-    (recipe["ingredients"] || []).each do |ingredient|
+    (recipe['ingredients'] || []).each do |ingredient|
       created_recipe.ingredients.create!(
-        name: ingredient["name"],
-        amount: ingredient["amount"],
-        category: ingredient["category"]
+        name: ingredient['name'],
+        amount: ingredient['amount'],
+        category: ingredient['category']
       )
     end
 
@@ -79,7 +79,7 @@ class Llm::LlmService
 
     response = prompt_to_generate_recipe(update_instruction)
 
-    recipe_reply = response.choices&.first&.message&.content || "No valid response"
+    recipe_reply = response.choices&.first&.message&.content || 'No valid response'
     usage = response.usage
 
     log_usage(recipe.id, prompt, usage, response.model)
@@ -87,30 +87,30 @@ class Llm::LlmService
     validated_recipe = validate_recipe_response(recipe_reply)
 
     Recipe.transaction do
-      if validated_recipe["ingredients"]
+      if validated_recipe['ingredients']
         # Remove old ingredients
         recipe.ingredients.destroy_all
 
         # Build new ingredients
-        validated_recipe["ingredients"].each do |ingredient|
+        validated_recipe['ingredients'].each do |ingredient|
           recipe.ingredients.build(
-            name: ingredient["name"],
-            category: ingredient["category"],
-            amount: ingredient["amount"]
+            name: ingredient['name'],
+            category: ingredient['category'],
+            amount: ingredient['amount']
           )
         end
       end
 
       recipe.update!(
-        title: validated_recipe["title"],
-        description: validated_recipe["description"],
-        instructions: validated_recipe["instructions"],
-        cuisine: validated_recipe["cuisine"],
-        difficulty: validated_recipe["difficulty"],
-        tags: validated_recipe["tags"],
-        prep_time: validated_recipe["prep_time"],
-        cook_time: validated_recipe["cook_time"],
-        servings: validated_recipe["servings"],
+        title: validated_recipe['title'],
+        description: validated_recipe['description'],
+        instructions: validated_recipe['instructions'],
+        cuisine: validated_recipe['cuisine'],
+        difficulty: validated_recipe['difficulty'],
+        tags: validated_recipe['tags'],
+        prep_time: validated_recipe['prep_time'],
+        cook_time: validated_recipe['cook_time'],
+        servings: validated_recipe['servings'],
       )
     end
 
@@ -124,11 +124,11 @@ class Llm::LlmService
 
   def prompt_to_generate_recipe(prompt)
     OpenAIClient.chat.completions.create(
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
+      model: 'gpt-4.1-mini',
+      response_format: { type: 'json_object' },
       messages: [
-        { role: "system", content: Llm::RecipeLlmInstruction::SYSTEM_PROMPT },
-        { role: "user", content: prompt }
+        { role: 'system', content: Llm::RecipeLlmInstruction::SYSTEM_PROMPT },
+        { role: 'user', content: prompt }
       ],
       max_tokens: 2000
     )
@@ -137,11 +137,11 @@ class Llm::LlmService
   def validate_recipe_response(json_string)
     data = JSON.parse(json_string)
 
-    unless data.is_a?(Hash) && data.key?("recipe")
+    unless data.is_a?(Hash) && data.key?('recipe')
       raise StandardError, "Missing 'recipe' key in response."
     end
 
-    recipe = data["recipe"]
+    recipe = data['recipe']
 
     required_keys = %w[title description instructions ingredients cuisine difficulty tags prep_time cook_time servings]
 
@@ -151,19 +151,19 @@ class Llm::LlmService
     end
 
     allowed_categories = GroceryCategories::CATEGORIES
-    recipe["ingredients"].each do |ingredient|
-      ingredient["category"] = "no category 📦" unless allowed_categories.include?(ingredient["category"])
+    recipe['ingredients'].each do |ingredient|
+      ingredient['category'] = 'no category 📦' unless allowed_categories.include?(ingredient['category'])
     end
 
     recipe
   end
 
   def usage_limit_exceeded?
-    if @user.email == "alexanderbtcc@gmail.com"
+    if @user.email == 'alexanderbtcc@gmail.com'
       return false
     end
     LlmUsage.where(user: @user)
-            .where("created_at >= ?", Time.current.beginning_of_day)
+            .where('created_at >= ?', Time.current.beginning_of_day)
             .limit(DAILY_LIMIT + 1)
             .count > DAILY_LIMIT
   end
@@ -180,20 +180,20 @@ class Llm::LlmService
       prompt: prompt,
       user: @user,
       model: model,
-      provider: "openai",
+      provider: 'openai',
       prompt_tokens: usage.prompt_tokens,
       completion_tokens: usage.completion_tokens,
     )
   end
 
   def prompt_recipe_image(recipe_description)
-    prompt = "Generate a high-quality, realistic food image for this recipe: " \
+    prompt = 'Generate a high-quality, realistic food image for this recipe: ' \
       "#{recipe_description}. Focus on appetizing presentation, vibrant colors, " \
-      "and making the dish look delicious and visually appealing."
+      'and making the dish look delicious and visually appealing.'
 
     response = OpenAIClient.images.generate(
       prompt: prompt,
-      size: "1024x1024"
+      size: '1024x1024'
     )
 
     response[:data][0][:url]

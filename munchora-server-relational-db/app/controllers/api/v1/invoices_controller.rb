@@ -16,7 +16,7 @@ class Api::V1::InvoicesController < ApplicationController
   # POST /invoices/:id/pay
   def pay
     # This is where you'd integrate with a payment gateway
-    if @invoice.update(status: "paid", paid_at: Time.current)
+    if @invoice.update(status: 'paid', paid_at: Time.current)
       render json: @invoice, status: :ok
     else
       render json: { errors: @invoice.errors.full_messages }, status: :unprocessable_entity

@@ -56,9 +56,9 @@ class Api::V1::UsersController < ApplicationController
     end
     current_user.destroy
     if current_user.destroyed?
-      render json: { msg: "OK" }
+      render json: { msg: 'OK' }
     else
-      render json: { msg: "User could not be deleted" }, status: :unprocessable_content
+      render json: { msg: 'User could not be deleted' }, status: :unprocessable_content
     end
   end
 
@@ -79,12 +79,12 @@ class Api::V1::UsersController < ApplicationController
       if current_user.image_src.present?
         Users::UsersUploadsService.delete_old_image(user: current_user)
         current_user.update(image_src: nil)
-        render json: { message: "OK" }, status: :ok
+        render json: { message: 'OK' }, status: :ok
       else
-        render json: { error: "No image to delete." }, status: :unprocessable_content
+        render json: { error: 'No image to delete.' }, status: :unprocessable_content
       end
     else
-      render json: { error: "Unauthorized" }, status: :unauthorized
+      render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
 

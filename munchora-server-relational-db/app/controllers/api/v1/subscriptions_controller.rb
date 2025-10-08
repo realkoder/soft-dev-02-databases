@@ -16,7 +16,7 @@ class Api::V1::SubscriptionsController < ApplicationController
   # POST /subscriptions
   def create
     subscription = current_user.subscriptions.new(subscription_params)
-    subscription.status = "active"
+    subscription.status = 'active'
 
     if subscription.save
       render json: subscription, status: :created
@@ -27,7 +27,7 @@ class Api::V1::SubscriptionsController < ApplicationController
 
   # POST /subscriptions/:id/cancel
   def cancel
-    if @subscription.update(status: "cancelled", cancelled_at: Time.current)
+    if @subscription.update(status: 'cancelled', cancelled_at: Time.current)
       render json: @subscription, status: :ok
     else
       render json: { errors: @subscription.errors.full_messages }, status: :unprocessable_entity

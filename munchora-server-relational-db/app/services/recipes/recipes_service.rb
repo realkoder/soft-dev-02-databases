@@ -3,7 +3,7 @@ class Recipes::RecipesService
     processor = ImageUpload::Processor.new(
       uploaded_file: uploaded_file,
       request: request,
-      upload_dir: Rails.root.join("public", "uploads", "recipes")
+      upload_dir: Rails.root.join('public', 'uploads', 'recipes')
     )
 
     result = processor.process
@@ -19,7 +19,7 @@ class Recipes::RecipesService
     return unless recipe.image_url.present?
 
     image_path = URI.parse(recipe.image_url).path
-    full_path = Rails.root.join("public", image_path.delete_prefix("/"))
+    full_path = Rails.root.join('public', image_path.delete_prefix('/'))
     File.delete(full_path) if File.exist?(full_path)
   rescue => e
     Rails.logger.error("Failed to delete old recipe image: #{e.message}")

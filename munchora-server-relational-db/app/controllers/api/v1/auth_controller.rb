@@ -1,5 +1,5 @@
 class Api::V1::AuthController < ApplicationController
-  require "google-id-token"
+  require 'google-id-token'
 
   def google
     auth_url = Auth::GoogleAuthService.get_redirect_uri
@@ -15,9 +15,9 @@ class Api::V1::AuthController < ApplicationController
     set_cookie(token)
 
     if Rails.env.production?
-      redirect_to "https://munchora.pro/home"
+      redirect_to 'https://munchora.pro/home'
     else
-      redirect_to "http://localhost:5173/home"
+      redirect_to 'http://localhost:5173/home'
     end
   end
 
@@ -27,7 +27,7 @@ class Api::V1::AuthController < ApplicationController
     if current_user
       render json: { user: current_user }
     else
-      render json: { error: "Unauthorized" }, status: :unauthorized
+      render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
 
@@ -40,14 +40,14 @@ class Api::V1::AuthController < ApplicationController
 
       render json: { user: user, token: token }
     else
-      render json: { error: "Invalid email or password" }, status: :unauthorized
+      render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
   end
 
   def logout
     cookies.delete(:jwt_auth, same_site: :lax)
 
-    render json: { message: "Logged out successfully" }, status: :ok
+    render json: { message: 'Logged out successfully' }, status: :ok
   end
 
   private

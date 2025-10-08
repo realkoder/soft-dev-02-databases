@@ -15,7 +15,7 @@ RSpec.describe User, type: :model do
   # ============
   # VALIDATIONS
   # ============
-  describe "validations" do
+  describe 'validations' do
     let(:valid_attributes) do
       {
         email: "john@example.com",
@@ -33,38 +33,27 @@ RSpec.describe User, type: :model do
     # EMAIL
     # ============
     context 'email', :email_context do
-      context 'valid cases' do
-        [
-          # Valid email partition 6-100
-          { email: 'u@t.dk' }, # valid lower
-          { email: 'u1@t.dk' }, # +1 char
-          { email: 'johnUser_232@test.dk' }, # valid middle
-          { email: "#{'a' * 87}@example.com" }, # -1 char from valid upper
-          { email: "#{'a' * 88}@example.com" } # valid upper
-        ].each do |example|
-          it "accepts valid email with length #{example[:email].size}" do
-            user = User.new(valid_attributes.merge(email: example[:email]))
-            expect(user).to be_valid
-          end
-        end
-      end
+      [
+        # Invalid email partition 0 - 6: lower boundary
+        { email: '', is_valid: false },
+        { email: 't', is_valid: false }, # +1 char
+        { email: 't.d', is_valid: false }, # middle value
+        { email: 'u@t.d', is_valid: false }, # -1 char from valid lower boundary
 
-      context "invalid cases" do
-        [
-          # Invalid email partition 0 - 6: lower boundary
-          { email: '' },
-          { email: 't' }, # +1 char
-          { email: 't.d' }, # middle value
-          { email: "u@t.d" }, # -1 char from valid lower boundary
+        # Valid email partition 6-100
+        { email: 'u@t.dk', is_valid: true }, # valid lower
+        { email: 'u1@t.dk', is_valid: true }, # +1 char
+        { email: 'johnUser_232@test.dk', is_valid: true }, # Equivalence partition
+        { email: "#{'a' * 87}@example.com", is_valid: true }, # -1 char from valid upper
+        { email: "#{'a' * 88}@example.com", is_valid: true }, # valid upper
 
-          # Invalid email partition 6-100: upper boundary
-          { email: "#{'a' * 89}@example.com" }, # +1 char
-          { email: "#{'a' * 200}@example.com" } # middle boundary
-        ].each do |example|
-          it "rejects invalid email with length #{example[:email].size}" do
-            user = User.new(valid_attributes.merge(email: example[:email]))
-            expect(user).to_not be_valid
-          end
+        # Invalid email partition 6-100: upper boundary
+        { email: "#{'a' * 89}@example.com", is_valid: false }, # +1 char
+        { email: "#{'a' * 450}@example.com", is_valid: false } # Equivalence partition
+      ].each do |example|
+        it "#{example[:is_valid] ? 'accepts ' : 'rejects in'}valid email with length #{example[:email].size}" do
+          user = User.new(valid_attributes.merge(email: example[:email]))
+          example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
         end
       end
     end
@@ -73,38 +62,25 @@ RSpec.describe User, type: :model do
     # FIRST_NAME
     # ============
     context 'first_name', :first_name_context do
-      context 'valid cases' do
-        [
-          # Valid first_name partition 2-60
-          { first_name: 'Jo' }, # valid lower
-          { first_name: 'Joe' }, # +1 char
-          { first_name: 'Rasputin' }, # valid middle
-          { first_name: "A" * 59 }, # -1 char from valid upper
-          { first_name: "A" * 60 } # valid upper
-        ].each do |example|
-          it "accepts valid first_name with length #{example[:first_name].size}" do
-            user = User.new(valid_attributes.merge(first_name: example[:first_name]))
-            expect(user).to be_valid
-          end
-        end
-      end
+      [
+        # Invalid first_name partition 0-2
+        { first_name: '', is_valid: false }, # invalid lower
+        { first_name: 'J', is_valid: false }, # +1 char
 
-      context "invalid cases" do
-        [
-          # Invalid email partition 0 - 6: lower boundary
-          { email: '' },
-          { email: 't' }, # +1 char
-          { email: 't.d' }, # middle value
-          { email: "u@t.d" }, # -1 char from valid lower boundary
+        # Valid first_name partition 2-60
+        { first_name: 'Jo', is_valid: true }, # valid lower
+        { first_name: 'Joe', is_valid: true }, # +1 char
+        { first_name: 'Maximilian', is_valid: true }, # Equivalence partition
+        { first_name: 'A' * 59, is_valid: true }, # -1 char from valid upper
+        { first_name: 'A' * 60, is_valid: true }, # valid upper
 
-          # Invalid email partition 6-100: upper boundary
-          { email: "#{'a' * 89}@example.com" }, # +1 char
-          { email: "#{'a' * 200}@example.com" } # middle boundary
-        ].each do |example|
-          it "rejects invalid email with length #{example[:email].size}" do
-            user = User.new(valid_attributes.merge(email: example[:email]))
-            expect(user).to_not be_valid
-          end
+        # Invalid first_name partition < 60
+        { first_name: 'A' * 61, is_valid: false }, # +1 char
+        { first_name: 'A' * 200, is_valid: false } # Equivalence partition
+      ].each do |example|
+        it "#{example[:is_valid] ? 'accepts ' : 'rejects in'}valid first_name with length #{example[:first_name].size}" do
+          user = User.new(valid_attributes.merge(first_name: example[:first_name]))
+          example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
         end
       end
     end
@@ -112,72 +88,79 @@ RSpec.describe User, type: :model do
     # ============
     # LAST_NAME
     # ============
-    context 'last_name' do
-      context 'valid cases' do
+    context 'last_name', :last_name_context do
+      [
+        # Invalid last_name partition 0-2
+        { last_name: '', is_valid: false }, # invalid lower
+        { last_name: 'O', is_valid: false }, # +1 char
 
-      end
+        # Valid last_name partition 2-60
+        { last_name: 'Li', is_valid: true }, # valid lower
+        { last_name: 'Lee', is_valid: true }, # +1 char
+        { last_name: 'Wolfeschlegelsteinhausenbergerdorff', is_valid: true }, # Equivalence partition
+        { last_name: 'A' * 59, is_valid: true }, # -1 char from valid upper
+        { last_name: 'A' * 60, is_valid: true }, # valid upper
 
-      context "invalid cases" do
-
+        # Invalid last_name partition > 60
+        { last_name: 'A' * 61, is_valid: false }, # +1 char
+        { last_name: 'A' * 200, is_valid: false } # Equivalence partition
+      ].each do |example|
+        it "#{example[:is_valid] ? 'accepts ' : 'rejects in'}valid last_name with length #{example[:last_name].size}" do
+          user = User.new(valid_attributes.merge(last_name: example[:last_name]))
+          example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
+        end
       end
     end
 
     # ============
     # BIO
     # ============
-    context 'bio' do
-      context 'valid cases' do
+    context 'bio', :bio_context do
+      [
+        # Valid bio partition 0 - 2_000
+        { bio: '', is_valid: true }, # valid lower
+        { bio: 'A', is_valid: true }, # +1 char
+        { bio: 'I like AI food' * 15, is_valid: true }, # Equivalence partition
+        { bio: 'a' * 1_999, is_valid: true }, # -1 char from valid upper
+        { bio: 'a' * 2_000, is_valid: true }, # valid upper
 
-      end
-
-      context "invalid cases" do
-
-      end
-    end
-
-    context 'uid' do
-      context 'valid cases' do
-
-      end
-
-      context "invalid cases" do
-
-      end
-    end
-
-    context 'provider' do
-      context 'valid cases' do
-
-      end
-
-      context "invalid cases" do
-
+        # Invalid bio partition > 2_000
+        { bio: 'a' * 2_001, is_valid: false }, # +1 char
+        { bio: 'I like AI food' * 500, is_valid: false } # Equivalence partition
+      ].each do |example|
+        it "#{example[:is_valid] ? 'accepts ' : 'rejects in'}valid bio with length #{example[:bio].size}" do
+          user = User.new(valid_attributes.merge(bio: example[:bio]))
+          example[:is_valid] ? (expect(user).to be_valid) : (expect(user).to_not be_valid)
+        end
       end
     end
 
-    context 'password' do
-      context 'valid cases' do
-
-      end
-
-      context "invalid cases" do
-
-      end
+    # ============
+    # UID
+    # ============
+    context 'uid', :uid_context do
     end
 
-    context 'image_src' do
-      context 'valid cases' do
-
-      end
-
-      context "invalid cases" do
-
-      end
+    # ============
+    # PROVIDER
+    # ============
+    context 'provider', :provider_context do
     end
 
+    # ============
+    # PASSWORD
+    # ============
+    context 'password', :password_context do
+    end
+
+    # ============
+    # IMAGE_SRC
+    # ============
+    context 'image_src', :image_src_context do
+    end
   end
 
-  describe "associations" do
+  describe 'associations' do
     it { should have_many(:grocery_lists).with_foreign_key(:owner_id).dependent(:destroy) }
     it { should have_many(:grocery_list_shares).dependent(:destroy) }
     it { should have_many(:recipes).dependent(:destroy) }
@@ -186,14 +169,12 @@ RSpec.describe User, type: :model do
   end
 
   describe 'methods' do
-
-    describe "#as_json" do
-      it "does not include password_digest" do
-        user = User.create!(id: SecureRandom.uuid, email: "secure@example.com", first_name: "Test", last_name: "Doe", password: "secure123")
+    describe '#as_json' do
+      it 'does not include password_digest' do
+        user = User.create!(id: SecureRandom.uuid, email: 'secure@example.com', first_name: 'Test', last_name: 'Doe', password: 'secure123')
         json = user.as_json
-        expect(json).not_to have_key("password_digest")
+        expect(json).not_to have_key('password_digest')
       end
     end
-
   end
 end

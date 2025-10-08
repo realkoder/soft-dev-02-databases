@@ -5,14 +5,14 @@ class Api::V1::RecipesController < ApplicationController
   before_action :set_comment, only: [:delete_comment]
   before_action :set_like, only: [:delete_like]
 
-  ADMIN_EMAIL = "alexanderbtcc@gmail.com"
+  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
 
   def index
     recipes =
       if current_user&.email == ADMIN_EMAIL
         Recipe.all
       elsif current_user
-        Recipe.where("is_public = ? OR user_id = ?", true, current_user.id)
+        Recipe.where('is_public = ? OR user_id = ?', true, current_user.id)
       else
         Recipe.where(is_public: true)
       end
@@ -30,14 +30,14 @@ class Api::V1::RecipesController < ApplicationController
     end
 
     if params[:tag].present?
-      recipes = recipes.where("? = ANY(tags)", params[:tag])
+      recipes = recipes.where('? = ANY(tags)', params[:tag])
       filters_applied = true
     end
 
     if params[:search].present?
       query = "%#{params[:search].downcase}%"
       recipes = recipes.where(
-        "LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(cuisine) LIKE ?",
+        'LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(cuisine) LIKE ?',
         query, query, query # Protecting against sql injections - using prepared statement
       )
       filters_applied = true
@@ -120,7 +120,7 @@ class Api::V1::RecipesController < ApplicationController
       @recipe.destroy
       head :no_content
     else
-      render json: { error: "Failed to delete the recipes." }, status: :unprocessable_entity
+      render json: { error: 'Failed to delete the recipes.' }, status: :unprocessable_entity
     end
   end
 
@@ -147,7 +147,7 @@ class Api::V1::RecipesController < ApplicationController
     end
 
     if image_deleted
-      render json: { message: "OK" }
+      render json: { message: 'OK' }
     else
       render json: { error: image_deleted.error }, status: :unprocessable_entity
     end
@@ -173,7 +173,7 @@ class Api::V1::RecipesController < ApplicationController
     if @comment.destroy
       head :no_content
     else
-      render json: { errors: "Failed to delete comment" }, status: :unprocessable_entity
+      render json: { errors: 'Failed to delete comment' }, status: :unprocessable_entity
     end
   end
 
@@ -181,7 +181,7 @@ class Api::V1::RecipesController < ApplicationController
     like = @recipe.recipe_likes.find_or_initialize_by(user: current_user)
 
     if like.persisted?
-      render json: { message: "Already liked" }, status: :ok
+      render json: { message: 'Already liked' }, status: :ok
     elsif like.save
       render json: like, status: :created
     else
@@ -198,7 +198,7 @@ class Api::V1::RecipesController < ApplicationController
     if @like&.destroy
       head :no_content
     else
-      render json: { errors: "Failed to unlike" }, status: :unprocessable_entity
+      render json: { errors: 'Failed to unlike' }, status: :unprocessable_entity
     end
   end
 
@@ -221,14 +221,14 @@ class Api::V1::RecipesController < ApplicationController
   def set_comment
     @comment = @recipe.recipe_comments.find_by(id: params[:comment_id])
     unless @comment
-      render json: { error: "Comment not found" }, status: :not_found
+      render json: { error: 'Comment not found' }, status: :not_found
     end
   end
 
   def set_like
     @like = @recipe.recipe_likes.find_by(user: current_user)
     unless @like
-      render json: { error: "Like  not found" }, status: :not_found
+      render json: { error: 'Like  not found' }, status: :not_found
     end
   end
 

@@ -1,4 +1,4 @@
-require "open-uri"
+require 'open-uri'
 
 module Llm
   class LlmImageService
@@ -20,12 +20,12 @@ module Llm
     private
 
     def usage_limit_exceeded?
-      if @user.email == "alexanderbtcc@gmail.com"
+      if @user.email == 'alexanderbtcc@gmail.com'
         return false
       end
 
       LlmUsage.where(user: @user)
-              .where("created_at >= ?", Time.current.beginning_of_day)
+              .where('created_at >= ?', Time.current.beginning_of_day)
               .limit(DAILY_LIMIT + 1)
               .count > DAILY_LIMIT
     end
@@ -40,7 +40,7 @@ module Llm
       LlmUsage.create!(
         user: @user,
         model: model,
-        provider: "openai",
+        provider: 'openai',
         prompt_tokens: usage[:prompt_tokens],
         completion_tokens: usage[:completion_tokens],
         total_tokens: usage[:total_tokens]
@@ -48,18 +48,18 @@ module Llm
     end
 
     def prompt_recipe_image(recipe, request)
-      prompt = "Generate a highly realistic, high-resolution food photograph of this recipe: " \
+      prompt = 'Generate a highly realistic, high-resolution food photograph of this recipe: ' \
         "#{recipe.title} — #{recipe.description}. Capture it as if taken with a Canon DSLR in RAW (.CR2) format, " \
-        "using natural lighting, soft shadows, and a shallow depth of field. " \
-        "Keep the composition simple and clean, with minimal background and no distracting elements. " \
-        "Focus on appetizing presentation, texture details, and a professional magazine-quality look. " \
-        "The dish should appear fresh, mouth-watering, and photo-realistic — not artistic or abstract."
+        'using natural lighting, soft shadows, and a shallow depth of field. ' \
+        'Keep the composition simple and clean, with minimal background and no distracting elements. ' \
+        'Focus on appetizing presentation, texture details, and a professional magazine-quality look. ' \
+        'The dish should appear fresh, mouth-watering, and photo-realistic — not artistic or abstract.'
 
-      model = "dall-e-2"
+      model = 'dall-e-2'
 
       image_gen_response = OpenAIClient.images.generate(
         prompt: prompt,
-        size: "1024x1024",
+        size: '1024x1024',
         model: model,
       )
 
@@ -77,7 +77,7 @@ module Llm
         result.public_url
       else
         Rails.logger.error("AI image upload failed: #{result.error}")
-        ""
+        ''
       end
     end
 

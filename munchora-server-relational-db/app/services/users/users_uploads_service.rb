@@ -3,7 +3,7 @@ class Users::UsersUploadsService
     processor = ImageUpload::Processor.new(
       uploaded_file: uploaded_file,
       request: request,
-      upload_dir: Rails.root.join("public", "uploads", "user-profile-pics")
+      upload_dir: Rails.root.join('public', 'uploads', 'user-profile-pics')
     )
 
     result = processor.process
@@ -16,10 +16,10 @@ class Users::UsersUploadsService
   end
 
   def self.delete_old_image(user:)
-    return unless user.image_src.present? && user.image_src.include?("uploads/user-profile-pics")
+    return unless user.image_src.present? && user.image_src.include?('uploads/user-profile-pics')
 
     image_path = URI.parse(user.image_src).path
-    full_path = Rails.root.join("public", image_path.delete_prefix("/"))
+    full_path = Rails.root.join('public', image_path.delete_prefix('/'))
     File.delete(full_path) if File.exist?(full_path)
   rescue => e
     Rails.logger.error("Failed to delete old recipes image: #{e.message}")

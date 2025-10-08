@@ -14,8 +14,8 @@ class Invoice < ApplicationRecord
 
   # Ensure paid_at is set if status is 'paid'
   def paid_at_if_paid
-    if status == "paid" && paid_at.blank?
-      errors.add(:paid_at, "must be set if invoice is paid")
+    if status == 'paid' && paid_at.blank?
+      errors.add(:paid_at, 'must be set if invoice is paid')
     end
   end
 
@@ -24,7 +24,7 @@ class Invoice < ApplicationRecord
     return if period_start.blank? || period_end.blank?
 
     if period_end <= period_start
-      errors.add(:period_end, "must be after period_start")
+      errors.add(:period_end, 'must be after period_start')
     end
   end
 end
