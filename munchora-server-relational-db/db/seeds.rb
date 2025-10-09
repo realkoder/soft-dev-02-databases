@@ -4,8 +4,6 @@
 
 # db/seeds.rb
 
-require "securerandom"
-
 # =================
 # USERS
 # =================
@@ -92,6 +90,7 @@ end
 users = User.all
 
 puts "Seeded #{users.size} users."
+
 
 # =================
 # RECIPES
@@ -314,7 +313,6 @@ sample_recipes = [
 
 sample_recipes.each do |recipe_attrs|
   Recipe.create!(
-    id: SecureRandom.uuid,
     user_id: users.sample.id,
     title: recipe_attrs[:title],
     description: recipe_attrs[:description],
@@ -415,8 +413,6 @@ puts "Seeded ingredients for recipes."
 # LLM_USAGE
 # =================
 
-require "securerandom"
-
 # Make sure there are some recipes and users
 recipes = Recipe.all
 
@@ -452,7 +448,6 @@ llm_usages_sample = [
 20.times do
   usage_attrs = llm_usages_sample.sample
   LlmUsage.create!(
-    id: SecureRandom.uuid,
     user_id: users.sample.id,
     recipe_id: recipes.sample.id,
     provider: usage_attrs[:provider],

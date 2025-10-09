@@ -44,7 +44,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.string "name", null: false
     t.string "category"
     t.boolean "is_completed", default: false
-    t.string "grocery_list_id", null: false
+    t.string "grocery_list_id", limit: 36, null: false
     t.string "added_by_id", limit: 36
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,7 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.index ["user_id"], name: "index_grocery_list_shares_on_user_id"
   end
 
-  create_table "grocery_lists", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "grocery_lists", id: { type: :string, limit: 36, default: -> { "(uuid())" } }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "owner_id", limit: 36, null: false
     t.datetime "created_at", null: false
@@ -95,7 +95,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
-  create_table "llm_usages", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "llm_usages", id: { type: :string, limit: 36, default: -> { "(uuid())" } }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "user_id", limit: 36, null: false
     t.string "recipe_id", limit: 36, null: false
     t.string "provider"
@@ -141,7 +141,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.index ["user_id"], name: "index_recipe_suggestions_on_user_id"
   end
 
-  create_table "recipes", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "recipes", id: { type: :string, limit: 36, default: -> { "(uuid())" } }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "user_id", limit: 36, null: false
     t.string "title"
     t.text "description"
@@ -189,7 +189,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", id: { type: :string, limit: 36, default: -> { "(uuid())" } }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "email"

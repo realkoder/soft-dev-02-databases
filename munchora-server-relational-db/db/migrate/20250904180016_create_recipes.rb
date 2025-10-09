@@ -19,6 +19,8 @@ class CreateRecipes < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
+    execute "ALTER TABLE recipes MODIFY id VARCHAR(36) DEFAULT (UUID()) NOT NULL;"
+
     # Create trigger to generate UUID on insert
     # execute <<~SQL
     #   CREATE TRIGGER before_recipes_insert

@@ -15,9 +15,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    # I have wasted hours on trying to fix this db side UUID generation - but its not possible since rails wont receive the UUID after generation
-    # t.string :id, limit: 36, primary_key: true, null: false
-    # execute "ALTER TABLE recipes MODIFY id VARCHAR(36) DEFAULT (UUID()) NOT NULL;"
+    execute "ALTER TABLE users MODIFY id VARCHAR(36) DEFAULT (UUID()) NOT NULL;"
 
     # Create trigger to generate UUID on insert
     # execute <<~SQL

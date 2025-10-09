@@ -42,7 +42,7 @@ class User < ApplicationRecord
   # Don't want to return password_digest when serializing
   def as_json(options = {})
     super({ except: [:email, :password_digest] }.merge(options)).merge(
-      'fullname' => "#{first_name} #{last_name}" # client relies on attribute fullname instead of first_name / last_name
+      'fullname' => "#{first_name} #{last_name}", # client relies on attribute fullname instead of first_name / last_name
     )
   end
 end
