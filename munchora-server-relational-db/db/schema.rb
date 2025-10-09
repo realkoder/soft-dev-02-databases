@@ -96,8 +96,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
   end
 
   create_table "llm_usages", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "user_id", limit: 36
-    t.string "recipe_id", limit: 36
+    t.string "user_id", limit: 36, null: false
+    t.string "recipe_id", limit: 36, null: false
     t.string "provider"
     t.string "model"
     t.text "prompt"
@@ -105,8 +105,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.integer "completion_tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["recipe_id"], name: "fk_rails_499b915d68"
+    t.index ["recipe_id"], name: "index_llm_usages_on_recipe_id"
     t.index ["user_id", "created_at"], name: "index_llm_usages_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_llm_usages_on_user_id"
   end
 
   create_table "recipe_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -156,6 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_132239) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "is_public"], name: "index_recipes_on_user_id_and_is_public"
+    t.index ["user_id"], name: "index_recipes_on_user_id"
   end
 
   create_table "subscription_plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

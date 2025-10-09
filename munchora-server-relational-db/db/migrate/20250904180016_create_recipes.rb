@@ -3,7 +3,7 @@ class CreateRecipes < ActiveRecord::Migration[8.0]
     create_table :recipes, id: false do |t|
       t.string :id, limit: 36, null: false, primary_key: true
 
-      t.string :user_id, limit: 36, null: false
+      t.references :user, null: false, type: :string, limit: 36, foreign_key: true
       t.string :title
       t.text :description
       t.string :image_url
@@ -18,8 +18,6 @@ class CreateRecipes < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-
-    add_foreign_key :recipes, :users, column: :user_id
 
     # Create trigger to generate UUID on insert
     # execute <<~SQL

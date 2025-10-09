@@ -3,8 +3,8 @@ class CreateLlmUsages < ActiveRecord::Migration[8.0]
     create_table :llm_usages, id: false do |t|
       t.string :id, limit: 36, null: false, primary_key: true
 
-      t.string :user_id, limit: 36, null: true
-      t.string :recipe_id, limit: 36, null: true
+      t.references :user, null: false, type: :string, limit: 36, foreign_key: true
+      t.references :recipe, null: false, type: :string, limit: 36, foreign_key: true
       t.string :provider
       t.string :model
       t.text :prompt
@@ -13,9 +13,6 @@ class CreateLlmUsages < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-
-    add_foreign_key :llm_usages, :users, column: :user_id
-    add_foreign_key :llm_usages, :recipes, column: :recipe_id
 
     # Create trigger to generate UUID on insert
     # execute <<~SQL
