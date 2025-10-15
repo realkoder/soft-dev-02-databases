@@ -213,9 +213,13 @@ exercised at least once.
 
 london vs detroit approach
 
-DB - sqlite3 - both london and detorit not hardly mocked not hardly integrated
+DB - sqlite3 - both london and detroit not hardly mocked not hardly integrated
 
 Third part OAtuh Google and OpenAI
+
+The integration tests for `Api::V1::LlmController` uses London approach, since calling the `OpenAI API` for every test
+would be costly and slow. Instead, the service layer is mocked to return a sample recipe, allowing to test controller
+behavior and responses without hitting the real API.
 
 ---
 
