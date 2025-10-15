@@ -4,6 +4,8 @@ class ApplicationController < ActionController::API
 
   attr_reader :current_user
 
+  before_action :parse_json_request # ensures json content is valid and can be parsed
+
   if Rails.env.production?
     # strict 3 requests per minute for sensitive API endpoints
     rate_limit to: 3,
@@ -100,6 +102,18 @@ class ApplicationController < ActionController::API
   end
 
   private
+
+  def parse_json_request
+    return unless request.content_type == 'application/json'
+
+    begin
+      # This forces Rails to parse JSON body early
+      JSON.parse(request.raw_post) unless request.raw_post.blank?
+    rescue JSON::ParserError => e
+      render_error(400, 'Bad request', "Malformed JSON: #{e.message}") and return
+    end
+  end
+
 
   def disney_url
     'https://disney.com'

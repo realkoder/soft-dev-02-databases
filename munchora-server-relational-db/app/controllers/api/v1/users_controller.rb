@@ -6,6 +6,10 @@ class Api::V1::UsersController < ApplicationController
     users = User.all
 
     if params[:search].present?
+      if params[:search].length > 120
+        return render json: { error: 'Search query too long (max 120 characters)' }, status: :bad_request
+      end
+
       query = "%#{params[:search].downcase}%" # Matches any string that contains search param and ignores case
       users = users.where(
         "LOWER(first_name || ' ' || last_name) LIKE ? OR LOWER(email) LIKE ?",
@@ -25,13 +29,15 @@ class Api::V1::UsersController < ApplicationController
     }
   end
 
-  # GET /api/v1/users/:id
   def show
     render json: current_user
   end
 
-  # POST /api/v1/users
   def create
+    if params[:user].blank?
+      return render_error(400, 'Bad request', 'user parameter is required')
+    end
+
     user = User.new(user_params)
     if user.save
       render json: user, status: :created
@@ -40,7 +46,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  # PUT / PATCH /ai/v1/users/:userid
   def update
     if current_user.update(user_update_params)
       render json: current_user
@@ -49,7 +54,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  # DELETE /api/v1/users
   def destroy
     if current_user.image_src.present?
       Users::UsersUploadsService.delete_old_image(user: current_user)
@@ -62,7 +66,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  # POST /api/v1/users/upload-image
   def upload_image
     result = Users::UsersUploadsService.call(user: current_user, uploaded_file: params[:image], request: request)
 
@@ -73,7 +76,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  # DELETE /api/v1/users/delete-image
   def delete_image
     if current_user
       if current_user.image_src.present?

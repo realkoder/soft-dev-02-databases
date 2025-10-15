@@ -1,13 +1,15 @@
 module ErrorHandling
   extend ActiveSupport::Concern
+
   included do
     rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :handle_unprocessable_entity
     rescue_from ActionController::ParameterMissing, with: :handle_bad_request
+    rescue_from ActionDispatch::Http::Parameters::ParseError, with: :handle_bad_request
     rescue_from JWT::DecodeError, with: :handle_unauthorized
 
     # Catch-all fallback
-    rescue_from StandardError, with: :handle_internal_error
+    rescue_from StandardError, with: :handle_internal_error unless Rails.env.development?
   end
 
   private
@@ -29,7 +31,7 @@ module ErrorHandling
   end
 
   def handle_internal_error(exception)
-    Rails.logger.error(exception.message)
+    Rails.logger.error("#{exception.class}: #{exception.message}")
     Rails.logger.error(exception.backtrace.join("\n"))
     render_error(500, 'Internal Server Error', 'Something went wrong')
   end
