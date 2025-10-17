@@ -18,7 +18,6 @@ RSpec.describe Api::V1::LlmController, type: :request do
       mock_llm_service = instance_double(Llm::LlmService)
       allow(Llm::LlmService).to receive(:new).with(user: auth_user).and_return(mock_llm_service)
     end
-
   end
 
   # ======================================

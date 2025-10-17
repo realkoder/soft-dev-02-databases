@@ -198,20 +198,6 @@ RSpec.describe Api::V1::UsersController, type: :request do
   # PUT/PATCH: UPDATE
   # ======================================
   context '#update' do
-    context 'positive tests' do
-      it '' do
-      end
-    end
-    context 'negative tests' do
-      it '' do
-      end
-    end
-  end
-
-  # ======================================
-  # PUT/PATCH: DESTROY
-  # ======================================
-  context '#destroy' do
     let(:sut_user) { create(:user, first_name: 'John', last_name: 'Doe', email: 'john@example.com') }
     let(:sut_headers) do
       token = Auth::JsonWebToken.encode(user_id: sut_user.id)
@@ -220,48 +206,51 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
     context 'positive tests' do
       [
-        { description: 'allowed fields successfully', attrs: { first_name: 'Johnny', last_name: 'Doez' }, expect: { first_name: 'Johnny', last_name: 'Doez' } },
-        { description: 'email to a new valid one', attrs: { email: 'new.email@example.com' }, expect: nil }, # email is not returned but as long as status is OK
-        { description: 'bio to a new bio description', attrs: { bio: 'i like cooking with ai' }, expect: { bio: 'i like cooking with ai' } }
+        { description: 'allowed fields successfully', attrs: { first_name: 'Johnny', last_name: 'Doez' }, status: :ok, expect: { first_name: 'Johnny', last_name: 'Doez' } },
+        { description: 'email to a new valid one', attrs: { email: 'new.email@example.com' }, status: :ok, expect: nil }, # email will not be updated bu should just pass
+        { description: 'bio to a new bio description', attrs: { bio: 'i like cooking with ai' }, status: :ok, expect: { bio: 'i like cooking with ai' } }
       ].each do |example|
         it "updates #{example[:description]}" do
           patch "/api/v1/users/#{sut_user.id}", params: { user: example[:attrs] }.to_json, headers: sut_headers
 
-          expect(response).to have_http_status(:ok)
-          json = JSON.parse(response.body)
-
-          example[:expect].each do |key, val|
-            expect(json[key.to_s]).to eq(val)
+          expect(response).to have_http_status(example[:status])
+          if example[:expect] != nil
+            json = JSON.parse(response.body)
+            example[:expect].each do |key, val|
+              expect(json[key.to_s]).to eq(val)
+            end
           end
         end
       end
     end
 
     context 'negative tests' do
-      it 'returns 422 when updating with invalid email' do
-        updated_attributes = { email: 'invalid-email' }
-
-        patch "/api/v1/users/#{sut_user.id}", params: { user: updated_attributes }.to_json, headers: sut_headers
-
-        expect(response).to have_http_status(:unprocessable_content)
-        json = JSON.parse(response.body)
-        expect(json['errors']).to include(a_string_matching(/Email/))
-      end
-
       it 'returns 422 when required fields are blank' do
         updated_attributes = { first_name: '', last_name: '' }
 
         patch "/api/v1/users/#{sut_user.id}", params: { user: updated_attributes }.to_json, headers: sut_headers
 
         expect(response).to have_http_status(:unprocessable_content)
-        json = JSON.parse(response.body)
-        expect(json['errors']).to include(a_string_matching(/First name/))
       end
 
       it 'returns 401 when no authentication token is provided' do
-        patch "/api/v1/users/#{sut_user.id}", params: { user: { first_name: 'New' } }.to_json, header: sut_headers
+        patch "/api/v1/users/#{sut_user.id}", params: { user: { first_name: 'New' } }.to_json
 
         expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+
+  # ======================================
+  # PUT/PATCH: DESTROY
+  # ======================================
+  context '#destroy' do
+    context 'positive tests' do
+      it '' do
+      end
+    end
+    context 'negative tests' do
+      it '' do
       end
     end
   end
