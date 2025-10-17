@@ -10,10 +10,10 @@ class Llm::LlmService
 
     response = prompt_to_generate_recipe(prompt)
 
-    recipe_reply = response.choices&.first&.message&.content || 'No valid response'
+    recipe_res = response.choices&.first&.message&.content || 'No valid response'
     usage = response.usage
 
-    recipe = validate_recipe_response(recipe_reply)
+    recipe = validate_recipe_response(recipe_res)
 
     recipe_attributes = {
       title: recipe['title'],
@@ -79,12 +79,12 @@ class Llm::LlmService
 
     response = prompt_to_generate_recipe(update_instruction)
 
-    recipe_reply = response.choices&.first&.message&.content || 'No valid response'
+    updated_recipe_res = response.choices&.first&.message&.content || 'No valid response'
     usage = response.usage
 
     log_usage(recipe.id, prompt, usage, response.model)
 
-    validated_recipe = validate_recipe_response(recipe_reply)
+    validated_recipe = validate_recipe_response(updated_recipe_res)
 
     Recipe.transaction do
       if validated_recipe['ingredients']

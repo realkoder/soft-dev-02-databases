@@ -7,7 +7,7 @@ class Recipe
   field :image_url, type: String
   field :instructions, type: Array
   field :is_public, type: Boolean, default: false
-  field :cuisine, type: Hash # { type: "Italian", region: "Mediterranean" }
+  field :cuisine, type: Array # ["Italian", "Mediterranean"]
   field :difficulty, type: String # "easy", "medium", "hard"
   field :tags, type: Array # ["vegetarian", "quick", "gluten-free"]
   field :prep_time, type: Integer, default: 10
@@ -23,11 +23,12 @@ class Recipe
   has_many :comments, class_name: "RecipeComment", inverse_of: :recipe
 
   # Indexes for performance
-  index({ user_id: 1, is_public: 1 })
-  index({ is_public: 1 })
-  index({ tags: 1 })
-  index({ cuisine: 1 })
-  index({ difficulty: 1 })
+  index({ user_id: 1 })    # Fast lookup of user's recipes (both private and public)
+  index({ title: 1 })      # For title searches
+  index({ is_public: 1 })  # Fast lookup of public recipes for browsing
+  index({ tags: 1 })       # Fast filtering by tags (e.g., "vegetarian", "quick")
+  index({ cuisine: 1 })    # Fast filtering by cuisine type (e.g., "Italian")
+  index({ difficulty: 1 }) # Fast filtering by difficulty level
 
   validates :title, presence: true, length: { maximum: 150 }
   validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true

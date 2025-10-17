@@ -4,7 +4,6 @@ module GroceryLists
       users_to_add = User.where(:id.in => user_ids).not_in(id: list.shared_user_ids)
 
       users_to_add.each do |user|
-        puts "FIRST ITERATION #{users_to_add}"
         # Add user to list.shared_users unless already present
         unless list.shared_users.include?(user)
           list.shared_users << user

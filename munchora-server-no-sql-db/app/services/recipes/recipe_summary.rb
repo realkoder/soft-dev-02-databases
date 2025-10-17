@@ -6,30 +6,20 @@ class Recipes::RecipeSummary
       .collection
       .aggregate([
                    # Lookup creator (user) information
-                   {
-                     "$lookup": { from: "users", localField: "user_id", foreignField: "_id", as: "creator" }
-                   },
+                   { "$lookup": { from: "users", localField: "user_id", foreignField: "_id", as: "creator" } },
                    { "$unwind": "$creator" },
 
                    # Lookup likes
-                   {
-                     "$lookup": { from: "recipe_likes", localField: "_id", foreignField: "recipe_id", as: "recipe_likes" }
-                   },
+                   { "$lookup": { from: "recipe_likes", localField: "_id", foreignField: "recipe_id", as: "recipe_likes" } },
 
                    # Lookup comments
-                   {
-                     "$lookup": { from: "recipe_comments", localField: "_id", foreignField: "recipe_id", as: "recipe_comments" }
-                   },
+                   { "$lookup": { from: "recipe_comments", localField: "_id", foreignField: "recipe_id", as: "recipe_comments" }  },
 
                    # Lookup users for liked users names
-                   {
-                     "$lookup": { from: "users", localField: "recipe_likes.user_id", foreignField: "_id", as: "liked_users" }
-                   },
+                   { "$lookup": { from: "users", localField: "recipe_likes.user_id", foreignField: "_id", as: "liked_users" } },
 
                    # Lookup users for comment creators
-                   {
-                     "$lookup": { from: "users", localField: "recipe_comments.user_id", foreignField: "_id", as: "comment_creators" }
-                   },
+                   { "$lookup": { from: "users", localField: "recipe_comments.user_id", foreignField: "_id", as: "comment_creators" } },
 
                    # Project the final fields with proper handling for missing arrays
                    {

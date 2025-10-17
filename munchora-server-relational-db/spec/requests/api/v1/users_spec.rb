@@ -52,7 +52,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       [
         { search: '', expect: { status: :ok, users_size: 10 } }, # lower boundary
         { search: 's', expect: { status: :ok, users_size: 10 } }, # lower +1
-        { search: '      ', expect: { status: :ok, users_size: 10 } }, # edge case
+        { search: '      ', expect: { status: :ok, users_size: 10 } }, # edge case - string with whitespaces
         { search: 'Jane Smith', expect: { status: :ok, users_size: 1 } }, # eq partition
         { search: 'jane@example.com', expect: { status: :ok, users_size: 1 } }, # existing email
         { search: 'NOTHING', expect: { status: :ok, users_size: 0 } }, # edge case
@@ -182,16 +182,15 @@ RSpec.describe Api::V1::UsersController, type: :request do
       end
     end
 
-    it 'returns error with empty request body' do
-      post '/api/v1/users', headers: { 'Content-Type' => 'application/json' }
+    [
+      { description: 'empty request body', params: nil },
+      { description: 'malformed JSON', params: '{ malformed json' }
+    ].each do |example|
+      it "returns bad_request when given #{example[:description]}" do
+        post '/api/v1/users', params: example[:params], headers: { 'Content-Type' => 'application/json' }
 
-      expect(response).to have_http_status(:bad_request)
-    end
-
-    it 'returns error with malformed JSON' do
-      post '/api/v1/users', params: '{ malformed json', headers: { 'Content-Type' => 'application/json' }
-
-      expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:bad_request)
+      end
     end
   end
 
@@ -213,12 +212,56 @@ RSpec.describe Api::V1::UsersController, type: :request do
   # PUT/PATCH: DESTROY
   # ======================================
   context '#destroy' do
+    let(:sut_user) { create(:user, first_name: 'John', last_name: 'Doe', email: 'john@example.com') }
+    let(:sut_headers) do
+      token = Auth::JsonWebToken.encode(user_id: sut_user.id)
+      { 'Authorization' => "Bearer #{token}", 'Content-Type' => 'application/json' }
+    end
+
     context 'positive tests' do
-      it '' do
+      [
+        { description: 'allowed fields successfully', attrs: { first_name: 'Johnny', last_name: 'Doez' }, expect: { first_name: 'Johnny', last_name: 'Doez' } },
+        { description: 'email to a new valid one', attrs: { email: 'new.email@example.com' }, expect: nil }, # email is not returned but as long as status is OK
+        { description: 'bio to a new bio description', attrs: { bio: 'i like cooking with ai' }, expect: { bio: 'i like cooking with ai' } }
+      ].each do |example|
+        it "updates #{example[:description]}" do
+          patch "/api/v1/users/#{sut_user.id}", params: { user: example[:attrs] }.to_json, headers: sut_headers
+
+          expect(response).to have_http_status(:ok)
+          json = JSON.parse(response.body)
+
+          example[:expect].each do |key, val|
+            expect(json[key.to_s]).to eq(val)
+          end
+        end
       end
     end
+
     context 'negative tests' do
-      it '' do
+      it 'returns 422 when updating with invalid email' do
+        updated_attributes = { email: 'invalid-email' }
+
+        patch "/api/v1/users/#{sut_user.id}", params: { user: updated_attributes }.to_json, headers: sut_headers
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json = JSON.parse(response.body)
+        expect(json['errors']).to include(a_string_matching(/Email/))
+      end
+
+      it 'returns 422 when required fields are blank' do
+        updated_attributes = { first_name: '', last_name: '' }
+
+        patch "/api/v1/users/#{sut_user.id}", params: { user: updated_attributes }.to_json, headers: sut_headers
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json = JSON.parse(response.body)
+        expect(json['errors']).to include(a_string_matching(/First name/))
+      end
+
+      it 'returns 401 when no authentication token is provided' do
+        patch "/api/v1/users/#{sut_user.id}", params: { user: { first_name: 'New' } }.to_json, header: sut_headers
+
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

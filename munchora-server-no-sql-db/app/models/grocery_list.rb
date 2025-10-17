@@ -20,5 +20,12 @@ class GroceryList
   index({ owner_id: 1 })
   index({ shared_user_ids: 1 })
 
+  # client relies on id not _id
+  def as_json(options = {})
+    attrs = super(options)
+    attrs['id'] = attrs.delete('_id') if attrs.has_key?('_id')
+    attrs
+  end
+
   validates :name, presence: true, length: { maximum: 50 }
 end

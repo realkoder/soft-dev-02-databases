@@ -12,6 +12,13 @@ RSpec.describe Api::V1::LlmController, type: :request do
   # POST: GENERATE_RECIPE
   # ======================================
   context '#generate_recipe' do
+    let(:valid_prompt) { "Create a recipe for a classic beef burger" }
+
+    before do
+      mock_llm_service = instance_double(Llm::LlmService)
+      allow(Llm::LlmService).to receive(:new).with(user: auth_user).and_return(mock_llm_service)
+    end
+
   end
 
   # ======================================

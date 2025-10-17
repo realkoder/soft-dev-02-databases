@@ -5,6 +5,9 @@ development:
     default:
       # Mongoid can connect to a URI accepted by the driver:
       uri: <%= ENV.fetch("MONGODB_CONNECTION_STRING", "") %>
+      # Configure Mongoid specific options. (optional)
+      options:
+        auto_create_indexes: true
 
         # Otherwise define the parameters separately.
         # This defines the name of the default database that Mongoid can connect to.
@@ -118,7 +121,6 @@ development:
       # truncate_logs: true
 
   # Configure Mongoid specific options. (optional)
-  options:
   # Application name that is printed to the mongodb logs upon establishing
   # a connection in server versions >= 3.4. Note that the name cannot
   # exceed 128 bytes. It is also used as the database name if the
