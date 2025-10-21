@@ -14,6 +14,9 @@ class User
   property :password_digest, type: String
   property :image_src, type: String
 
+  # Relationships
+  has_many :out, :recipes, type: :CREATED_BY, model_class: 'Recipe', dependent: :destroy
+
   # Validations
   validates :email,
             presence: true,

@@ -1,0 +1,212 @@
+class Api::V1::RecipesController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user_or_nil, only: [:index, :show]
+  before_action :set_recipe, only: [:show, :update, :destroy, :add_comment, :add_like, :delete_comment, :delete_like]
+  before_action :set_comment, only: [:delete_comment]
+  before_action :set_like, only: [:delete_like]
+
+  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
+
+  # GET /recipes
+  def index
+    recipes = if current_user&.email == ADMIN_EMAIL
+                Recipe.all
+              elsif current_user
+                Recipe.where(is_public: true).or(Recipe.where(user_id: current_user.id))
+              else
+                Recipe.where(is_public: true)
+              end
+
+    filters_applied = false
+
+    if params[:cuisine].present?
+      recipes = recipes.where(cuisine: params[:cuisine])
+      filters_applied = true
+    end
+
+    if params[:difficulty].present?
+      recipes = recipes.where(difficulty: params[:difficulty])
+      filters_applied = true
+    end
+
+    if params[:tag].present?
+      recipes = recipes.to_a.select { |r| r.tags&.include?(params[:tag]) }
+      filters_applied = true
+    end
+
+    if params[:search].present?
+      query = params[:search].downcase
+      recipes = recipes.to_a.select do |r|
+        r.title&.downcase&.include?(query) ||
+          r.description&.downcase&.include?(query) ||
+          r.cuisine&.map(&:downcase)&.include?(query)
+      end
+      filters_applied = true
+    end
+
+    # Order by updated_at
+    recipes = recipes.sort_by(&:updated_at).reverse
+
+    # Simple manual pagination
+    page = (params[:page] || 1).to_i
+    per_page = (params[:per_page] || 10).to_i
+    paginated_recipes = recipes.slice((page - 1) * per_page, per_page) || []
+
+    render json: {
+      data: paginated_recipes.map { |r| recipe_json(r) },
+      pagination: {
+        current_page: page,
+        total_pages: (recipes.size / per_page.to_f).ceil,
+        total_count: recipes.size
+      }
+    }
+  end
+
+  # GET /recipes/:id
+  def show
+    if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
+      render json: recipe_json(@recipe)
+    else
+      head :forbidden
+    end
+  end
+
+  # PATCH/PUT /recipes/:id
+  def update
+    return head :forbidden unless @recipe.user_id == current_user.id || current_user&.email == ADMIN_EMAIL
+
+    ActiveGraph::Base.transaction do
+      if recipe_params[:ingredients]
+        @recipe.ingredients.each(&:destroy)
+        recipe_params[:ingredients].each do |ingredient|
+          @recipe.ingredients.create(
+            name: ingredient[:name],
+            category: ingredient[:category],
+            amount: ingredient[:amount]
+          )
+        end
+      end
+
+      @recipe.update(recipe_params.except(:ingredients))
+    end
+
+    render json: recipe_json(@recipe)
+  rescue ActiveGraph::Persistence::PersistenceError => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  end
+
+  # DELETE /recipes/:id
+  def destroy
+    return head :forbidden unless @recipe.user_id == current_user.id || current_user&.email == ADMIN_EMAIL
+
+    if @recipe.image_url.present?
+      image_deleted = Recipes::RecipesService.delete_old_image(recipe: @recipe)
+    else
+      image_deleted = true
+    end
+
+    if image_deleted
+      @recipe.destroy
+      head :no_content
+    else
+      render json: { error: 'Failed to delete the recipe.' }, status: :unprocessable_entity
+    end
+  end
+
+  # POST /recipes/:id/add_comment
+  def add_comment
+    comment = @recipe.recipe_comments.create(comment_params.merge(user: current_user))
+
+    if comment.persisted?
+      render json: comment, status: :created
+    else
+      render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /recipes/:id/delete_comment
+  def delete_comment
+    return head :forbidden unless @comment.user == current_user
+
+    if @comment.destroy
+      head :no_content
+    else
+      render json: { errors: 'Failed to delete comment' }, status: :unprocessable_entity
+    end
+  end
+
+  # POST /recipes/:id/add_like
+  def add_like
+    like = @recipe.recipe_likes.find { |l| l.user == current_user } || @recipe.recipe_likes.create(user: current_user)
+
+    if like.persisted?
+      render json: like, status: :created
+    else
+      render json: { message: 'Already liked' }, status: :ok
+    end
+  end
+
+  # DELETE /recipes/:id/delete_like
+  def delete_like
+    return head :forbidden unless @like.user == current_user
+
+    if @like&.destroy
+      head :no_content
+    else
+      render json: { errors: 'Failed to unlike' }, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def set_recipe
+    @recipe = Recipe.find(params[:id])
+  rescue ActiveGraph::Node::LabelsNotFoundError
+    head :not_found
+  end
+
+  def set_comment
+    @comment = @recipe.recipe_comments.find { |c| c.id == params[:comment_id] }
+    render(json: { error: 'Comment not found' }, status: :not_found) unless @comment
+  end
+
+  def set_like
+    @like = @recipe.recipe_likes.find { |l| l.user == current_user }
+    render(json: { error: 'Like not found' }, status: :not_found) unless @like
+  end
+
+  def recipe_params
+    params.require(:recipe).permit(
+      :title, :description, :cuisine,
+      :is_public, :difficulty, :prep_time, :cook_time, :servings,
+      instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
+    )
+  end
+
+  def comment_params
+    params.require(:comment).permit(:comment)
+  end
+
+  def recipe_json(recipe)
+    {
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description,
+      image_url: recipe.image_url,
+      instructions: recipe.instructions,
+      is_public: recipe.is_public,
+      cuisine: recipe.cuisine,
+      difficulty: recipe.difficulty,
+      tags: recipe.tags,
+      prep_time: recipe.prep_time,
+      cook_time: recipe.cook_time,
+      servings: recipe.servings,
+      created_at: recipe.created_at,
+      updated_at: recipe.updated_at,
+      user: recipe.user ? { id: recipe.user.id, image_src: recipe.user.image_src } : nil,
+      ingredients: recipe.ingredients.map { |i| i.slice(:id, :name, :category, :amount) },
+      recipe_likes: recipe.recipe_likes.map { |l| { user_id: l.user.id } },
+      recipe_comments: recipe.recipe_comments.map { |c| { id: c.id, comment: c.comment, user_id: c.user.id } }
+    }
+  end
+end

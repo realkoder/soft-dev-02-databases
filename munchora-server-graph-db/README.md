@@ -8,8 +8,11 @@ and --> http://neo4jrb.io/
 Creating a migration run the following:
 
 ```bash
-# Create migration
+# Create migration for constraint
 rake "neo4j:generate_schema_migration[constraint,User,id,email]"
+
+# Create migration for indexes
+rake "neo4j:generate_schema_migration[index,Recipe,title,is_public,user_id]"
 
 # RUN MIGRATIONS
 rake neo4j:migrate

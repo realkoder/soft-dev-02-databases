@@ -14,6 +14,23 @@ Rails.application.routes.draw do
       delete "/auth/logout", to: "auth#logout"
       get "/auth/me", to: "auth#me"
 
+      # RECIPES
+      resources :recipes, only: [:index, :show, :update, :destroy] do
+        member do
+          # image
+          post 'upload-image', to: 'recipes#upload_image'
+          delete 'delete-image', to: 'recipes#delete_image'
+
+          # comments
+          post 'comments', to: 'recipes#add_comment'
+          delete 'comments/:comment_id', to: 'recipes#delete_comment'
+
+          # likes
+          post 'likes', to: 'recipes#add_like'
+          delete 'likes', to: 'recipes#delete_like'
+        end
+      end
+
       # USERS
       resources :users, only: [:index, :show, :create, :update, :destroy]
 

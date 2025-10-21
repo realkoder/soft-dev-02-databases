@@ -16,7 +16,11 @@
 - CREATE CONSTRAINT `constraint_dbcee0a4` FOR (n:`ActiveGraph::Migrations::SchemaMigration`)
   REQUIRE (n.`migration_id`) IS UNIQUE
 - CREATE CONSTRAINT `constraint_e4cf7301` FOR (n:`User`) REQUIRE (n.`email`) IS UNIQUE
-:indexes: []
+- CREATE CONSTRAINT `constraint_f729ff5c` FOR (n:`Recipe`) REQUIRE (n.`id`) IS UNIQUE
+:indexes:
+- CREATE RANGE INDEX `index_75aa3230` FOR (n:`Recipe`) ON (n.`title`)
 :versions:
 - '20251001172117'
 - '20251021180509'
+- '20251021200521'
+- '20251021201549'
