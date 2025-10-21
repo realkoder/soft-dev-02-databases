@@ -545,3 +545,275 @@ Completed 200 OK in 142ms (Views: 51.9ms | GC: 1.1ms)
 
 [dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
 [dotenv] Loaded [33m.env.dev[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+Started GET "/api/v1/users" for ::1 at 2025-10-21 19:16:21 +0200
+ [34mBOLT:[0m [33m22ms[0m
+ [34mBOLT:[0m [33m41ms[0m
+ [34mBOLT:[0m [33m2ms[0m
+ [34mBOLT:[0m [33m30ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m16ms[0m
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_user! rendered or redirected
+Completed 401 Unauthorized in 2ms (Views: 0.2ms | GC: 0.0ms)
+
+
+Started GET "/api/v1/users" for ::1 at 2025-10-21 19:16:39 +0200
+Processing by Api::V1::UsersController#index as HTML
+ [34mBOLT:[0m [33m9ms[0m
+ [34mBOLT:[0m [33m11ms[0m
+ [36mUser[0m 
+  [36mMATCH[0m (n:`User`)
+  [36mRETURN[0m count(n) AS n 
+ [34mBOLT:[0m [33m36ms[0m
+ [36mUser[0m 
+  [36mMATCH[0m (n:`User`)
+  [36mRETURN[0m n
+  [36mSKIP[0m $skip_0
+  [36mLIMIT[0m $limit_10 | {skip_0: 0, limit_10: 10}
+ [34mBOLT:[0m [33m30ms[0m
+Completed 200 OK in 128ms (Views: 33.9ms | GC: 0.0ms)
+
+
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m22ms[0m
+ [34mBOLT:[0m [33m51ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`ActiveGraph::Migrations::SchemaMigration`) REQUIRE n.`migration_id` IS UNIQUE 
+ [34mBOLT:[0m [33m35ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m15ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m23ms[0m
+ [34mBOLT:[0m [33m24ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m2ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m72ms[0m
+ [34mBOLT:[0m [33m2ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m13ms[0m
+ [34mBOLT:[0m [33m12ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m11ms[0m
+ [34mBOLT:[0m [33m64ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m11ms[0m
+ [34mBOLT:[0m [33m14ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m12ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m4ms[0m
+ [34mBOLT:[0m [33m3ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m2ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m3ms[0m
+ [34mBOLT:[0m [33m3ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m2ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mWHERE[0m (n.migration_id = $n_migration_id)
+  [36mRETURN[0m n
+  [36mLIMIT[0m $limit_1 | {n_migration_id: "20251001172117", limit_1: 1}
+ [34mBOLT:[0m [33m64ms[0m
+ [36mCYPHER[0m 
+  [36mMATCH[0m (n)
+  [36mWHERE[0m (ID(n) = $ID_n)
+  [36mOPTIONAL MATCH[0m (n)-[r]-()
+  [31mDELETE[0m 
+    n, 
+    r | {ID_n: 0}
+ [34mBOLT:[0m [33m53ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m6ms[0m
+ [34mBOLT:[0m [33m2ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m2ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m21ms[0m
+ [34mBOLT:[0m [33m2ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m13ms[0m
+ [34mBOLT:[0m [33m16ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m10ms[0m
+ [34mBOLT:[0m [33m19ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m30ms[0m
+ [34mBOLT:[0m [33m32ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`ActiveGraph::Migrations::SchemaMigration`) REQUIRE n.`migration_id` IS UNIQUE 
+ [34mBOLT:[0m [33m28ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m17ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m60ms[0m
+ [34mBOLT:[0m [33m17ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m14ms[0m
+ [34mBOLT:[0m [33m22ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m13ms[0m
+ [34mBOLT:[0m [33m62ms[0m
+ [36mCYPHER[0m 
+  [36mMATCH[0m (n)
+  [36mWHERE[0m (ID(n) = $ID_n)
+  [36mOPTIONAL MATCH[0m (n)-[r]-()
+  [31mDELETE[0m 
+    n, 
+    r | {ID_n: 0}
+ [34mBOLT:[0m [33m1ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m253ms[0m
+ [34mBOLT:[0m [33m94ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`ActiveGraph::Migrations::SchemaMigration`) REQUIRE n.`migration_id` IS UNIQUE 
+ [34mBOLT:[0m [33m46ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m115ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m134ms[0m
+ [34mBOLT:[0m [33m30ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m17ms[0m
+ [34mBOLT:[0m [33m25ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m16ms[0m
+ [34mBOLT:[0m [33m70ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m16ms[0m
+ [34mBOLT:[0m [33m22ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`ActiveGraph::Migrations::SchemaMigration`) REQUIRE n.`migration_id` IS UNIQUE 
+ [34mBOLT:[0m [33m43ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m19ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m82ms[0m
+ [34mBOLT:[0m [33m19ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m14ms[0m
+ [34mBOLT:[0m [33m13ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m12ms[0m
+ [34mBOLT:[0m [33m39ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m25ms[0m
+ [34mBOLT:[0m [33m16ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m12ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m4ms[0m
+ [34mBOLT:[0m [33m3ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m2ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mWHERE[0m (n.migration_id = $n_migration_id)
+  [36mRETURN[0m n
+  [36mLIMIT[0m $limit_1 | {n_migration_id: "20251001172117", limit_1: 1}
+ [34mBOLT:[0m [33m46ms[0m
+ [36mCYPHER[0m 
+  [36mMATCH[0m (n)
+  [36mWHERE[0m (ID(n) = $ID_n)
+  [36mOPTIONAL MATCH[0m (n)-[r]-()
+  [31mDELETE[0m 
+    n, 
+    r | {ID_n: 0}
+ [34mBOLT:[0m [33m42ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m6ms[0m
+ [34mBOLT:[0m [33m4ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m2ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m16ms[0m
+ [34mBOLT:[0m [33m2ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m13ms[0m
+ [34mBOLT:[0m [33m36ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m13ms[0m
+ [34mBOLT:[0m [33m40ms[0m
+[dotenv] Set [36mNEO4J_URI[0m, [36mNEO4J_USER[0m, [36mNEO4J_PASSWORD[0m, [36mGOOGLE_CLIENT_ID[0m, [36mGOOGLE_CLIENT_SECRET[0m, [36mOPENAI_API[0m, [36mUPSTASH_REDIS_URL[0m, [36mRESEND_API_KEY[0m, and [36mPASSWORD[0m
+[dotenv] Loaded [33m.env.dev[0m
+ [34mBOLT:[0m [33m500ms[0m
+ [34mBOLT:[0m [33m71ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`ActiveGraph::Migrations::SchemaMigration`) REQUIRE n.`migration_id` IS UNIQUE 
+ [34mBOLT:[0m [33m42ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m77ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251001172117", incomplete: true}}
+ [34mBOLT:[0m [33m80ms[0m
+ [34mBOLT:[0m [33m32ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`id` IS UNIQUE 
+ [34mBOLT:[0m [33m15ms[0m
+ [36mCYPHER[0m 
+  [36mMATCH[0m (n)
+  [36mWHERE[0m (ID(n) = $ID_n)
+  [33mSET[0m n.`incomplete` = $setter_n_incomplete | {ID_n: 0, setter_n_incomplete: nil}
+ [34mBOLT:[0m [33m73ms[0m
+ [36mCYPHER[0m CREATE (n:`ActiveGraph::Migrations::SchemaMigration`) SET n = $props RETURN n | {props: {migration_id: "20251021180509", incomplete: true}}
+ [34mBOLT:[0m [33m17ms[0m
+ [34mBOLT:[0m [33m22ms[0m
+ [36mCYPHER[0m CREATE CONSTRAINT FOR (n:`User`) REQUIRE n.`email` IS UNIQUE 
+ [34mBOLT:[0m [33m14ms[0m
+ [36mCYPHER[0m 
+  [36mMATCH[0m (n)
+  [36mWHERE[0m (ID(n) = $ID_n)
+  [33mSET[0m n.`incomplete` = $setter_n_incomplete | {ID_n: 1, setter_n_incomplete: nil}
+ [34mBOLT:[0m [33m24ms[0m
+ [34mBOLT:[0m [33m26ms[0m
+ [34mBOLT:[0m [33m30ms[0m
+ [34mBOLT:[0m [33m4ms[0m
+ [36mActiveGraph::Migrations::SchemaMigration[0m 
+  [36mMATCH[0m (n:`ActiveGraph::Migrations::SchemaMigration`)
+  [36mRETURN[0m n 
+ [34mBOLT:[0m [33m15ms[0m

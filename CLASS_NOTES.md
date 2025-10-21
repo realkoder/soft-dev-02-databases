@@ -449,6 +449,32 @@ required if the orders are embedded within customer object.
 
 ![Graph vs RDBMS](assets/graph-vs-rdbms.png)
 
+### APOC (Awesome Procedures On Cypher)
+
+A powerful Neo4j plugin extending Cypher with hundreds of utility functions and procedures for data import/export,
+graph refactoring, path finding, and schema operations. It enhances Cypher’s expressiveness with commands like
+apoc.create.node, apoc.refactor.mergeNodes, and apoc.convert.toJson. Common uses include batch updates, dynamic queries,
+and integrating external data sources. APOC is essential for advanced data manipulation, automation, and maintenance
+within Neo4j.
+
+APOC is also providing utilities such as triggers and events.
+
+**Node** → roughly like a table row or document; represents an entity (e.g., User, Recipe).
+
+**Label** → roughly like a table or collection; nodes with the same label share a type (:User).
+
+**Property** → roughly like a field or attribute; key-value pair stored on a node or relationship (name, email).
+
+**Relationship** → edges connecting nodes; can also have properties (like a row in a join table).
+
+**Constraint** → similar to unique/primary key in relational DBs (e.g., id must be unique).
+
+**Index** → speeds up lookups on node properties.
+
+_Embedded/Foreign key concepts don’t really exist; graph relationships replace them._
+
+
+
 ---
 
 <br>
@@ -496,37 +522,37 @@ Essential and important _sql_ commands
 ```sql
 -- Show all databases
 SHOW
-DATABASES;
+    DATABASES;
 
 -- Select a database
 USE
-database_name;
+    database_name;
 
 -- Show all tables in the selected database
 SHOW
-TABLES;
+    TABLES;
 
 -- Describe a table structure
 DESCRIBE table_name;
 
 -- Show create table statement
 SHOW
-CREATE TABLE table_name;
+    CREATE TABLE table_name;
 
 -- Show indexes of a table
 SHOW
-INDEX FROM table_name;
+    INDEX FROM table_name;
 
 -- Show current database
 SELECT DATABASE();
 
 -- Show all columns of a table
 SHOW
-COLUMNS FROM table_name;
+    COLUMNS FROM table_name;
 
 -- Show table status (engine, rows, etc.)
 SHOW
-TABLE STATUS;
+    TABLE STATUS;
 
 -- Show all foreign keys for a table
 SELECT TABLE_NAME,
