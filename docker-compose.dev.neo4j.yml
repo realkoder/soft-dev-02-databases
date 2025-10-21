@@ -1,9 +1,9 @@
 # ===========================================================
 #       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
 # ===========================================================
-# docker-compose up:    docker-compose -f docker-compose.dev.yml up
-# docker-compose logs:  docker-compose -f docker-compose.dev.yml logs -f
-# docker-compose down:  docker-compose -f docker-compose.dev.yml down --rmi all --remove-orphans
+# docker-compose up:    docker-compose -f docker-compose.dev.neo4j.yml up
+# docker-compose logs:  docker-compose -f docker-compose.dev.neo4j.yml logs -f
+# docker-compose down:  docker-compose -f docker-compose.dev.neo4j.yml down --rmi all --remove-orphans
 #                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
 
 services:
