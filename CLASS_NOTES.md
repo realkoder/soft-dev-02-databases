@@ -413,6 +413,30 @@ No **_Stored Procedures_** in **_MongoDB_**
 
 MongoDB do have stored functions, but they're not recommended
 
+----
+
+#### MongoDB Atlas Cloud vs Self-hosting
+
+Relying on _MongoDB Atlas cloud_ provides automatic 3-node replica set where if self-hosted it has
+to be configured manually (simple version orchestrator is missing):
+
+```yml
+# docker-compose.yml for replica set
+version: '3.8'
+services:
+  mongo1:
+    image: mongo:5.0
+    command: [ "--replSet", "rs0", "--bind_ip_all" ]
+
+  mongo2:
+    image: mongo:5.0
+    command: [ "--replSet", "rs0", "--bind_ip_all" ]
+
+  mongo3:
+    image: mongo:5.0
+    command: [ "--replSet", "rs0", "--bind_ip_all" ]
+```
+
 ---
 
 ### Document Schema Design
@@ -445,6 +469,9 @@ For document oriented dbs they also do lack the relationships such as friends, f
 To determine which customers bought a given product a full scan of the customers is
 required if the orders are embedded within customer object.
 
+Ruby on Rails app relies on Bolt for neo4j connection just like SQL mosty relies on TCP.
+Bolt is Neo4j’s binary network protocol for communication between clients and the database.
+
 ![Graph DB](assets/graph-db.png)
 
 ![Graph vs RDBMS](assets/graph-vs-rdbms.png)
@@ -473,7 +500,30 @@ APOC is also providing utilities such as triggers and events.
 
 _Embedded/Foreign key concepts don’t really exist; graph relationships replace them._
 
+### Relations in Neo4j
 
+_Neo4j_ allows to define any relationship type - they're completely custom to a given domain.
+
+**Direction specifiers in Neo4j define relationship orientation:**
+
+- `:out` = From current node to others
+- `:in` = From others to current node
+- `:both` = Either direction (bidirectional)
+
+However, there are some common patterns and categories that emerge.
+Here are the main types of relationships with examples:
+
+**Common Relationship Categories Summary**
+
+| Category      | Example Relationships                      |
+|---------------|--------------------------------------------|
+| Social        | `:FRIENDS_WITH` `:FOLLOWS` `:CONNECTED_TO` |
+| Professional  | `:WORKS_FOR` `:MANAGES` `:COLLEAGUE_OF`    |
+| Content       | `:LIKED` `:SHARED` `:CREATED` `:VIEWED`    |
+| Spatial       | `:LOCATED_IN` `:NEAR` `:CONTAINS`          |
+| Temporal      | `:BEFORE` `:AFTER` `:DURING`               |
+| Causal        | `:CAUSES` `:LEADS_TO,` `:DEPENDS_ON`       |
+| Transactional | `:PURCHASED` `:OWNS` `:SOLD_TO`            |
 
 ---
 
