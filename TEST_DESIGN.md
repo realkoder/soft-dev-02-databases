@@ -293,7 +293,7 @@ cd munchora-server-relational-db
 docker-compose -f docker-compose-sonar-qube.yml up
 ```
 
-Go to **SonarQube dashboard** on `http://localhost:9090` - default credentials are login: `admin` password: `admin`
+Go to **SonarQube dashboard** on `http://localhost:9000` - default credentials are login: `admin` password: `admin`
 
 Use following command to scan project with _SonnarScanner_:
 

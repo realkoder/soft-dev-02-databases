@@ -185,17 +185,4 @@ class Llm::LlmService
       completion_tokens: usage.completion_tokens,
     )
   end
-
-  def prompt_recipe_image(recipe_description)
-    prompt = 'Generate a high-quality, realistic food image for this recipe: ' \
-      "#{recipe_description}. Focus on appetizing presentation, vibrant colors, " \
-      'and making the dish look delicious and visually appealing.'
-
-    response = OpenAIClient.images.generate(
-      prompt: prompt,
-      size: '1024x1024'
-    )
-
-    response[:data][0][:url]
-  end
 end
