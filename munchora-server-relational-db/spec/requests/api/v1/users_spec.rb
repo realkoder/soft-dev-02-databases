@@ -242,7 +242,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
   end
 
   # ======================================
-  # PUT/PATCH: DESTROY
+  # DELETE: DESTROY
   # ======================================
   context '#destroy' do
     context 'positive tests' do

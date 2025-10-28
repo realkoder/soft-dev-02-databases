@@ -54,7 +54,18 @@ or start _rails server_ `bin/rails s` and interact through _HTTP_ requests.
 
 ## NoSQL Document Based Database
 
+To boot up docker based MongoDB seeded from dump file please follow along
 
+```bash
+# 1. cd to ./dumps-and-migration-scripts
+cd ./dumps-and-migration-scripts
+
+# 2. Execute docker-compose for mongodb
+docker-compose -f docker-compose.mongodb-seeded.yml
+
+# 3. mongodb is running seeded and ready for connections
+mongosh "mongodb://root:root@localhost:27017/munchora?authsource=admin"
+```
 
 ---
 

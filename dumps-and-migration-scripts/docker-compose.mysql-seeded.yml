@@ -1,0 +1,25 @@
+# ===========================================================
+#       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
+# ===========================================================
+# docker-compose up:    docker-compose -f docker-compose.mysql-seed.yml up
+# docker-compose logs:  docker-compose -f docker-compose.mysql-seed.yml logs -f
+# docker-compose down:  docker-compose -f docker-compose.mysql-seed.yml down --rmi all --remove-orphans
+#                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
+#
+# Generate a mysql dump file: docker exec -i mysqldb mysqldump -u root -padmin munchora > ./munchora_dump.sql
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: munchora
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: dev-pswd
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./munchora_dump.sql:/docker-entrypoint-initdb.d/dump.sql
+volumes:
+  mysql_data:

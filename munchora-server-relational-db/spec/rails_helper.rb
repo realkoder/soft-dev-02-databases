@@ -21,7 +21,7 @@ require 'webmock/rspec'
 #
 #   # Optionally, ignore everything else
 #   add_filter do |source_file|
-#     !source_file.filename.end_with?("app/models/user.rb")
+#     !source_file.filename.end_with?("app/models/user.rb", "app/controllers/api/v1/users_controller.rb")
 #   end
 # end
 
@@ -87,7 +87,6 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
-
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|

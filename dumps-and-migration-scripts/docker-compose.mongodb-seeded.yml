@@ -1,0 +1,28 @@
+# ===========================================================
+#       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
+# ===========================================================
+# docker-compose up:    docker-compose -f docker-compose.mongodb-seeded.yml up
+# docker-compose logs:  docker-compose -f docker-compose.mongodb-seeded.yml logs -f
+# docker-compose down:  docker-compose -f docker-compose.mongodb-seeded.yml down --rmi all --remove-orphans
+#                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
+#
+# Generate a mysql dump file: mongodump --uri="mongodb+srv://user:password@cluster0.mongodb.net/munchora"
+# Interact through mongosh: mongosh "mongodb://root:root@localhost:27017/munchora?authSource=admin"
+
+services:
+  mongo_db:
+    image: mongo:8.0
+    container_name: munchora_mongo_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: munchora
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./mongodb-dump:/dump
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro # this script is needed to migrate mongodb from dumpfile
+
+volumes:
+  mongo_data:
