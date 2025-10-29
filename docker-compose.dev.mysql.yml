@@ -7,6 +7,8 @@
 #                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
 #
 # Generate a mysql dump file: docker exec -i mysqldb mysqldump -u root -padmin munchora > ./munchora_dump.sql
+#
+# Interact with running docker based mysql: docker exec -it <containerID / name> mysql -u root -padmin
 
 services:
   mysqldb:
