@@ -5,7 +5,7 @@ class Api::V1::RecipesController < ApplicationController
   before_action :set_comment, only: [:delete_comment]
   before_action :set_like, only: [:delete_like]
 
-  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
+  ADMIN_EMAIL = "alexanderbtcc@gmail.com"
 
   def index
     recipes = nil
@@ -70,31 +70,18 @@ class Api::V1::RecipesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /recipes/:id
   def update
     return head :forbidden unless @recipe.user_id == current_user.id || current_user&.email == ADMIN_EMAIL
+    begin
+      Recipe::RecipeUpdater.new(@recipe, recipe_params, current_user).call!
 
-    ActiveGraph::Base.transaction do
-      if recipe_params[:ingredients]
-        @recipe.ingredients.each(&:destroy)
-        recipe_params[:ingredients].each do |ingredient|
-          @recipe.ingredients.create(
-            name: ingredient[:name],
-            category: ingredient[:category],
-            amount: ingredient[:amount]
-          )
-        end
-      end
-
-      @recipe.update(recipe_params.except(:ingredients))
+      render json: recipe_json(@recipe)
+    rescue => e
+      Rails.logger.error "Update error: #{e.message}\n#{e.backtrace.join("\n")}"
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
-
-    render json: recipe_json(@recipe)
-  rescue ActiveGraph::Persistence::PersistenceError => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
-  # DELETE /recipes/:id
   def destroy
     return head :forbidden unless @recipe.user_id == current_user.id || current_user&.email == ADMIN_EMAIL
 
@@ -108,11 +95,10 @@ class Api::V1::RecipesController < ApplicationController
       @recipe.destroy
       head :no_content
     else
-      render json: { error: 'Failed to delete the recipe.' }, status: :unprocessable_entity
+      render json: { error: "Failed to delete the recipe." }, status: :unprocessable_entity
     end
   end
 
-  # POST /recipes/:id/add_comment
   def add_comment
     comment = @recipe.recipe_comments.create(comment_params.merge(user: current_user))
 
@@ -123,36 +109,33 @@ class Api::V1::RecipesController < ApplicationController
     end
   end
 
-  # DELETE /recipes/:id/delete_comment
   def delete_comment
     return head :forbidden unless @comment.user == current_user
 
     if @comment.destroy
       head :no_content
     else
-      render json: { errors: 'Failed to delete comment' }, status: :unprocessable_entity
+      render json: { errors: "Failed to delete comment" }, status: :unprocessable_entity
     end
   end
 
-  # POST /recipes/:id/add_like
   def add_like
     like = @recipe.recipe_likes.find { |l| l.user == current_user } || @recipe.recipe_likes.create(user: current_user)
 
     if like.persisted?
       render json: like, status: :created
     else
-      render json: { message: 'Already liked' }, status: :ok
+      render json: { message: "Already liked" }, status: :ok
     end
   end
 
-  # DELETE /recipes/:id/delete_like
   def delete_like
     return head :forbidden unless @like.user == current_user
 
     if @like&.destroy
       head :no_content
     else
-      render json: { errors: 'Failed to unlike' }, status: :unprocessable_entity
+      render json: { errors: "Failed to unlike" }, status: :unprocessable_entity
     end
   end
 
@@ -165,19 +148,18 @@ class Api::V1::RecipesController < ApplicationController
 
   def set_comment
     @comment = @recipe.recipe_comments.find { |c| c.id == params[:comment_id] }
-    render(json: { error: 'Comment not found' }, status: :not_found) unless @comment
+    render(json: { error: "Comment not found" }, status: :not_found) unless @comment
   end
 
   def set_like
     @like = @recipe.recipe_likes.find { |l| l.user == current_user }
-    render(json: { error: 'Like not found' }, status: :not_found) unless @like
+    render(json: { error: "Like not found" }, status: :not_found) unless @like
   end
 
   def recipe_params
     params.require(:recipe).permit(
-      :title, :description, :cuisine,
-      :is_public, :difficulty, :prep_time, :cook_time, :servings,
-      instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
+      :title, :description, :is_public, :difficulty, :prep_time, :cook_time, :servings,
+      cuisine: [], instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
     )
   end
 
@@ -191,11 +173,11 @@ class Api::V1::RecipesController < ApplicationController
       title: recipe.title,
       description: recipe.description,
       image_url: recipe.image_url,
-      instructions: JSON.parse(recipe.instructions || '[]'),
+      instructions: JSON.parse(recipe.instructions || "[]"),
       is_public: recipe.is_public,
-      cuisine: JSON.parse(recipe.cuisine || '[]'),
+      cuisine: JSON.parse(recipe.cuisine || "[]"),
       difficulty: recipe.difficulty,
-      tags: JSON.parse(recipe.tags || '[]'),
+      tags: JSON.parse(recipe.tags || "[]"),
       prep_time: recipe.prep_time,
       cook_time: recipe.cook_time,
       servings: recipe.servings,

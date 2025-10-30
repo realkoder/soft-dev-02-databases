@@ -22,7 +22,6 @@
 - CREATE CONSTRAINT `constraint_f729ff5c` FOR (n:`Recipe`) REQUIRE (n.`id`) IS UNIQUE
 :indexes:
 - CREATE RANGE INDEX `index_152c8627` FOR (n:`Recipe`) ON (n.`difficulty`)
-- CREATE RANGE INDEX `index_254d7932` FOR (n:`Recipe`) ON (n.`user_id`)
 - CREATE RANGE INDEX `index_2946d8f6` FOR (n:`LlmUsage`) ON (n.`created_at`)
 - CREATE RANGE INDEX `index_610deb21` FOR (n:`Recipe`) ON (n.`updated_at`)
 - CREATE RANGE INDEX `index_75aa3230` FOR (n:`Recipe`) ON (n.`title`)
