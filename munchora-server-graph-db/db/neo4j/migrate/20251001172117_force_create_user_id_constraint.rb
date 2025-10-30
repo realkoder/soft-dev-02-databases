@@ -1,6 +1,6 @@
 class ForceCreateUserIdConstraint < ActiveGraph::Migrations::Base
   def up
-    add_constraint :User, :id, type: :unique
+    add_constraint :User, :id, type: :unique, force: true
   end
 
   def down
