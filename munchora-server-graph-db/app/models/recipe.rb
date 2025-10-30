@@ -37,6 +37,15 @@ class Recipe
   # Callbacks
   before_save :update_timestamp
 
+  # JSON serialization
+  def as_json(options = {})
+    super(options).tap do |recipe_json|
+      recipe_json["recipe"]["cuisine"] = JSON.parse(cuisine) if cuisine.present?
+      recipe_json["recipe"]["instructions"] = JSON.parse(instructions) if instructions.present?
+      recipe_json["recipe"]["tags"] = JSON.parse(tags) if tags.present?
+    end
+  end
+
   private
 
   def update_timestamp

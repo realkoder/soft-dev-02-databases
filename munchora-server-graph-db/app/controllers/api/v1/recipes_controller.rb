@@ -53,7 +53,13 @@ class Api::V1::RecipesController < ApplicationController
     paginated_recipes = recipes.offset((page - 1) * per_page).limit(per_page)
 
     render json: {
-      data: paginated_recipes.map { |r| recipe_json(r) },
+      data: paginated_recipes.map { |r| r.as_json(
+        include: {
+          ingredients: { only: [:id, :name, :category, :amount] },
+          user: { only: [:image_src, :id] },
+          # recipe_likes: {},
+          # recipe_comments: {}
+        }) },
       pagination: {
         current_page: page,
         total_pages: (recipes.count / per_page.to_f).ceil,
@@ -64,7 +70,12 @@ class Api::V1::RecipesController < ApplicationController
 
   def show
     if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
-      render json: recipe_json(@recipe)
+      render json: @recipe.as_json(include: {
+        ingredients: { only: [:id, :name, :category, :amount] },
+        user: { only: [:image_src, :id] },
+        # recipe_likes: {},
+        # recipe_comments: {}
+      })
     else
       head :forbidden
     end
@@ -75,7 +86,12 @@ class Api::V1::RecipesController < ApplicationController
     begin
       Recipe::RecipeUpdater.new(@recipe, recipe_params, current_user).call!
 
-      render json: recipe_json(@recipe)
+      render json: @recipe.as_json(include: {
+        ingredients: { only: [:id, :name, :category, :amount] },
+        user: { only: [:image_src, :id] },
+        # recipe_likes: {},
+        # recipe_comments: {}
+      })
     rescue => e
       Rails.logger.error "Update error: #{e.message}\n#{e.backtrace.join("\n")}"
       render json: { errors: [e.message] }, status: :unprocessable_entity
@@ -165,33 +181,5 @@ class Api::V1::RecipesController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:comment)
-  end
-
-  def recipe_json(recipe)
-    {
-      id: recipe.id,
-      title: recipe.title,
-      description: recipe.description,
-      image_url: recipe.image_url,
-      instructions: JSON.parse(recipe.instructions || "[]"),
-      is_public: recipe.is_public,
-      cuisine: JSON.parse(recipe.cuisine || "[]"),
-      difficulty: recipe.difficulty,
-      tags: JSON.parse(recipe.tags || "[]"),
-      prep_time: recipe.prep_time,
-      cook_time: recipe.cook_time,
-      servings: recipe.servings,
-      created_at: recipe.created_at,
-      updated_at: recipe.updated_at,
-      user: recipe.user ? { id: recipe.user.id, email: recipe.user.email } : nil,
-      ingredients: recipe.ingredients.map do |ingredient|
-        {
-          id: ingredient.id,
-          name: ingredient.name,
-          amount: ingredient.amount,
-          category: ingredient.category
-        }
-      end
-    }
   end
 end

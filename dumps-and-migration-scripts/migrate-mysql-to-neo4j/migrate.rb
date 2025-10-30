@@ -141,7 +141,7 @@ neo4j_driver.session do |session|
             created_at: $created_at,
             updated_at: $updated_at
       })
-        CREATE (u)-[:CREATED_BY]->(r)
+        CREATE (r)-[:CREATED_BY]->(u)
         WITH r
         UNWIND $ingredients_data AS ingredient
         CREATE (i:Ingredient {
