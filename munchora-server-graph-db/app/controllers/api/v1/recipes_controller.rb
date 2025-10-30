@@ -7,20 +7,20 @@ class Api::V1::RecipesController < ApplicationController
 
   ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
 
-  # GET /recipes
   def index
-    recipes = if current_user&.email == ADMIN_EMAIL
-                Recipe.all
-              elsif current_user
-                Recipe.where(is_public: true).or(Recipe.where(user_id: current_user.id))
-              else
-                Recipe.where(is_public: true)
-              end
+    recipes = nil
+    if current_user&.email == ADMIN_EMAIL
+      recipes = Recipe.all
+    elsif current_user
+      recipes = Recipe.where(is_public: true).or(Recipe.where(user_id: current_user.id))
+    else
+      recipes = Recipe.where(is_public: true)
+    end
 
     filters_applied = false
 
     if params[:cuisine].present?
-      recipes = recipes.where(cuisine: params[:cuisine])
+      recipes = recipes.where("cuisine ILIKE ?", "%#{params[:cuisine]}%")
       filters_applied = true
     end
 
@@ -30,39 +30,38 @@ class Api::V1::RecipesController < ApplicationController
     end
 
     if params[:tag].present?
-      recipes = recipes.to_a.select { |r| r.tags&.include?(params[:tag]) }
+      recipes = recipes.where("tags ILIKE ?", "%\"#{params[:tag]}\"%")
       filters_applied = true
     end
 
+    # Search across multiple fields
     if params[:search].present?
       query = params[:search].downcase
-      recipes = recipes.to_a.select do |r|
-        r.title&.downcase&.include?(query) ||
-          r.description&.downcase&.include?(query) ||
-          r.cuisine&.map(&:downcase)&.include?(query)
-      end
+      recipes = recipes.where(
+        "LOWER(title) LIKE :query OR LOWER(description) LIKE :query OR LOWER(cuisine) LIKE :query",
+        query: "%#{query}%"
+      )
       filters_applied = true
     end
 
     # Order by updated_at
-    recipes = recipes.sort_by(&:updated_at).reverse
+    recipes = recipes.order(created_at: :desc)
 
     # Simple manual pagination
     page = (params[:page] || 1).to_i
     per_page = (params[:per_page] || 10).to_i
-    paginated_recipes = recipes.slice((page - 1) * per_page, per_page) || []
+    paginated_recipes = recipes.offset((page - 1) * per_page).limit(per_page)
 
     render json: {
       data: paginated_recipes.map { |r| recipe_json(r) },
       pagination: {
         current_page: page,
-        total_pages: (recipes.size / per_page.to_f).ceil,
-        total_count: recipes.size
+        total_pages: (recipes.count / per_page.to_f).ceil,
+        total_count: recipes.count
       }
     }
   end
 
-  # GET /recipes/:id
   def show
     if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
       render json: recipe_json(@recipe)
@@ -160,9 +159,8 @@ class Api::V1::RecipesController < ApplicationController
   private
 
   def set_recipe
-    @recipe = Recipe.find(params[:id])
-  rescue ActiveGraph::Node::LabelsNotFoundError
-    head :not_found
+    @recipe = Recipe.find_by(id: params[:id])
+    head :not_found unless @recipe
   end
 
   def set_comment
@@ -193,20 +191,25 @@ class Api::V1::RecipesController < ApplicationController
       title: recipe.title,
       description: recipe.description,
       image_url: recipe.image_url,
-      instructions: recipe.instructions,
+      instructions: JSON.parse(recipe.instructions || '[]'),
       is_public: recipe.is_public,
-      cuisine: recipe.cuisine,
+      cuisine: JSON.parse(recipe.cuisine || '[]'),
       difficulty: recipe.difficulty,
-      tags: recipe.tags,
+      tags: JSON.parse(recipe.tags || '[]'),
       prep_time: recipe.prep_time,
       cook_time: recipe.cook_time,
       servings: recipe.servings,
       created_at: recipe.created_at,
       updated_at: recipe.updated_at,
-      user: recipe.user ? { id: recipe.user.id, image_src: recipe.user.image_src } : nil,
-      ingredients: recipe.ingredients.map { |i| i.slice(:id, :name, :category, :amount) },
-      recipe_likes: recipe.recipe_likes.map { |l| { user_id: l.user.id } },
-      recipe_comments: recipe.recipe_comments.map { |c| { id: c.id, comment: c.comment, user_id: c.user.id } }
+      user: recipe.user ? { id: recipe.user.id, email: recipe.user.email } : nil,
+      ingredients: recipe.ingredients.map do |ingredient|
+        {
+          id: ingredient.id,
+          name: ingredient.name,
+          amount: ingredient.amount,
+          category: ingredient.category
+        }
+      end
     }
   end
 end

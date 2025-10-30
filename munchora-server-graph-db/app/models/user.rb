@@ -3,8 +3,7 @@ class User
   include ActiveModel::SecurePassword
 
   # Properties
-  id_property :id
-  property :id, type: String, default: -> { SecureRandom.uuid }
+  id_property :id, auto: :uuid
   property :email, type: String
   property :first_name, type: String
   property :last_name, type: String
@@ -16,6 +15,7 @@ class User
 
   # Relationships
   has_many :out, :recipes, type: :CREATED_BY, model_class: 'Recipe', dependent: :destroy
+  has_many :out, :llm_usages, type: :HAS_LLM_USAGE
 
   # Validations
   validates :email,
@@ -41,8 +41,6 @@ class User
             allow_blank: true
 
   # Relationships
-  # has_many :out, :recipes, type: :CREATED, model_class: 'Recipe', dependent: :destroy
-  # has_many :out, :llm_usages, type: :USED, model_class: 'LlmUsage'
   # has_many :out, :grocery_lists, type: :OWNS, model_class: 'GroceryList', dependent: :destroy
   # has_many :out, :grocery_list_shares, type: :SHARED, model_class: 'GroceryListShare', dependent: :destroy
   # has_many :out, :shared_grocery_lists, type: :SHARED, model_class: 'GroceryList', rel_class: 'GroceryListShare'

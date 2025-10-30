@@ -14,6 +14,11 @@ Rails.application.routes.draw do
       delete "/auth/logout", to: "auth#logout"
       get "/auth/me", to: "auth#me"
 
+      # LLM
+      post 'llm/generate-recipe', to: 'llm#generate_recipe'
+      post 'llm/generate-recipe-image/:id', to: 'llm#generate_recipe_image'
+      put 'llm/update-recipe/:id', to: 'llm#update_recipe'
+
       # RECIPES
       resources :recipes, only: [:index, :show, :update, :destroy] do
         member do
