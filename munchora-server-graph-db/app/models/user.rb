@@ -12,9 +12,11 @@ class User
   property :provider, type: String
   property :password_digest, type: String
   property :image_src, type: String
+  property :created_at, type: DateTime, default: -> { DateTime.now }
+  property :updated_at, type: DateTime, default: -> { DateTime.now }
 
   # Relationships
-  has_many :out, :recipes, type: :CREATED_BY, model_class: 'Recipe', dependent: :destroy
+  has_many :out, :recipes, type: :CREATED_BY, dependent: :destroy
   has_many :out, :llm_usages, type: :HAS_LLM_USAGE
 
   # Validations
@@ -44,10 +46,7 @@ class User
   # has_many :out, :grocery_lists, type: :OWNS, model_class: 'GroceryList', dependent: :destroy
   # has_many :out, :grocery_list_shares, type: :SHARED, model_class: 'GroceryListShare', dependent: :destroy
   # has_many :out, :shared_grocery_lists, type: :SHARED, model_class: 'GroceryList', rel_class: 'GroceryListShare'
-  # has_many :out, :subscriptions, type: :SUBSCRIBED, model_class: 'Subscription'
-  # has_many :out, :invoices, type: :HAS, model_class: 'Invoice'
   # has_many :out, :recipe_suggestions, type: :SUGGESTED, model_class: 'RecipeSuggestion', dependent: :destroy
-  # has_many :out, :recipe_likes, type: :LIKED, model_class: 'RecipeLike', dependent: :destroy
 
   # JSON serialization
   def as_json(options = {})

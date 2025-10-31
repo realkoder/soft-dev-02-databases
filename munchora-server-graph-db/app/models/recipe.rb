@@ -21,6 +21,8 @@ class Recipe
   has_one :out, :user, type: :CREATED_BY
   has_many :out, :llm_usages, type: :HAS_LLM_USAGE
   has_many :out, :ingredients, type: :HAS_INGREDIENT, dependent: :destroy
+  has_many :in, :likes, type: :LIKED, model_class: 'RecipeLike', dependent: :destroy
+  has_many :in, :comments, type: :COMMENTED, model_class: 'RecipeComment', dependent: :destroy
 
   # Validations
   validates :title, presence: true, length: { maximum: 150 }

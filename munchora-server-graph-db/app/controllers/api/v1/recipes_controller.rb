@@ -3,7 +3,6 @@ class Api::V1::RecipesController < ApplicationController
   before_action :authenticate_user_or_nil, only: [:index, :show]
   before_action :set_recipe, only: [:show, :update, :destroy, :add_comment, :add_like, :delete_comment, :delete_like]
   before_action :set_comment, only: [:delete_comment]
-  before_action :set_like, only: [:delete_like]
 
   ADMIN_EMAIL = "alexanderbtcc@gmail.com"
 
@@ -57,8 +56,8 @@ class Api::V1::RecipesController < ApplicationController
         include: {
           ingredients: { only: [:id, :name, :category, :amount] },
           user: { only: [:image_src, :id] },
-          # recipe_likes: {},
-          # recipe_comments: {}
+          likes: {},
+          comments: {}
         }) },
       pagination: {
         current_page: page,
@@ -73,8 +72,8 @@ class Api::V1::RecipesController < ApplicationController
       render json: @recipe.as_json(include: {
         ingredients: { only: [:id, :name, :category, :amount] },
         user: { only: [:image_src, :id] },
-        # recipe_likes: {},
-        # recipe_comments: {}
+        likes: {},
+        comments: {}
       })
     else
       head :forbidden
@@ -89,8 +88,8 @@ class Api::V1::RecipesController < ApplicationController
       render json: @recipe.as_json(include: {
         ingredients: { only: [:id, :name, :category, :amount] },
         user: { only: [:image_src, :id] },
-        # recipe_likes: {},
-        # recipe_comments: {}
+        likes: {},
+        comments: {}
       })
     rescue => e
       Rails.logger.error "Update error: #{e.message}\n#{e.backtrace.join("\n")}"
@@ -116,7 +115,8 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_comment
-    comment = @recipe.recipe_comments.create(comment_params.merge(user: current_user))
+    puts "LOOK #{comment_params}"
+    comment = RecipeComment.create(comment_params.merge(user: current_user, recipe: @recipe))
 
     if comment.persisted?
       render json: comment, status: :created
@@ -136,19 +136,22 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_like
-    like = @recipe.recipe_likes.find { |l| l.user == current_user } || @recipe.recipe_likes.create(user: current_user)
+    like = @recipe.likes.find_by(user: current_user)
 
-    if like.persisted?
-      render json: like, status: :created
-    else
+    if like
       render json: { message: "Already liked" }, status: :ok
+    else
+      new_like = RecipeLike.create!(user: current_user, recipe: @recipe)
+      render json: new_like, status: :created
     end
   end
 
   def delete_like
-    return head :forbidden unless @like.user == current_user
+    like = @recipe.likes.find_by(user: current_user)
 
-    if @like&.destroy
+    if like.nil?
+      render json: { error: "Like not found" }, status: :not_found
+    elsif like.destroy
       head :no_content
     else
       render json: { errors: "Failed to unlike" }, status: :unprocessable_entity
@@ -163,13 +166,10 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def set_comment
-    @comment = @recipe.recipe_comments.find { |c| c.id == params[:comment_id] }
-    render(json: { error: "Comment not found" }, status: :not_found) unless @comment
-  end
+    puts "TRYING TO FIND #{params[:comment_id]}"
+    @comment = @recipe.comments.find_by(id: params[:comment_id], user: current_user)
 
-  def set_like
-    @like = @recipe.recipe_likes.find { |l| l.user == current_user }
-    render(json: { error: "Like not found" }, status: :not_found) unless @like
+    render(json: { error: "Comment not found" }, status: :not_found) unless @comment
   end
 
   def recipe_params

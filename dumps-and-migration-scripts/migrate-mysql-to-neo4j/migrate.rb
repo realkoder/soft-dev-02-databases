@@ -21,7 +21,7 @@ neo4j_driver = Neo4j::Driver::GraphDatabase.driver(ENV['NEO4J_URI'], Neo4j::Driv
 # RESETTING NEO4J clean slate
 # ===========================
 
-puts 'Resetting NEO4J DB'
+puts 'resetting neo4j db'
 
 neo4j_driver.session do |session|
   session.write_transaction do |tx|
@@ -29,13 +29,13 @@ neo4j_driver.session do |session|
   end
 end
 
-puts 'NEO4J DB is reset to a clean slate'
+puts 'neo4j db is reset to a clean slate'
 
 # ===========================
 # MIGRATE USERS
 # ===========================
 
-puts "Migrating users..."
+puts "migrating users..."
 
 users = mysql_client.query("SELECT * FROM users")
 
@@ -80,7 +80,7 @@ puts "#{users.size} users migrated from MySQL to Neo4j"
 # MIGRATE FEEDBACKS
 # ===========================
 
-puts "Migrating feedbacks..."
+puts "migrating feedbacks..."
 
 feedbacks = mysql_client.query("SELECT * FROM feedbacks")
 
@@ -112,7 +112,7 @@ puts "#{feedbacks.size} feedbacks migrated from MySQL to Neo4j"
 # MIGRATE RECIPES
 # ===========================
 
-puts "Migrating recipes..."
+puts "migrating recipes..."
 
 recipes = mysql_client.query("SELECT * FROM recipes")
 
@@ -184,13 +184,13 @@ neo4j_driver.session do |session|
   end
 end
 
-puts " #{recipes.size} recipes migrated from MySQL to Neo4j"
+puts "#{recipes.size} recipes migrated from MySQL to Neo4j"
 
 # ===========================
 # MIGRATE LLM_USAGES
 # ===========================
 
-puts "Migrating llm_usages..."
+puts "migrating llm_usages..."
 
 llm_usages = mysql_client.query("SELECT * FROM llm_usages")
 
@@ -230,6 +230,73 @@ neo4j_driver.session do |session|
   end
 end
 
-puts " #{recipes.size} recipes migrated from MySQL to Neo4j"
+puts "#{llm_usages.size} llm_usages migrated from MySQL to Neo4j"
 
+# ===========================
+# MIGRATE RECIPE_LIKES
+# ===========================
+
+puts "migrating recipe_likes..."
+
+recipe_likes = mysql_client.query("SELECT * FROM recipe_likes")
+
+neo4j_driver.session do |session|
+  recipe_likes.each do |row|
+    session.write_transaction do |tx|
+      tx.run(
+        "MERGE (u:User {id: $user_id})
+        MERGE (r:Recipe {id: $recipe_id})
+        CREATE (rl:RecipeLike {
+            id: $id,
+            created_at: $created_at,
+            updated_at: $updated_at
+      })
+        CREATE (u)-[:CREATED]->(rl)
+        CREATE (rl)-[:LIKED]->(r)",
+        id: SecureRandom.uuid,
+        user_id: row['user_id'],
+        recipe_id: row['recipe_id'],
+        created_at: row['created_at'],
+        updated_at: row['updated_at'],
+      )
+    end
+  end
+end
+
+puts "#{recipe_likes.size} recipes_likes migrated from MySQL to Neo4j"
+
+# ===========================
+# MIGRATE RECIPE_COMMENTS
+# ===========================
+
+puts "migrating recipe_comments..."
+
+recipe_comments = mysql_client.query("SELECT * FROM recipe_comments")
+
+neo4j_driver.session do |session|
+  recipe_comments.each do |row|
+    session.write_transaction do |tx|
+      tx.run(
+        "MERGE (u:User {id: $user_id})
+        MERGE (r:Recipe {id: $recipe_id})
+        CREATE (rl:RecipeComment {
+            id: $id,
+            comment: $comment,
+            created_at: $created_at,
+            updated_at: $updated_at
+      })
+        CREATE (u)-[:CREATED]->(rl)
+        CREATE (rl)-[:COMMENTED]->(r)",
+        id: SecureRandom.uuid,
+        user_id: row['user_id'],
+        comment: row['comment'],
+        recipe_id: row['recipe_id'],
+        created_at: row['created_at'],
+        updated_at: row['updated_at'],
+      )
+    end
+  end
+end
+
+puts "#{recipe_comments.size} recipes_comments migrated from MySQL to Neo4j"
 

@@ -12,7 +12,11 @@
 
 ---
 :constraints:
+- CREATE CONSTRAINT `constraint_2bf9c79b` FOR (n:`RecipeComment`) REQUIRE (n.`id`)
+  IS UNIQUE
 - CREATE CONSTRAINT `constraint_6965c9d8` FOR (n:`Ingredient`) REQUIRE (n.`id`) IS
+  UNIQUE
+- CREATE CONSTRAINT `constraint_71aed712` FOR (n:`RecipeLike`) REQUIRE (n.`id`) IS
   UNIQUE
 - CREATE CONSTRAINT `constraint_74fad970` FOR (n:`User`) REQUIRE (n.`id`) IS UNIQUE
 - CREATE CONSTRAINT `constraint_dbcee0a4` FOR (n:`ActiveGraph::Migrations::SchemaMigration`)
@@ -34,3 +38,5 @@
 - '20251029204327'
 - '20251029210955'
 - '20251030071914'
+- '20251031192819'
+- '20251031205002'

@@ -36,6 +36,29 @@ Then in browser enter: `http://localhost:7474` to enter **neo4j's** dashboard.
 
 <br>
 
+## CHATGPT ON IN vs OUT relationships
+
+_The core idea: relationships have a direction_
+
+Every relationship in Neo4j has a direction.
+Think of it like an arrow:
+
+```text
+(A) -[:RELATIONSHIP_TYPE]-> (B)
+```
+
+That means:
+
+Node A is the start (the “outgoing” side)
+
+Node B is the end (the “incoming” side)
+
+ActiveGraph model this direction using `:out` or `:in` in **has_one** / **has_many** declarations.
+
+---
+
+<br>
+
 ## MISC
 
 For cypher syntax checkout https://neo4j.com/docs/cypher-manual/current/introduction/ and
