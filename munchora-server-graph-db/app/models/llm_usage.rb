@@ -1,5 +1,6 @@
 class LlmUsage
   include ActiveGraph::Node
+  include ActiveGraph::Timestamps
 
   id_property :id, auto: :uuid
 
@@ -8,9 +9,6 @@ class LlmUsage
   property :prompt, type: String
   property :prompt_tokens, type: Integer
   property :completion_tokens, type: Integer
-
-  property :created_at, type: DateTime
-  property :updated_at, type: DateTime
 
   # Relations
   has_one :in, :user, origin: :llm_usages

@@ -1,5 +1,6 @@
 class Ingredient
   include ActiveGraph::Node
+  include ActiveGraph::Timestamps
 
   id_property :id, auto: :uuid
 

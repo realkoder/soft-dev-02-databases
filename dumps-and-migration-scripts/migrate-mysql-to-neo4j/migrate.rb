@@ -121,7 +121,6 @@ neo4j_driver.session do |session|
     # ADDING INGREDIENTS TO RECIPE
     ingredients_for_recipe = mysql_client.query("SELECT * FROM ingredients WHERE recipe_id = '#{row['id']}'")
     user_id = users.to_a.sample['id']
-
     session.write_transaction do |tx|
       tx.run(
         "MERGE (u:User {id: $user_id})
@@ -159,11 +158,11 @@ neo4j_driver.session do |session|
         title: row['title'],
         description: row['description'],
         image_url: row['image_url'],
-        instructions: row['instructions'].to_json,
+        instructions: row['instructions'],
         is_public: row['is_public'],
-        cuisine: row['cuisine'].to_json,
+        cuisine: row['cuisine'],
         difficulty: row['difficulty'],
-        tags: row['tags'].to_json,
+        tags: row['tags'],
         prep_time: row['prep_time'],
         cook_time: row['cook_time'],
         servings: row['servings'],

@@ -115,7 +115,6 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_comment
-    puts "LOOK #{comment_params}"
     comment = RecipeComment.create(comment_params.merge(user: current_user, recipe: @recipe))
 
     if comment.persisted?
@@ -166,7 +165,6 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def set_comment
-    puts "TRYING TO FIND #{params[:comment_id]}"
     @comment = @recipe.comments.find_by(id: params[:comment_id], user: current_user)
 
     render(json: { error: "Comment not found" }, status: :not_found) unless @comment

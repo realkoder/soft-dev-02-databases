@@ -1,5 +1,6 @@
 class User
   include ActiveGraph::Node
+  include ActiveGraph::Timestamps
   include ActiveModel::SecurePassword
 
   # Properties
@@ -12,12 +13,13 @@ class User
   property :provider, type: String
   property :password_digest, type: String
   property :image_src, type: String
-  property :created_at, type: DateTime, default: -> { DateTime.now }
-  property :updated_at, type: DateTime, default: -> { DateTime.now }
 
   # Relationships
   has_many :out, :recipes, type: :CREATED_BY, dependent: :destroy
   has_many :out, :llm_usages, type: :HAS_LLM_USAGE
+  # has_many :out, :grocery_lists, type: :OWNS, model_class: 'GroceryList', dependent: :destroy
+  # has_many :out, :grocery_list_shares, type: :SHARED, model_class: 'GroceryListShare', dependent: :destroy
+  # has_many :out, :shared_grocery_lists, type: :SHARED, model_class: 'GroceryList', rel_class: 'GroceryListShare'
 
   # Validations
   validates :email,
@@ -41,12 +43,6 @@ class User
   validates :image_src, length: { minimum: 6, maximum: 400 },
             format: URI::DEFAULT_PARSER.make_regexp(%w[http https]),
             allow_blank: true
-
-  # Relationships
-  # has_many :out, :grocery_lists, type: :OWNS, model_class: 'GroceryList', dependent: :destroy
-  # has_many :out, :grocery_list_shares, type: :SHARED, model_class: 'GroceryListShare', dependent: :destroy
-  # has_many :out, :shared_grocery_lists, type: :SHARED, model_class: 'GroceryList', rel_class: 'GroceryListShare'
-  # has_many :out, :recipe_suggestions, type: :SUGGESTED, model_class: 'RecipeSuggestion', dependent: :destroy
 
   # JSON serialization
   def as_json(options = {})

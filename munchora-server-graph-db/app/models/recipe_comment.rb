@@ -1,11 +1,10 @@
 class RecipeComment
   include ActiveGraph::Node
+  include ActiveGraph::Timestamps
 
   # Properties
   id_property :id, auto: :uuid
   property :comment, type: String
-  property :created_at, type: DateTime, default: -> { DateTime.now }
-  property :updated_at, type: DateTime, default: -> { DateTime.now }
 
   # Relationships
   has_one :out, :recipe, type: :COMMENTED
