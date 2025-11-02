@@ -28,15 +28,12 @@ jobs:
       - run: |
           cd munchora-server-relational-db
           # Install test dependencies for coverage
-          bundle add simplecov simplecov-json
-          bundle exec rspec  # Remove the --format option
+          bundle add simplecov
+          bundle exec rspec
 
 
       - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          sonar-scanner \
-            -Dsonar.projectBaseDir=. \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
