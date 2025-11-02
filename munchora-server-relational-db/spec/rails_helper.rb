@@ -14,8 +14,9 @@ require 'rspec/rails'
 require 'webmock/rspec'
 
 require 'simplecov'
-require 'simplecov-json'
-
+require 'simplecov_json_formatter'
+SimpleCov.formatters = [SimpleCov::Formatter::JSONFormatter]
+SimpleCov.coverage_dir 'coverage'
 SimpleCov.start do
   # Track only the User model
   # track_files "app/models/user.rb"
@@ -24,7 +25,7 @@ SimpleCov.start do
   # add_filter do |source_file|
   #   !source_file.filename.end_with?("app/models/user.rb", "app/controllers/api/v1/users_controller.rb")
   # end
-  formatter SimpleCov::Formatter::JSONFormatter
+  add_filter %w[spec/ config/ vendor/]
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

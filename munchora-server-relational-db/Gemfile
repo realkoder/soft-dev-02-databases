@@ -76,7 +76,7 @@ group :development, :test do
 
   # Test coverage tracking tool
   gem 'simplecov', require: false
-  gem 'simplecov-json', require: false
+  gem 'simplecov_json_formatter', require: false
 
   # Rspec for TDD
   gem 'rspec-rails'
