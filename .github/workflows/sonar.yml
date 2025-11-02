@@ -29,7 +29,8 @@ jobs:
           cd munchora-server-relational-db
           # Install test dependencies for coverage
           bundle add simplecov simplecov-json
-          bundle exec rspec --format RspecJunitFormatter --out rspec.xml
+          bundle exec rspec  # Remove the --format option
+
 
       - name: SonarQube Scan
         env:
