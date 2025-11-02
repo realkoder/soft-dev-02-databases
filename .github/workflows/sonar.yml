@@ -33,18 +33,6 @@ jobs:
       - name: Run tests and generate coverage
         run: bundle exec rspec
 
-      - name: Verify coverage file exists
-        run: |
-          echo "Checking for coverage file..."
-          ls -la coverage/
-          if [ -f coverage/coverage.json ]; then
-            echo "✅ Coverage file found!"
-            cat coverage/coverage.json | head -30
-          else
-            echo "❌ Coverage file NOT found!"
-            exit 1
-          fi
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
