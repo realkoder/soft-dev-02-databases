@@ -3,13 +3,16 @@ name: SonarQube Analysis
 on:
   push:
     branches: [ main ]
+    paths:
+      - "munchora-server-relational-db/**"
   pull_request:
     branches: [ main ]
+    paths:
+      - "munchora-server-relational-db/**"
 
 jobs:
   sonar:
     runs-on: ubuntu-latest
-    # Set the working directory for the entire job
     defaults:
       run:
         working-directory: ./munchora-server-relational-db
