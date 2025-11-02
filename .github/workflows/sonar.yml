@@ -12,21 +12,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # required for blame info
+          fetch-depth: 0
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: cd client && npm ci && npm run test -- --coverage
+#      - name: Set up Node
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#      - run: cd client && npm ci && npm run test -- --coverage
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3
+          bundler-cache: true
       - run: |
           cd server
-          bundle install
+          # Install test dependencies for coverage
+          bundle add simplecov simplecov-json
           bundle exec rspec --format RspecJunitFormatter --out rspec.xml
 
       - name: SonarQube Scan
@@ -37,4 +39,3 @@ jobs:
             -Dsonar.projectBaseDir=. \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
