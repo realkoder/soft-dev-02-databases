@@ -39,11 +39,11 @@ jobs:
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
+        run: |
+          cd munchora-server-relational-db
+          sonar-scanner \
+            -Dsonar.organization=munchora-test \
+            -Dsonar.ruby.coverage.reportPaths=coverage/coverage.json
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.organization=munchora-test
-            -Dsonar.projectBaseDir=./munchora-server-relational-db
-            -Dsonar.ruby.coverage.reportPaths=${{ github.workspace }}/munchora-server-relational-db/coverage/coverage.json
