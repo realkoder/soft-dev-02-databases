@@ -38,7 +38,6 @@ jobs:
           ls -l coverage
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
         run: |
           cd munchora-server-relational-db
           sonar-scanner \
