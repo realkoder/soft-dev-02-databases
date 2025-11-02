@@ -46,4 +46,4 @@ jobs:
           args: >
             -Dsonar.organization=munchora-test
             -Dsonar.projectBaseDir=./munchora-server-relational-db
-            -Dsonar.ruby.coverage.reportPaths=./munchora-server-relational-db/coverage/coverage.json
+            -Dsonar.ruby.coverage.reportPaths=${{ github.workspace }}/munchora-server-relational-db/coverage/coverage.json
