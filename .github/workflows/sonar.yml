@@ -41,3 +41,4 @@ jobs:
           args: >
             -Dsonar.organization=munchora-test
             -Dsonar.projectBaseDir=.
+            -Dsonar.analysis.automatic=false
