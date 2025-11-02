@@ -39,5 +39,3 @@ jobs:
         with:
           args: >
             -Dsonar.organization=munchora-test
-            -Dsonar.projectBaseDir=.
-            -Dsonar.scm.disabled=true
