@@ -30,14 +30,6 @@ jobs:
           bundle add simplecov simplecov_json_formatter
           bundle exec rspec
 
-
-      - name: Verify coverage file
-        run: |
-          echo "Current working directory: $(pwd)"
-          ls -R munchora-server-relational-db | grep coverage || echo "No coverage dir found"
-          ls -lah munchora-server-relational-db/coverage || echo "coverage dir missing"
-
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
@@ -47,3 +39,4 @@ jobs:
           args: >
             -Dsonar.organization=munchora-test
             -Dsonar.projectBaseDir=./munchora-server-relational-db
+            -Dsonar.ruby.coverage.reportPaths=$(pwd)/munchora-server-relational-db/coverage/coverage.json
