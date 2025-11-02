@@ -39,3 +39,4 @@ jobs:
         with:
           args: >
             -Dsonar.organization=munchora-test
+            -Dsonar.projectBaseDir=./munchora-server-relational-db
