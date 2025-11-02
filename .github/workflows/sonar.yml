@@ -25,9 +25,10 @@ jobs:
         with:
           ruby-version: 3.3
           bundler-cache: true
-      - run: |
+
+      - name: Run tests with coverage
+        run: |
           cd munchora-server-relational-db
-          bundle add simplecov simplecov_json_formatter
           bundle exec rspec
 
       - name: SonarQube Scan
@@ -39,4 +40,4 @@ jobs:
           args: >
             -Dsonar.organization=munchora-test
             -Dsonar.projectBaseDir=./munchora-server-relational-db
-            -Dsonar.ruby.coverage.reportPaths=$(pwd)/munchora-server-relational-db/coverage/coverage.json
+            -Dsonar.ruby.coverage.reportPaths=coverage/coverage.json
