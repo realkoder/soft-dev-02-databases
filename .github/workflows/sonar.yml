@@ -26,7 +26,7 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
       - run: |
-          cd server
+          cd munchora-server-relational-db
           # Install test dependencies for coverage
           bundle add simplecov simplecov-json
           bundle exec rspec --format RspecJunitFormatter --out rspec.xml
