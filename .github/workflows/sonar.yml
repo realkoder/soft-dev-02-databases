@@ -9,33 +9,44 @@ on:
 jobs:
   sonar:
     runs-on: ubuntu-latest
+    # Set the working directory for the entire job
+    defaults:
+      run:
+        working-directory: ./munchora-server-relational-db
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-#      - name: Set up Node
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: 20
-#      - run: cd client && npm ci && npm run test -- --coverage
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3
           bundler-cache: true
-      - run: |
-          cd munchora-server-relational-db
+          working-directory: ./munchora-server-relational-db
+
+      - name: Install dependencies
+        run: |
           bundle add simplecov simplecov_json_formatter
-          bundle exec rspec
+
+      - name: Run tests and generate coverage
+        run: bundle exec rspec
+
+      - name: Verify coverage file exists
+        run: |
+          echo "Checking for coverage file..."
+          ls -la coverage/
+          if [ -f coverage/coverage.json ]; then
+            echo "✅ Coverage file found!"
+            cat coverage/coverage.json | head -30
+          else
+            echo "❌ Coverage file NOT found!"
+            exit 1
+          fi
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.organization=munchora-test
-            -Dsonar.projectBaseDir=./munchora-server-relational-db
