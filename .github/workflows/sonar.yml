@@ -26,7 +26,6 @@ jobs:
           ruby-version: 3.4
           bundler-cache: true
 
-
       - name: Install Gems
         run: |
           cd munchora-server-relational-db
@@ -36,6 +35,7 @@ jobs:
         run: |
           cd munchora-server-relational-db
           bundle exec rspec
+          ls -l coverage
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
@@ -46,4 +46,4 @@ jobs:
           args: >
             -Dsonar.organization=munchora-test
             -Dsonar.projectBaseDir=./munchora-server-relational-db
-            -Dsonar.ruby.coverage.reportPaths=coverage/coverage.json
+            -Dsonar.ruby.coverage.reportPaths=./munchora-server-relational-db/coverage/coverage.json
