@@ -27,7 +27,7 @@ jobs:
           bundler-cache: true
       - run: |
           cd munchora-server-relational-db
-          bundle add simplecov simplecov-json
+          bundle add simplecov simplecov_json_formatter
           bundle exec rspec
 
 
