@@ -32,9 +32,11 @@ jobs:
 
 
       - name: SonarQube Scan
-        run: |
-          cd munchora-server-relational-db
-          sonar-scanner -Dsonar.organization=munchora-test
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.organization=munchora-test
+            -Dsonar.projectBaseDir=./munchora-server-relational-db
