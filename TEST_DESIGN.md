@@ -2,7 +2,8 @@
 
 This document outlines the design techniques and testing process for the **_Munchora_** application.
 
-The core functionalities of **_Munchora_** have been prioritized to achieve high test coverage, which will include:
+The core functionalities of **_Munchora_** have been prioritized to achieve high test coverage for these following
+domains:
 
 - **MODELS**
     - _GroceryList_
@@ -23,6 +24,9 @@ The core functionalities of **_Munchora_** have been prioritized to achieve high
 
 ## Table of Contents
 
+- [Acceptance tests](#Acceptance-tests)
+- [System tests / End-to-end tests](#System-tests--End-to-end-tests)
+- [Integration tests](#Integration-tests)
 - [Black Box Design Techniques](#black-box-design-techniques)
     - [User model](#user-model)
         - [Equivalence Partitions](#equivalence-partitions)
@@ -31,14 +35,49 @@ The core functionalities of **_Munchora_** have been prioritized to achieve high
     - [User creation / User initialize](#user-creation--user-initialize)
         - [Test cases 100% statement coverage](#test-cases-100-statement-coverage)
         - [Test cases 100% decision coverage](#test-cases-100-decision-coverage)
-- [Integration tests](#Integration-tests)
-- [System tests / End-to-end tests](#System-tests--End-to-end-tests)
-- [Acceptance tests](#Acceptance-tests)
 - [CI pipeline](#ci-pipeline)
     - [Rubocop](#rubocop)
     - [SonarQube](#sonarqube)
 - [Risk Analysis](#risk-analysis)
 - [MISC](#misc)
+
+---
+
+<br>
+
+# Acceptance tests
+
+Real users...
+
+Test templates
+
+Check Arturo's [Acceptance Test checklist](https://github.com/arturomorarioja-ek/SD_Testing_E25/blob/main/Lesson07/Acceptance%20Test%20checklist.xlsx)
+
+Check Arturo's [Test Case template](https://github.com/arturomorarioja-ek/SD_Testing_E25/blob/main/Lesson07/Test%20Case%20template.xlsx)
+
+---
+
+<br>
+
+# System tests / End-to-end tests
+
+Cypress WHY CYPRESS - shared methods - scenarios
+
+---
+
+<br>
+
+# Integration tests
+
+london vs detroit approach
+
+DB - sqlite3 - both london and detroit not hardly mocked not hardly integrated
+
+Third part OAtuh Google and OpenAI
+
+The integration tests for `Api::V1::LlmController` uses London approach, since calling the `OpenAI API` for every test
+would be costly and slow. Instead, the service layer is mocked to return a sample recipe, allowing to test controller
+behavior and responses without hitting the real API.
 
 ---
 
@@ -210,40 +249,6 @@ exercised at least once.
 
 <br>
 
-# Integration tests
-
-london vs detroit approach
-
-DB - sqlite3 - both london and detroit not hardly mocked not hardly integrated
-
-Third part OAtuh Google and OpenAI
-
-The integration tests for `Api::V1::LlmController` uses London approach, since calling the `OpenAI API` for every test
-would be costly and slow. Instead, the service layer is mocked to return a sample recipe, allowing to test controller
-behavior and responses without hitting the real API.
-
----
-
-<br>
-
-# System tests / End-to-end tests
-
-Cypress
-
----
-
-<br>
-
-# Acceptance tests
-
-Real users...
-
-Test templates
-
----
-
-<br>
-
 # CI pipeline
 
 4 different flows defined
@@ -323,19 +328,23 @@ For inspiration checkout hand-ins for Risk Analysis on teams within Test room
 
 **Factor** = _Prob_ __*__ _Impact_
 
-| ID  | Name                        | Description                                                                                                                              | Prob | Impact | Risk Factor | Mitigation                                                                                                                                         | Responsible           | Status Date | Follow-up Date | Status  |
-|-----|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------|------|--------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|-------------|----------------|---------|
-| R1  | **Technical & Operational** | **System Outages & Performance Issues**: The site goes down or is unusably slow. User grocery lists are lost or corrupted.               | 4    | 4      | 16          | Implement monitoring (any bottlenecks). Horizontal/vertical scaling.                                                                               | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R2  | **Technical & Operational** | **Solo Project**: Munchora is unavailable due to illness, burnout, or other reasons. The project grinds to a halt.                       | 4    | 3      | 12          | Well structured code base and architecture. Using versioning control (git), clear commit messages. _CI/CD pipeline_.                               | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R3  | **Technical & Operational** | **Technical Debt & Scalability**: Quick ad-hoc fixes accumulate, making the codebase unmaintainable.                                     | 3    | 5      | 15          | Well structured code base and architecture. Using versioning control (git), clear commit messages. Coding standards and principles (DRY, SOLID).   | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R4  | **Security & Privacy**      | **Data Breach & Privacy Failure**: User data (emails, passwords, shopping lists) is exposed. GDPR/Privacy violation.                     | 4    | 3      | 12          | Never store plain-text passwords. Regular dependency vulnerability scanning (brakeman). Use HTTPS. Have a clear, simple Privacy Policy.            | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R5  | **Security & Privacy**      | **API Key Compromise**: Keys for the AI service, database, or email service leaked -> unauthorized use and large bills.                  | 3    | 5      | 15          | Never hardcode API keys. Use environment variables.                                                                                                | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R6  | **Security & Privacy**      | **Injection & XSS Attacks**: Malicious code is injected into shared lists or recipes, affecting other users.                             | 3    | 3      | 9           | Parameterized queries for database access. Sanitize and validate all user input on the backend.                                                    | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R7  | **Business & Legal**        | **AI-Generated Content Liability**: AI generates a recipe that is harmful and a user gets sick.                                          | 5    | 2      | 10          | Prominently Terms of Service and conditions: "AI-generated recipes are suggestions. only Always use your judgment regarding food safety..."        | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R8  | **Business & Legal**        | **Intellectual Property Infringement**: AI generates a recipe that is a near-copy of a copyrighted recipe from a famous chef or website. | 3    | 3      | 9           | A clear Terms of Service stating users are responsible for the content they generate and that the platform is a tool, not a publisher, is crucial. | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R9  | **Business & Legal**        | **Monetization & Financial Failure**: Project cannot cover its costs (API fees, hosting).                                                | 4    | 4      | 16          | Calculate precisely monthly costs. Limit user signups and recipe generations.                                                                      | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R10 | **Product & Market**        | **Low User Adoption / Product-Market Fit**: The app doesn't solve a real problem effectively enough to attract and retain users.         | 5    | 5      | 25          | Talk to potential users before and during development. Prepared to pivot features based on feedback.                                               | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
-| R11 | **Product & Market**        | **User Onboarding & UX Failure**: Munchroa is confusing, and users don't understand how to use the AI or shared lists.                   | 3    | 4      | 12          | Build a clean, intuitive UI. Use analytics to see where users drop off.                                                                            | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| ID  | Name                        | Description                                                                                                                                             | Prob | Impact | Risk Factor | Mitigation                                                                                                                                         | Responsible           | Status Date | Follow-up Date | Status  |
+|-----|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|------|--------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|-------------|----------------|---------|
+| R1  | **Technical & Operational** | **System Outages & Performance Issues**: The site goes down or is unusably slow. User grocery lists are lost or corrupted.                              | 4    | 4      | 16          | Implement monitoring (any bottlenecks). Horizontal/vertical scaling.                                                                               | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R2  | **Technical & Operational** | **Solo Project**: Munchora is unavailable due to illness, burnout, or other reasons. The project grinds to a halt.                                      | 4    | 3      | 12          | Well structured code base and architecture. Using versioning control (git), clear commit messages. _CI/CD pipeline_.                               | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R3  | **Technical & Operational** | **Technical Debt & Scalability**: Quick ad-hoc fixes accumulate, making the codebase unmaintainable.                                                    | 3    | 5      | 15          | Well structured code base and architecture. Using versioning control (git), clear commit messages. Coding standards and principles (DRY, SOLID).   | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R4  | **Security & Privacy**      | **Data Breach & Privacy Failure**: User data (emails, passwords, shopping lists) is exposed. GDPR/Privacy violation.                                    | 4    | 3      | 12          | Never store plain-text passwords. Regular dependency vulnerability scanning (brakeman). Use HTTPS. Have a clear, simple Privacy Policy.            | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R5  | **Security & Privacy**      | **API Key Compromise**: Keys for the AI service, database, or email service leaked -> unauthorized use and large bills.                                 | 3    | 5      | 15          | Never hardcode API keys. Use environment variables.                                                                                                | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R6  | **Security & Privacy**      | **Injection & XSS Attacks**: Malicious code is injected into shared lists or recipes, affecting other users.                                            | 3    | 3      | 9           | Parameterized queries for database access. Sanitize and validate all user input on the backend.                                                    | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R7  | **Business & Legal**        | **AI-Generated Content Liability**: AI generates a recipe that is harmful and a user gets sick.                                                         | 5    | 2      | 10          | Prominently Terms of Service and conditions: "AI-generated recipes are suggestions. only Always use your judgment regarding food safety..."        | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R8  | **Business & Legal**        | **Intellectual Property Infringement**: AI generates a recipe that is a near-copy of a copyrighted recipe from a famous chef or website.                | 3    | 3      | 9           | A clear Terms of Service stating users are responsible for the content they generate and that the platform is a tool, not a publisher, is crucial. | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R9  | **Business & Legal**        | **Monetization & Financial Failure**: Project cannot cover its costs (API fees, hosting).                                                               | 4    | 4      | 16          | Calculate precisely monthly costs. Limit user signups and recipe generations.                                                                      | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R10 | **Product & Market**        | **Low User Adoption / Product-Market Fit**: The app doesn't solve a real problem effectively enough to attract and retain users.                        | 5    | 5      | 25          | Talk to potential users before and during development. Prepared to pivot features based on feedback.                                               | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+| R11 | **Product & Market**        | **Scope creep - User Onboarding & UX Failure**: Munchora is confusing, too many features, and users don't understand how to use the AI or shared lists. | 3    | 4      | 12          | Build a clean, intuitive UI. Use analytics to see where users drop off.                                                                            | Alexander Christensen | 2025-11-4   | Weekly         | Initial |
+
+Create and add a table similar to this:
+
+![Risk Analysis Risk Factors](assets/risk-table-risk-factors.png)
 
 ---
 
