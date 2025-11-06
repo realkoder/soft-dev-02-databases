@@ -228,6 +228,28 @@ If portability matters → procedures are MySQL-specific (locks you in).
 
 # MISC
 
+## SQL Indexes
+
+MySQL / InnoDB uses B+TREE (combination of B-TREE and doubly linked list) for keeping control of indexes 
+
+![B+TREE usage in MySQL](assets/index-mysql-btreeplus.png)
+
+---
+
+To track how a query runs use `EXPLAIN`
+
+![EXPLAIN SQL](assets/explain-sql-query.png)
+
+---
+
+Comparison for different data structures insertion, lookup and deletion/update times:
+
+![Time comparison](assets/time-complexity-costs-indexing-datatruct.png)
+
+---
+
+<br>
+
 ## Transactions
 
 In MySQL, a transaction is a sequence of one or more SQL statements executed as a single unit, ensuring atomicity,
