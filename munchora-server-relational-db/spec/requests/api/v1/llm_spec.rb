@@ -1,22 +1,44 @@
 require 'rails_helper'
+require 'ostruct'
 
 RSpec.describe Api::V1::LlmController, type: :request do
-  # acting with authenticated test-user
-  let!(:auth_user) { User.create!(first_name: 'Jane', last_name: 'Smith', email: 'jane@example.com', password: 'secure123') }
-  let(:headers) do
-    token = Auth::JsonWebToken.encode(user_id: auth_user.id)
-    { 'Authorization' => "Bearer #{token}", 'Content-Type' => 'application/json' }
-  end
+  let(:user) { create(:user, password: 'securepass') }
+  let(:token) { Auth::JsonWebToken.encode(user_id: user.id) }
 
   # ======================================
   # POST: GENERATE_RECIPE
   # ======================================
   context '#generate_recipe' do
-    let(:valid_prompt) { "Create a recipe for a classic beef burger" }
+    let(:valid_prompt) { 'Something delicious!' }
 
-    before do
-      mock_llm_service = instance_double(Llm::LlmService)
-      allow(Llm::LlmService).to receive(:new).with(user: auth_user).and_return(mock_llm_service)
+    context 'positive tests' do
+      before do
+        allow_any_instance_of(Llm::LlmService).to receive(:usage_limit_exceeded?).and_return(false)
+
+        mock_response = OpenStruct.new(choices: [OpenStruct.new(message: OpenStruct.new(content: "Generated recipe text"))])
+        allow_any_instance_of(Llm::LlmService).to receive(:prompt_to_generate_recipe).with(anything).and_return(mock_response)
+
+        allow_any_instance_of(Llm::LlmService).to receive(:validate_recipe_response).with(anything).and_return(build(:recipe))
+      end
+
+      it 'accepts authenticated requests' do
+        cookies[:jwt_auth] = token
+        post '/api/v1/llm/generate-recipe', params: { prompt: 'Something delicious' }
+        expect(response).to have_http_status(:ok)
+
+        parsed_response = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_response).to include(:title, :description, :ingredients, :user)
+        expect(parsed_response[:ingredients]).to all(include(:name, :category, :amount))
+        expect(parsed_response[:user]).to include(:id, :image_src)
+      end
+    end
+
+    context 'negative tests' do
+      it 'rejects unauthenticated requests' do
+        post '/api/v1/llm/generate-recipe', params: { prompt: 'Something delicious' }
+        expect(response).to have_http_status(:unauthorized)
+      end
     end
   end
 

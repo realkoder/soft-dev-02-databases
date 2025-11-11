@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :recipe do
     association :user
-    association :ingredients
 
     title { "Ande Burger 🍔" }
     image_url { "https://munchora.pro/uploads/recipes/f6aea855-cc8a-4d51-9245-5961fca2f3a2_image.jpg" }
@@ -33,5 +32,9 @@ FactoryBot.define do
     prep_time { 15 }
     cook_time { 20 }
     servings { 2 }
+
+    after(:build) do |recipe|
+      recipe.ingredients << build_list(:ingredient, 3, recipe: recipe)
+    end
   end
 end

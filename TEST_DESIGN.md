@@ -72,11 +72,11 @@ evaluate the application's resilience and its ability to handle multiple concurr
 
 Using Apache JMeter for setting up:
 
-**Stress Testing** &rarr; to check how much stress the system handles
+**Stress Testing** &rarr; Push system beyond normal limits to find breaking points
 
-**Load testing** &rarr; fewer requests but checking how much the system can handle over time if it still performs okay
+**Load testing** &rarr; Verify system performance under expected normal-to-peak load (the implementation is expecting middle input)
 
-**Spike testing** &rarr; a snap increase in incoming request to see if it handles it okay 
+**Spike testing** &rarr; Test system response to sudden, massive traffic surges
 
 ```bash
 # Ensure to be positioned at ./jmeter-tests/
@@ -106,7 +106,7 @@ london vs detroit approach
 
 DB - sqlite3 - both london and detroit not hardly mocked not hardly integrated
 
-Third part OAtuh Google and OpenAI
+Third part OAuth Google and OpenAI
 
 The integration tests for `Api::V1::LlmController` uses London approach, since calling the `OpenAI API` for every test
 would be costly and slow. Instead, the service layer is mocked to return a sample recipe, allowing to test controller

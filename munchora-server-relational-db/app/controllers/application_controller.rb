@@ -41,7 +41,6 @@ class ApplicationController < ActionController::API
 
   def authenticate_user!
     token = cookies[:jwt_auth]
-
     # If no cookie, check for Bearer token in Authorization header
     if token.nil?
       auth_header = request.headers['Authorization']
