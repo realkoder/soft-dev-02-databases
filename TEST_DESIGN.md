@@ -26,6 +26,8 @@ domains:
 
 - [Acceptance tests](#Acceptance-tests)
 - [System tests / End-to-end tests](#System-tests--End-to-end-tests)
+    - [Stress Performance Testing](#stress-performance-testing)
+    - [End-to-end Tests](#End-to-end-tests)
 - [Integration tests](#Integration-tests)
 - [Black Box Design Techniques](#black-box-design-techniques)
     - [User model](#user-model)
@@ -51,15 +53,46 @@ Real users...
 
 Test templates
 
-Check Arturo's [Acceptance Test checklist](https://github.com/arturomorarioja-ek/SD_Testing_E25/blob/main/Lesson07/Acceptance%20Test%20checklist.xlsx)
+Check
+Arturo's [Acceptance Test checklist](https://github.com/arturomorarioja-ek/SD_Testing_E25/blob/main/Lesson07/Acceptance%20Test%20checklist.xlsx)
 
-Check Arturo's [Test Case template](https://github.com/arturomorarioja-ek/SD_Testing_E25/blob/main/Lesson07/Test%20Case%20template.xlsx)
+Check
+Arturo's [Test Case template](https://github.com/arturomorarioja-ek/SD_Testing_E25/blob/main/Lesson07/Test%20Case%20template.xlsx)
 
 ---
 
 <br>
 
-# System tests / End-to-end tests
+# System Tests
+
+Testing Munchora's system by using **Cypress** for _E-2-E tests_ and **Apache JMeter** for _performance stress testing_ to
+evaluate the application's resilience and its ability to handle multiple concurrent requests.
+
+## Stress Performance Testing
+
+Using Apache JMeter for setting up:
+
+**Stress Testing** &rarr; to check how much stress the system handles
+
+**Load testing** &rarr; fewer requests but checking how much the system can handle over time if it still performs okay
+
+**Spike testing** &rarr; a snap increase in incoming request to see if it handles it okay 
+
+```bash
+# Ensure to be positioned at ./jmeter-tests/
+# run stress tests
+jmeter -n -t stepping_thread_group_stress_test.jmx -l results/load_results.jtl -e -o reports/load_test
+
+# run load tests
+jmeter -n -t load_test.jmx -l results/load_results.jtl -e -o reports/load_test
+
+# run spike tests
+jmeter -n -t spike_test.jmx -l results/load_results.jtl -e -o reports/load_test
+```
+
+---
+
+## End-to-end Tests
 
 Cypress WHY CYPRESS - shared methods - scenarios
 
