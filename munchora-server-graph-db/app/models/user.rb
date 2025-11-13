@@ -17,9 +17,8 @@ class User
   # Relationships
   has_many :out, :recipes, type: :CREATED_BY, dependent: :destroy
   has_many :out, :llm_usages, type: :HAS_LLM_USAGE
-  # has_many :out, :grocery_lists, type: :OWNS, model_class: 'GroceryList', dependent: :destroy
-  # has_many :out, :grocery_list_shares, type: :SHARED, model_class: 'GroceryListShare', dependent: :destroy
-  # has_many :out, :shared_grocery_lists, type: :SHARED, model_class: 'GroceryList', rel_class: 'GroceryListShare'
+  has_many :in, :owned_grocery_lists, type: :CREATED_BY, model_class: :GroceryList, dependent: :destroy
+  has_many :in, :shared_grocery_lists, type: :CAN_ACCESS, model_class: :GroceryList
 
   # Validations
   validates :email,

@@ -14,6 +14,17 @@ Rails.application.routes.draw do
       delete "/auth/logout", to: "auth#logout"
       get "/auth/me", to: "auth#me"
 
+      # GROCERY_LISTS
+      resources :grocery_lists, only: [:index, :create, :update, :destroy] do
+        member do
+          post 'add-item', action: :add_item
+          delete 'remove-item/:item_id', action: :remove_item
+          patch 'update-item/:item_id', action: :update_item
+          post 'share', action: :share
+          delete 'unshare', action: :unshare
+        end
+      end
+
       # LLM
       post 'llm/generate-recipe', to: 'llm#generate_recipe'
       post 'llm/generate-recipe-image/:id', to: 'llm#generate_recipe_image'

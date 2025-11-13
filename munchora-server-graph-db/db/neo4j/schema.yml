@@ -16,9 +16,13 @@
   IS UNIQUE
 - CREATE CONSTRAINT `constraint_6965c9d8` FOR (n:`Ingredient`) REQUIRE (n.`id`) IS
   UNIQUE
+- CREATE CONSTRAINT `constraint_709b87f0` FOR (n:`GroceryListItem`) REQUIRE (n.`id`)
+  IS UNIQUE
 - CREATE CONSTRAINT `constraint_71aed712` FOR (n:`RecipeLike`) REQUIRE (n.`id`) IS
   UNIQUE
 - CREATE CONSTRAINT `constraint_74fad970` FOR (n:`User`) REQUIRE (n.`id`) IS UNIQUE
+- CREATE CONSTRAINT `constraint_7b961405` FOR (n:`GroceryList`) REQUIRE (n.`id`) IS
+  UNIQUE
 - CREATE CONSTRAINT `constraint_dbcee0a4` FOR (n:`ActiveGraph::Migrations::SchemaMigration`)
   REQUIRE (n.`migration_id`) IS UNIQUE
 - CREATE CONSTRAINT `constraint_e4cf7301` FOR (n:`User`) REQUIRE (n.`email`) IS UNIQUE
@@ -40,3 +44,5 @@
 - '20251030071914'
 - '20251031192819'
 - '20251031205002'
+- '20251113124157'
+- '20251113124218'

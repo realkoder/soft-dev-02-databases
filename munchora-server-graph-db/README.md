@@ -53,7 +53,19 @@ Node A is the start (the “outgoing” side)
 
 Node B is the end (the “incoming” side)
 
-ActiveGraph model this direction using `:out` or `:in` in **has_one** / **has_many** declarations.
+#### From Tomas slide
+
+Relationships
+are directed, named, semantically-relevant connections between two node
+entities.
+A relationship always has a direction, a type, a start node, and an end node.
+Relationships can have properties. In most cases, relationships have quantitative
+properties, such as weights, costs, distances, ratings, time intervals, or strengths.
+Two nodes can share any number or type of relationships without sacrificing
+performance.
+Although they are stored in a specific direction, relationships can always be
+navigated efficiently in either direction.
+
 
 ---
 
