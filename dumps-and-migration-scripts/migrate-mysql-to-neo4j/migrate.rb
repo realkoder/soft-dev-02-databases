@@ -24,6 +24,23 @@ neo4j_driver = Neo4j::Driver::GraphDatabase.driver(ENV['NEO4J_URI'], Neo4j::Driv
 puts 'resetting neo4j db'
 
 neo4j_driver.session do |session|
+  # Drop all constraints
+  session.write_transaction do |tx|
+    constraints = tx.run("SHOW CONSTRAINTS YIELD name").map { |row| row["name"] }
+    constraints.each do |name|
+      tx.run("DROP CONSTRAINT #{name}")
+    end
+  end
+
+  # Drop all indexes
+  session.write_transaction do |tx|
+    indexes = tx.run("SHOW INDEXES YIELD name").map { |row| row["name"] }
+    indexes.each do |name|
+      tx.run("DROP INDEX #{name}")
+    end
+  end
+
+  # Delete all nodes
   session.write_transaction do |tx|
     tx.run("MATCH (n) DETACH DELETE n")
   end
@@ -118,7 +135,7 @@ recipes = mysql_client.query("SELECT * FROM recipes")
 
 neo4j_driver.session do |session|
   recipes.each do |row|
-    # ADDING INGREDIENTS TO RECIPE
+    # INGREDIENTS FOR RECIPES
     ingredients_for_recipe = mysql_client.query("SELECT * FROM ingredients WHERE recipe_id = '#{row['id']}'")
     user_id = users.to_a.sample['id']
     session.write_transaction do |tx|
@@ -299,3 +316,60 @@ end
 
 puts "#{recipe_comments.size} recipes_comments migrated from MySQL to Neo4j"
 
+# ===========================
+# MIGRATE GROCERY_LISTS
+# ===========================
+
+puts "migrating grocery_lists..."
+
+grocery_lists = mysql_client.query("SELECT * FROM grocery_lists")
+
+neo4j_driver.session do |session|
+  grocery_lists.each do |row|
+    # ITEMS FOR GROCERY_LISTS
+    items_for_lists = mysql_client.query("SELECT * FROM grocery_list_items WHERE grocery_list_id = '#{row['id']}'")
+    user_id = users.to_a.sample['id']
+    session.write_transaction do |tx|
+      tx.run(
+        "MERGE (u:User {id: $user_id})
+        CREATE (g:GroceryList {
+            id: $id,
+            name: $name,
+            created_at: $created_at,
+            updated_at: $updated_at
+      })
+        CREATE (g)-[:CREATED_BY]->(u)
+        WITH g
+        UNWIND $items_data AS item
+        CREATE (gi:GroceryListItem {
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          is_completed: item.is_completed,
+          created_at: item.created_at,
+          updated_at: item.updated_at
+        })
+        CREATE (gi)-[:ADDED_BY]->(u)
+        CREATE (g)-[:HAS_ITEM]->(gi)
+        ",
+        id: row['id'],
+        user_id: user_id,
+        name: row['name'],
+        created_at: row['created_at'],
+        updated_at: row['updated_at'],
+        items_data: items_for_lists.map do |item|
+          {
+            id: SecureRandom.uuid,
+            name: item['name'],
+            category: item['category'],
+            is_completed: item['is_completed'],
+            created_at: item['created_at'],
+            updated_at: item['updated_at']
+          }
+        end
+      )
+    end
+  end
+end
+
+puts "#{grocery_lists.size} grocery_lists migrated from MySQL to Neo4j"
