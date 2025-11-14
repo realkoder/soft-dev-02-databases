@@ -12,14 +12,14 @@ class Recipe < ApplicationRecord
 
   accepts_nested_attributes_for :ingredients, allow_destroy: true
 
-  validates :title, presence: true, length: { maximum: 150 }
-  validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: 'must be a valid URL' }, allow_blank: true
+  validates :title, presence: true, length: { minimum: 6, maximum: 150 }, format: { with: /[A-Za-z]/, message: 'must contain at least one letter' }
+  validates :image_url, length: { minimum: 14, maximum: 400 }, format: URI.regexp(%w[http https]), allow_blank: true
   validates :description, presence: true, length: { maximum: 2_000 }
   validates :instructions, presence: true
   validate :instructions_length_limit
   validates :difficulty, inclusion: { in: %w[easy medium hard] }, allow_nil: true
   validates :prep_time, :cook_time, :servings,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0 },
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100 },
             allow_nil: true
   validates :tags, length: { maximum: 10 }
   validates :cuisine, length: { maximum: 30 }

@@ -8,7 +8,6 @@ domains:
 - **MODELS**
     - _GroceryList_
     - _GroceryListItem_
-    - _GroceryListShare_
     - _User_
 - **Requests**
     - _auth_controller_

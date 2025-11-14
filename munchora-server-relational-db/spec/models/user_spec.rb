@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
     end
 
     # ======================================
-    # EMAIL_VALIDATIONS
+    # EMAIL VALIDATIONS
     # ======================================
     context 'email', :email_context do
       [
@@ -69,7 +69,7 @@ RSpec.describe User, type: :model do
     end
 
     # ==========================
-    # FIRST_NAME_VALIDATIONS
+    # FIRST_NAME VALIDATIONS
     # ==========================
     context 'first_name', :first_name_context do
       [
@@ -104,7 +104,7 @@ RSpec.describe User, type: :model do
     end
 
     # ==========================
-    # LAST_NAME_VALIDATIONS
+    # LAST_NAME VALIDATIONS
     # ==========================
     context 'last_name', :last_name_context do
       [
@@ -140,7 +140,7 @@ RSpec.describe User, type: :model do
     end
 
     # ======================================
-    # BIO_VALIDATIONS
+    # BIO VALIDATIONS
     # ======================================
     context 'bio', :bio_context do
       [
@@ -171,7 +171,7 @@ RSpec.describe User, type: :model do
     end
 
     # ======================================
-    # UID_VALIDATIONS
+    # UID VALIDATIONS
     # ======================================
     context 'uid', :uid_context do
       [
@@ -202,7 +202,7 @@ RSpec.describe User, type: :model do
     end
 
     # ============================
-    # PROVIDER_VALIDATIONS
+    # PROVIDER VALIDATIONS
     # ============================
     context 'provider', :provider_context do
       [
@@ -233,7 +233,7 @@ RSpec.describe User, type: :model do
     end
 
     # ==========================
-    # PASSWORD_VALIDATIONS
+    # PASSWORD VALIDATIONS
     # ==========================
     context 'password', :password_context do
       [
@@ -270,7 +270,7 @@ RSpec.describe User, type: :model do
     end
 
     # ==========================
-    # IMAGE_SRC_VALIDATIONS
+    # IMAGE_SRC VALIDATIONS
     # ==========================
     context 'image_src', :image_src_context do
       [
