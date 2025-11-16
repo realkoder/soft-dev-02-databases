@@ -21,6 +21,7 @@ RSpec.describe Recipe, type: :model do
         image_url: nil,
         description: "Kogte kartofler med brun Sovs",
         instructions: ["Skræld kartofler", "Kog kartofler", "lav sovs"],
+        ingredients: create_list(:ingredient, rand(5..10)),
         difficulty: "easy",
         servings: 4,
         tags: ["danish"],
