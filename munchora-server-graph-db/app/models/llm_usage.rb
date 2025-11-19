@@ -10,7 +10,7 @@ class LlmUsage
   property :prompt_tokens, type: Integer
   property :completion_tokens, type: Integer
 
-  # Relations
+  # Relationships
   has_one :in, :user, origin: :llm_usages
   has_one :in, :recipe, origin: :llm_usages
 end

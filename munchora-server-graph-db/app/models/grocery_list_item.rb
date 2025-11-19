@@ -7,6 +7,7 @@ class GroceryListItem
   property :category, type: String
   property :is_completed, type: Boolean, default: false
 
+  # Relationships
   has_one :out, :added_by, type: :ADDED_BY, model_class: :User
   has_one :in, :grocery_list, type: :HAS_ITEM, model_class: :GroceryList
 
