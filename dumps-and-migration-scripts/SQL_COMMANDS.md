@@ -158,3 +158,16 @@ VALUES (3, 'Cherry'); -- Step 3
 
 COMMIT; -- Only Step 1 and Step 3 are committed
 ```
+
+---
+
+### Stored procedures
+
+How **stored procedures** are executed in _SQL_
+
+```mysql
+PREPARE q FROM 'SELECT * from users WHERE first_name = ?';
+SET @name = 'Alexander';
+EXECUTE q USING @name;
+DEALLOCATE PREPARE q;
+```
