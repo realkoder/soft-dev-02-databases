@@ -6,7 +6,7 @@
 # docker-compose down:  docker-compose -f docker-compose.mongodb-seeded.yml down --rmi all --remove-orphans
 #                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
 #
-# Generate a mysql dump file: mongodump --uri="mongodb+srv://user:password@cluster0.mongodb.net/munchora"
+# Generate a mongo dump file: mongodump --uri="mongodb+srv://user:password@cluster0.mongodb.net/munchora"
 # Interact through mongosh: mongosh "mongodb://root:root@localhost:27017/munchora?authSource=admin"
 
 services:
