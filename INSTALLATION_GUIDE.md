@@ -8,17 +8,17 @@ It's required to `git clone https://github.com/realkoder/soft-dev-02-databases.g
 
 ## Relational Database - munchora-server-relational-db
 
-### _Recommended_: Start MySQL seeded and ready to query using docker-compose
+### _Recommended_: Start MySQL migrated and ready to query using docker-compose
 
 In terminal cd to  `./munchora-server-relational-db`
 
-Start MySQL by `docker-compose -f docker-compose.mysql-seeded.yml up -d`
+Start MySQL by `docker-compose -f docker-compose.mysql-migrated.yml up -d`
 
 Enter the docker based Mysql by `docker exec -it mysql_db mysql -udeveloper -pdev-pswd munchora`
 
 ---
 
-### Use Ruby on Rails app for seeding and querying MySQL DB
+### Another approach Use Ruby on Rails app for migrated and querying MySQL DB
 
 In terminal cd to **root** of project and start _docker-compose MySQL_
 `docker-compose -f docker-compose.dev.mysql.yml up -d`
@@ -54,16 +54,15 @@ or start _rails server_ `bin/rails s` and interact through _HTTP_ requests.
 
 ## NoSQL Document Based Database
 
-To boot up docker based MongoDB seeded from dump file please follow along
+To boot up docker based MongoDB migrated from dump file please follow along
 
 ```bash
-# 1. cd to ./dumps-and-migration-scripts
 cd ./dumps-and-migration-scripts
 
-# 2. Execute docker-compose for mongodb
-docker-compose -f docker-compose.mongodb-seeded.yml
+# Execute docker-compose for mongodb
+docker-compose -f docker-compose.mongodb-migrated.yml
 
-# 3. mongodb is running seeded and ready for connections
+# 3. mongodb is running migrated and ready for connections
 mongosh "mongodb://root:root@localhost:27017/munchora?authsource=admin"
 ```
 
@@ -73,3 +72,13 @@ mongosh "mongodb://root:root@localhost:27017/munchora?authsource=admin"
 
 ## Graph Database
 
+To boot up docker based neo4j migrated from dump file please follow along
+
+```bash
+cd ./dumps-and-migration-scripts
+
+# Execute docker-compose for neo4j
+docker-compose -f docker-compose.neo4j-migrated.yml
+
+# neo4j is running migrated and ready for connections - go to http://localhost:7474
+```

@@ -1,0 +1,32 @@
+# ===========================================================
+#       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
+# ===========================================================
+# docker-compose up:    docker-compose -f docker-compose.dev.neo4j.yml up
+# docker-compose logs:  docker-compose -f docker-compose.dev.neo4j.yml logs -f
+# docker-compose down:  docker-compose -f docker-compose.dev.neo4j.yml down --rmi all --remove-orphans
+#                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
+
+services:
+  neo4j-migrated:
+    image: neo4j:5
+    container_name: neo4j-migrated
+    ports:
+      - "7474:7474" # Exposed interface for connecting to neo4j
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    volumes:
+      - ./neo4j.dump:/backups/neo4j.dump
+    entrypoint: /bin/bash
+    command: >
+      -c "
+      if [ ! -f /data/.restored ]; then
+        echo 'Restoring database from dump file...';
+        neo4j-admin database load neo4j --from-path=/backups --overwrite-destination=true;
+        touch /data/.restored;
+        echo 'Database restored successfully';
+      else
+        echo 'Database already restored, skipping...';
+      fi;
+      exec /startup/docker-entrypoint.sh neo4j
+      "

@@ -94,6 +94,15 @@ neo4j_driver.session do |session|
     # INGREDIENTS FOR RECIPES
     ingredients_for_recipe = mysql_client.query("SELECT * FROM ingredients WHERE recipe_id = '#{row['id']}'")
     user_id = users.to_a.sample['id']
+
+    cuisine = JSON.parse(row['cuisine']) rescue row['cuisine']
+    tags = JSON.parse(row['tags']) rescue row['tags']
+    instructions = JSON.parse(row['instructions']) rescue row['instructions']
+
+    cuisine_str = cuisine.is_a?(Array) ? cuisine.to_json : [cuisine].to_json
+    tags_str = tags.is_a?(Array) ? tags.to_json : [tags].to_json
+    instructions_str = instructions.is_a?(Array) ? instructions.to_json : [instructions].to_json
+
     session.write_transaction do |tx|
       tx.run(
         "MERGE (u:User {id: $user_id})
@@ -131,11 +140,11 @@ neo4j_driver.session do |session|
         title: row['title'],
         description: row['description'],
         image_url: row['image_url'],
-        instructions: row['instructions'],
+        instructions: instructions_str,  # Use parsed instructions
         is_public: row['is_public'],
-        cuisine: row['cuisine'],
+        cuisine: cuisine_str,  # Use parsed cuisine array
         difficulty: row['difficulty'],
-        tags: row['tags'],
+        tags: tags_str,  # Use parsed tags array
         prep_time: row['prep_time'],
         cook_time: row['cook_time'],
         servings: row['servings'],

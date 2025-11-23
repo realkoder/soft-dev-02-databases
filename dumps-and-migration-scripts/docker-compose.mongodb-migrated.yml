@@ -1,9 +1,9 @@
 # ===========================================================
 #       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
 # ===========================================================
-# docker-compose up:    docker-compose -f docker-compose.mongodb-seeded.yml up
-# docker-compose logs:  docker-compose -f docker-compose.mongodb-seeded.yml logs -f
-# docker-compose down:  docker-compose -f docker-compose.mongodb-seeded.yml down --rmi all --remove-orphans
+# docker-compose up:    docker-compose -f docker-compose.mongodb-migrated.yml up
+# docker-compose logs:  docker-compose -f docker-compose.mongodb-migrated.yml logs -f
+# docker-compose down:  docker-compose -f docker-compose.mongodb-migrated.yml down --rmi all --remove-orphans
 #                       // Deletes all images - JUST MAKE SURE VOLUMES WON'T BE DELETED
 #
 # Generate a mongo dump file: mongodump --uri="mongodb+srv://user:password@cluster0.mongodb.net/munchora"

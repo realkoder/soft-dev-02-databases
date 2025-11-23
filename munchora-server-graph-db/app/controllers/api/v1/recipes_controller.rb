@@ -7,19 +7,18 @@ class Api::V1::RecipesController < ApplicationController
   ADMIN_EMAIL = "alexanderbtcc@gmail.com"
 
   def index
-    recipes = nil
     if current_user&.email == ADMIN_EMAIL
       recipes = Recipe.all
     elsif current_user
-      recipes = Recipe.where(is_public: true).or(Recipe.where(user_id: current_user.id))
+      recipes = Recipe.where("result_recipe2.is_public = 1").or(Recipe.where(user_id: current_user.id))
     else
-      recipes = Recipe.where(is_public: true)
+      recipes = Recipe.where("result_recipe2.is_public = 1")
     end
 
     filters_applied = false
 
     if params[:cuisine].present?
-      recipes = recipes.where("cuisine ILIKE ?", "%#{params[:cuisine]}%")
+      recipes = recipes.where("result_recipe2.cuisine =~ ?", "(?i).*#{params[:cuisine]}.*")
       filters_applied = true
     end
 
@@ -29,16 +28,15 @@ class Api::V1::RecipesController < ApplicationController
     end
 
     if params[:tag].present?
-      recipes = recipes.where("tags ILIKE ?", "%\"#{params[:tag]}\"%")
+      recipes = recipes.where("result_recipe2.tags =~ ?", "(?i).*#{params[:tag]}.*")
       filters_applied = true
     end
 
     # Search across multiple fields
     if params[:search].present?
-      query = params[:search].downcase
+      pattern = "(?i).*#{params[:search].downcase}.*"
       recipes = recipes.where(
-        "LOWER(title) LIKE :query OR LOWER(description) LIKE :query OR LOWER(cuisine) LIKE :query",
-        query: "%#{query}%"
+        "result_recipe2.title =~ '#{pattern}' OR result_recipe2.description =~ '#{pattern}' OR result_recipe2.cuisine =~ '#{pattern}'"
       )
       filters_applied = true
     end
