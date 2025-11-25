@@ -3,19 +3,19 @@ class Api::V1::GroceryListsController < ApplicationController
   before_action :set_grocery_list, only: [:update, :destroy, :add_item, :remove_item, :share, :unshare]
 
   def index
-    use_db = request.headers['use-db'].to_s.downcase
-    if use_db == 'mongodb'
+    use_db = request.headers["use-db"].to_s.downcase
+    if use_db == "mongodb"
       owned_lists = current_user.grocery_lists
       shared_lists = current_user.shared_grocery_lists
-    elsif use_db == 'neo4j'
-      owned_lists = current_user.owned_grocery_lists.as_json(include: { owner: {}, items: {}, shared_users: {} })
-      shared_lists = current_user.shared_grocery_lists.as_json(include: { owner: {}, items: {}, shared_users: {} })
+    elsif use_db == "neo4j"
+      owned_lists = current_user.owned_grocery_lists.as_json(include: { owner: { only: [:id, :first_name, :last_name, :image_src] }, items: {}, shared_users: { only: [:id, :first_name, :last_name, :image_src] } })
+      shared_lists = current_user.shared_grocery_lists.as_json(include: { owner: { only: [:id, :first_name, :last_name, :image_src] }, items: {}, shared_users: { only: [:id, :first_name, :last_name, :image_src] } })
     else
       owned_lists = current_user.grocery_lists.includes(:items, :shared_users)
       shared_lists = current_user.shared_grocery_lists.includes(:items, :shared_users)
     end
 
-    all_lists = (owned_lists + shared_lists).uniq { |list| list.id }
+    all_lists = (owned_lists + shared_lists).uniq
 
     render json: all_lists.as_json(
       include: [
@@ -26,14 +26,16 @@ class Api::V1::GroceryListsController < ApplicationController
   end
 
   def create
-    list = GroceryLists::Creator.call(current_user, grocery_list_params, request.headers['use-db'].to_s.downcase)
+    list = GroceryLists::Creator.call(current_user, grocery_list_params, request.headers["use-db"].to_s.downcase)
     render json: list.as_json(include: [:items, shared_users: { only: [:id, :first_name, :last_name, :image_src] }]), status: :created
   end
 
   # PUT /api/v1/grocery_lists
   def update
     @grocery_list.update!(grocery_list_params)
-    GroceryLists::NotifyEvents.name_updated(@grocery_list)
+    if request.headers["use-db"].to_s.downcase != "mongodb" && request.headers["use-db"].to_s.downcase != "neo4j"
+      GroceryLists::NotifyEvents.name_updated(@grocery_list)
+    end
     render json: @grocery_list
   end
 
@@ -43,15 +45,23 @@ class Api::V1::GroceryListsController < ApplicationController
       GroceryLists::NotifyEvents.list_deleted(@grocery_list)
       head :no_content
     else
-      GroceryLists::NotifyEvents.unshare_list(@grocery_list, current_user.id)
-      GroceryLists::Sharer.unshare(@grocery_list, current_user.id)
+      use_db = request.headers["use-db"].to_s.downcase
+
+      GroceryLists::Sharer.unshare(@grocery_list, current_user.id, use_db)
+      if use_db != "mongodb" && use_db != "neo4j"
+        GroceryLists::NotifyEvents.unshare_list(@grocery_list, current_user.id)
+      end
       head :no_content
     end
   end
 
   def add_item
-    item = GroceryLists::ItemManager.add_item(@grocery_list, item_params, current_user)
-    GroceryLists::NotifyEvents.item_added(@grocery_list, item)
+    use_db = request.headers["use-db"].to_s.downcase
+    item = GroceryLists::ItemManager.add_item(@grocery_list, item_params, current_user, use_db)
+
+    if use_db != "mongodb" && use_db != "neo4j"
+      GroceryLists::NotifyEvents.item_added(@grocery_list, item)
+    end
     render json: item, status: :created
   end
 
@@ -59,20 +69,33 @@ class Api::V1::GroceryListsController < ApplicationController
   def remove_item
     item_id = params[:item_id]
     GroceryLists::ItemManager.remove_item(@grocery_list, item_id)
-    GroceryLists::NotifyEvents.item_removed(@grocery_list, item_id)
+
+    use_db = request.headers["use-db"].to_s.downcase
+    if use_db != "mongodb" && use_db != "neo4j"
+      GroceryLists::NotifyEvents.item_removed(@grocery_list, item_id)
+    end
     head :no_content
   end
 
   def share
     user_ids = Array(params[:user_ids])
-    GroceryLists::Sharer.share(@grocery_list, user_ids)
-    GroceryLists::NotifyEvents.share_list(@grocery_list)
+    use_db = request.headers["use-db"].to_s.downcase
+    puts "LOOK"
+    GroceryLists::Sharer.share(@grocery_list, user_ids, use_db)
+
+    if use_db != "mongodb" && use_db != "neo4j"
+      GroceryLists::NotifyEvents.share_list(@grocery_list)
+    end
     head :no_content
   end
 
   def unshare
-    GroceryLists::NotifyEvents.unshare_list(@grocery_list, params[:user_id])
-    GroceryLists::Sharer.unshare(@grocery_list, params[:user_id])
+    use_db = request.headers["use-db"].to_s.downcase
+    GroceryLists::Sharer.unshare(@grocery_list, params[:user_id], use_db)
+
+    if use_db != "mongodb" && use_db != "neo4j"
+      GroceryLists::NotifyEvents.unshare_list(@grocery_list, params[:user_id])
+    end
     head :no_content
   end
 
@@ -90,21 +113,39 @@ class Api::V1::GroceryListsController < ApplicationController
     update_attrs[:category] = params[:category] if params[:category].present?
 
     item.update!(update_attrs)
-    GroceryLists::NotifyEvents.item_updated(@grocery_list, item)
+    use_db = request.headers["use-db"].to_s.downcase
+    if use_db != "mongodb" && use_db != "neo4j"
+      GroceryLists::NotifyEvents.item_updated(@grocery_list, item)
+    end
     render json: item
   end
 
   private
 
   def set_grocery_list
-    @grocery_list = GroceryList
-                      .left_outer_joins(:shared_users)
-                      .where(
-                        'grocery_lists.owner_id = :user_id OR users.id = :user_id',
-                        user_id: current_user.id
-                      )
-                      .distinct
-                      .find(params[:id])
+    use_db = request.headers["use-db"].to_s.downcase
+    if use_db == "mongodb"
+      user_id = current_user.id.is_a?(BSON::ObjectId) ? current_user.id : BSON::ObjectId(current_user.id.to_s)
+
+      @grocery_list = Document::GroceryList.where(
+        :_id => BSON::ObjectId(params[:id]),
+        :$or => [
+          { owner_id: user_id }, # user is owner
+          { :shared_user_ids.in => [user_id] } # user is shared
+        ]
+      ).first
+    elsif use_db == "neo4j"
+      @grocery_list = Graph::GroceryList.find_by(id: params[:id])
+    else
+      @grocery_list = Relational::GroceryList
+                        .left_outer_joins(:shared_users)
+                        .where(
+                          "grocery_lists.owner_id = :user_id OR users.id = :user_id",
+                          user_id: current_user.id
+                        )
+                        .distinct
+                        .find(params[:id])
+    end
   end
 
   def grocery_list_params

@@ -60,7 +60,7 @@ class ApplicationController < ActionController::API
     @current_user = User.find_by(id: decoded[:user_id])
 
   rescue JWT::DecodeError
-    return nil
+    nil
   end
 
   def authorize_admin!
