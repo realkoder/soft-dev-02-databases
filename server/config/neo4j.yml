@@ -1,0 +1,11 @@
+development:
+  url: <%= ENV.fetch("NEO4J_URI", "neo4j://localhost:7687") %>
+  username: <%= ENV.fetch("NEO4J_USER", "neo4j") %>
+  password: <%= ENV.fetch("NEO4J_PASSWORD", "password") %>
+  encryption: false
+
+test:
+  url: <%= ENV.fetch("NEO4J_URI", "neo4j://localhost:7687") %>
+  username: <%= ENV.fetch("NEO4J_USER", "neo4j") %>
+  password: <%= ENV.fetch("NEO4J_PASSWORD", "password") %>
+  encryption: false

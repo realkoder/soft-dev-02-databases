@@ -1,6 +1,8 @@
-require_relative 'boot'
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
+
+require 'active_graph/railtie'
 
 # Enables usage of dotenv files
 require 'dotenv'
@@ -10,13 +12,10 @@ Dotenv.load('.env.dev') if Rails.env.development?
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module MunchoraServerRelationalDb
+module Server
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
-
-    # Default to UUID for all primary keys
-    config.active_record.primary_key = :uuid
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.

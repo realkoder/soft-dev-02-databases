@@ -1,0 +1,48 @@
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Node to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# Note that this schema.yml definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using neo4j:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
+#
+# It's strongly recommended that you check this file into your version control system.
+
+---
+:constraints:
+- CREATE CONSTRAINT `constraint_2bf9c79b` FOR (n:`RecipeComment`) REQUIRE (n.`id`)
+  IS UNIQUE
+- CREATE CONSTRAINT `constraint_6965c9d8` FOR (n:`Ingredient`) REQUIRE (n.`id`) IS
+  UNIQUE
+- CREATE CONSTRAINT `constraint_709b87f0` FOR (n:`GroceryListItem`) REQUIRE (n.`id`)
+  IS UNIQUE
+- CREATE CONSTRAINT `constraint_71aed712` FOR (n:`RecipeLike`) REQUIRE (n.`id`) IS
+  UNIQUE
+- CREATE CONSTRAINT `constraint_74fad970` FOR (n:`User`) REQUIRE (n.`id`) IS UNIQUE
+- CREATE CONSTRAINT `constraint_7b961405` FOR (n:`GroceryList`) REQUIRE (n.`id`) IS
+  UNIQUE
+- CREATE CONSTRAINT `constraint_dbcee0a4` FOR (n:`ActiveGraph::Migrations::SchemaMigration`)
+  REQUIRE (n.`migration_id`) IS UNIQUE
+- CREATE CONSTRAINT `constraint_e4cf7301` FOR (n:`User`) REQUIRE (n.`email`) IS UNIQUE
+- CREATE CONSTRAINT `constraint_eaf4a417` FOR (n:`LlmUsage`) REQUIRE (n.`id`) IS UNIQUE
+- CREATE CONSTRAINT `constraint_f729ff5c` FOR (n:`Recipe`) REQUIRE (n.`id`) IS UNIQUE
+:indexes:
+- CREATE RANGE INDEX `index_152c8627` FOR (n:`Recipe`) ON (n.`difficulty`)
+- CREATE RANGE INDEX `index_2946d8f6` FOR (n:`LlmUsage`) ON (n.`created_at`)
+- CREATE RANGE INDEX `index_610deb21` FOR (n:`Recipe`) ON (n.`updated_at`)
+- CREATE RANGE INDEX `index_75aa3230` FOR (n:`Recipe`) ON (n.`title`)
+- CREATE RANGE INDEX `index_b54a9d11` FOR (n:`Recipe`) ON (n.`is_public`)
+:versions:
+- '20251001172117'
+- '20251021180509'
+- '20251021200521'
+- '20251021201549'
+- '20251029204327'
+- '20251029210955'
+- '20251030071914'
+- '20251031192819'
+- '20251031205002'
+- '20251113124157'
+- '20251113124218'

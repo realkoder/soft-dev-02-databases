@@ -1,9 +1,9 @@
-class Recipe < ApplicationRecord
-  self.primary_key = 'id'
+class Relational::Recipe < ApplicationRecord
+  self.primary_key = "id"
 
   before_create -> { self.id ||= SecureRandom.uuid }
 
-  belongs_to :user, foreign_key: 'user_id'
+  belongs_to :user
   has_many :llm_usages, dependent: :nullify
   has_many :ingredients, dependent: :destroy
   has_many :recipe_comments, dependent: :destroy
@@ -12,7 +12,7 @@ class Recipe < ApplicationRecord
 
   accepts_nested_attributes_for :ingredients, allow_destroy: true
 
-  validates :title, presence: true, length: { minimum: 6, maximum: 150 }, format: { with: /[A-Za-z]/, message: 'must contain at least one letter' }
+  validates :title, presence: true, length: { minimum: 6, maximum: 150 }, format: { with: /[A-Za-z]/, message: "must contain at least one letter" }
   validates :image_url, length: { minimum: 14, maximum: 400 }, format: URI.regexp(%w[http https]), allow_blank: true
   validates :description, presence: true, length: { maximum: 2_000 }
   validates :instructions, presence: true
@@ -36,12 +36,12 @@ class Recipe < ApplicationRecord
 
   def instructions_length_limit
     if instructions.is_a?(Array)
-      total_length = instructions.join(' ').length
+      total_length = instructions.join(" ").length
       if total_length > 3000
-        errors.add(:instructions, 'combined length must be less than 3000 characters')
+        errors.add(:instructions, "combined length must be less than 3000 characters")
       end
     else
-      errors.add(:instructions, 'must be an array of steps')
+      errors.add(:instructions, "must be an array of steps")
     end
   end
 end
