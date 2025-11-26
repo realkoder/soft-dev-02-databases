@@ -1,4 +1,4 @@
-class Recipe::RecipeUpdater
+class Recipes::RecipeUpdater
   def initialize(recipe, recipe_params, current_user)
     @recipe = recipe
     @recipe_params = recipe_params

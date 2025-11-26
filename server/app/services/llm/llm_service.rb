@@ -29,36 +29,37 @@ class Llm::LlmService
       user: @user
     }
 
-    created_recipe = if use_db == "mongodb"
-      recipe_attributes[:ingredients] = recipe["ingredients"]
-      Document::Recipe.create!(recipe_attributes)
-    elsif use_db == "neo4j"
-      created_recipe = Graph::Recipe.create!(recipe_attributes)
+    created_recipe =
+      if use_db == "mongodb"
+        recipe_attributes[:ingredients] = recipe["ingredients"]
+        Document::Recipe.create!(recipe_attributes)
+      elsif use_db == "neo4j"
+        created_recipe = Graph::Recipe.create!(recipe_attributes)
 
-      # Attach ingredients from OpenAI response
-      (recipe["ingredients"] || []).each do |ingredient|
-        created_recipe.ingredients.create!(
-          name: ingredient["name"],
-          amount: ingredient["amount"],
-          category: ingredient["category"],
-          recipe: created_recipe
-        )
-      end
-      created_recipe
-    else
-      created_recipe = Relational::Recipe.create!(recipe_attributes)
+        # Attach ingredients from OpenAI response
+        (recipe["ingredients"] || []).each do |ingredient|
+          created_recipe.ingredients.create!(
+            name: ingredient["name"],
+            amount: ingredient["amount"],
+            category: ingredient["category"],
+            recipe: created_recipe
+          )
+        end
+        created_recipe
+      else
+        created_recipe = Relational::Recipe.create!(recipe_attributes)
 
-      # Attach ingredients from OpenAI recipe response
-      (recipe["ingredients"] || []).each do |ingredient|
-        created_recipe.ingredients.create!(
-          name: ingredient["name"],
-          amount: ingredient["amount"],
-          category: ingredient["category"],
-          recipe: created_recipe
-        )
+        # Attach ingredients from OpenAI recipe response
+        (recipe["ingredients"] || []).each do |ingredient|
+          created_recipe.ingredients.create!(
+            name: ingredient["name"],
+            amount: ingredient["amount"],
+            category: ingredient["category"],
+            recipe: created_recipe
+          )
+        end
+        created_recipe
       end
-      created_recipe
-    end
 
     create_llm_usage(created_recipe.id, prompt, usage, response.model, use_db)
 
