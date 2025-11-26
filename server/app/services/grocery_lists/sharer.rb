@@ -1,8 +1,8 @@
 class GroceryLists::Sharer
   def self.share(list, user_ids, use_db)
-    if use_db == "mongodb"
+    if use_db == 'mongodb'
       mongodb_share(list, user_ids)
-    elsif use_db == "neo4j"
+    elsif use_db == 'neo4j'
       neo4j_share(list, user_ids)
     else
       users_to_add = Relational::User.where(id: user_ids).where.not(id: list.shared_user_ids)
@@ -11,9 +11,9 @@ class GroceryLists::Sharer
   end
 
   def self.unshare(list, user_id, use_db)
-    if use_db == "mongodb"
+    if use_db == 'mongodb'
       mongodb_unshare(list, user_id)
-    elsif use_db == "neo4j"
+    elsif use_db == 'neo4j'
       user = Graph::User.find(user_id)
       list.shared_users.delete(user)
     else

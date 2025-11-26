@@ -2,7 +2,7 @@ class Document::Feedback
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  store_in collection: "feedbacks"
+  store_in collection: 'feedbacks'
 
   field :name, type: String
   field :email, type: String
@@ -15,6 +15,6 @@ class Document::Feedback
   validates :email, presence: true, length: { minimum: 4, maximum: 100 }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :category, presence: true,
             length: { maximum: 40 },
-            inclusion: { in: CATEGORIES, message: "%{value} is not a valid category" }
+            inclusion: { in: CATEGORIES, message: '%{value} is not a valid category' }
   validates :message, presence: true, length: { maximum: 2000 }
 end

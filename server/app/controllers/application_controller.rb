@@ -11,17 +11,17 @@ class ApplicationController < ActionController::API
     rate_limit to: 3,
                within: 1.minute,
                by: -> { request.domain },
-               with: -> { redirect_to disney_url, alert: "Too many requests. Please try again later.", allow_other_host: true },
+               with: -> { redirect_to disney_url, alert: 'Too many requests. Please try again later.', allow_other_host: true },
                if: -> do
                  (request.post? || request.put?) &&
                    [
-                     "/api/v1/users",
-                     "/api/v1/auth/login",
-                     "/api/v1/llm/generate-recipe",
+                     '/api/v1/users',
+                     '/api/v1/auth/login',
+                     '/api/v1/llm/generate-recipe',
                      %r{^/api/v1/llm/generate-recipe-image/\d+},
                      %r{^/api/v1/llm/update-recipe/\d+},
-                     "/api/v1/users/upload-image",
-                     "/api/v1/recipes/upload-image"
+                     '/api/v1/users/upload-image',
+                     '/api/v1/recipes/upload-image'
                    ].any? do |path|
                      path.is_a?(Regexp) ? request.path.match?(path) : request.path == path
                    end
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::API
     rate_limit to: 20,
                within: 1.minute,
                by: -> { request.domain },
-               with: -> { redirect_to disney_url, alert: "Too many requests. Please try again later.", allow_other_host: true }
+               with: -> { redirect_to disney_url, alert: 'Too many requests. Please try again later.', allow_other_host: true }
   end
 
   # To be used as a fallback for unknown routes - directed from config/routes.rb
@@ -43,44 +43,44 @@ class ApplicationController < ActionController::API
     token = cookies[:jwt_auth]
     # If no cookie, check for Bearer token in Authorization header
     if token.nil?
-      auth_header = request.headers["Authorization"]
-      if auth_header.present? && auth_header.start_with?("Bearer ")
-        token = auth_header.split(" ").last
+      auth_header = request.headers['Authorization']
+      if auth_header.present? && auth_header.start_with?('Bearer ')
+        token = auth_header.split(' ').last
       end
     end
 
     if token.nil?
-      return render json: { error: "Unauthorized" }, status: :unauthorized
+      return render json: { error: 'Unauthorized' }, status: :unauthorized
     end
 
     decoded = Auth::JsonWebToken.decode(token)
     if decoded.nil? || !decoded[:user_id]
-      return render json: { error: "Unauthorized" }, status: :unauthorized
+      return render json: { error: 'Unauthorized' }, status: :unauthorized
     end
 
-    use_db = request.headers["use-db"].to_s.downcase
-    @current_user = if use_db == "mongodb"
+    use_db = request.headers['use-db'].to_s.downcase
+    @current_user = if use_db == 'mongodb'
                       Document::User.find_by(id: decoded[:user_id])
-                    elsif use_db == "neo4j"
+    elsif use_db == 'neo4j'
                       Graph::User.find_by(id: decoded[:user_id])
-                    else
+    else
                       Relational::User.find_by(id: decoded[:user_id])
-                    end
+    end
 
     if !@current_user
-      render json: { error: "Unauthorized" }, status: :unauthorized
+      render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-    render json: { error: "Unauthorized" }, status: :unauthorized
+    render json: { error: 'Unauthorized' }, status: :unauthorized
   end
 
   def authenticate_user_or_nil
     token = cookies[:jwt_auth]
 
     if token.nil?
-      auth_header = request.headers["Authorization"]
-      if auth_header.present? && auth_header.start_with?("Bearer ")
-        token = auth_header.split(" ").last
+      auth_header = request.headers['Authorization']
+      if auth_header.present? && auth_header.start_with?('Bearer ')
+        token = auth_header.split(' ').last
       end
     end
 
@@ -94,14 +94,14 @@ class ApplicationController < ActionController::API
       return nil
     end
 
-    use_db = request.headers["use-db"].to_s.downcase
-    @current_user = if use_db == "mongodb"
+    use_db = request.headers['use-db'].to_s.downcase
+    @current_user = if use_db == 'mongodb'
                       Document::User.find_by(id: decoded[:user_id])
-                    elsif use_db == "neo4j"
+    elsif use_db == 'neo4j'
                       Graph::User.find_by(id: decoded[:user_id])
-                    else
+    else
                       Relational::User.find_by(id: decoded[:user_id])
-                    end
+    end
 
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
     nil
@@ -109,25 +109,25 @@ class ApplicationController < ActionController::API
 
   def authorize_admin!
     authenticate_user!
-    unless current_user&.email == "alexanderbtcc@gmail.com"
-      head :unauthorized unless current_user&.email == "alexanderbtcc@gmail.com"
+    unless current_user&.email == 'alexanderbtcc@gmail.com'
+      head :unauthorized unless current_user&.email == 'alexanderbtcc@gmail.com'
     end
   end
 
   private
 
   def parse_json_request
-    return unless request.content_type == "application/json"
+    return unless request.content_type == 'application/json'
 
     begin
       # This forces Rails to parse JSON body early
       JSON.parse(request.raw_post) unless request.raw_post.blank?
     rescue JSON::ParserError => e
-      render_error(400, "Bad request", "Malformed JSON: #{e.message}") and return
+      render_error(400, 'Bad request', "Malformed JSON: #{e.message}") and return
     end
   end
 
   def disney_url
-    "https://disney.com"
+    'https://disney.com'
   end
 end

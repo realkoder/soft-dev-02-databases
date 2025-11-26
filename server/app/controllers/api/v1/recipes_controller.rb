@@ -5,14 +5,14 @@ class Api::V1::RecipesController < ApplicationController
   before_action :set_comment, only: [:delete_comment]
   before_action :set_like, only: [:delete_like]
 
-  ADMIN_EMAIL = "alexanderbtcc@gmail.com"
+  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
 
   def index
-    use_db = request.headers["use-db"]
+    use_db = request.headers['use-db']
     paginated_recipes =
-      if use_db == "mongodb"
+      if use_db == 'mongodb'
         Recipes::MongodbRecipeSearchService.new(params).call(current_user)
-      elsif use_db == "neo4j"
+      elsif use_db == 'neo4j'
         Recipes::Neo4jRecipeSearchService.new(params).call(current_user)
       else
         Recipes::MysqlRecipeSearchService.new(params).call(current_user)
@@ -23,8 +23,8 @@ class Api::V1::RecipesController < ApplicationController
       user: { only: [:image_src, :id] }
     }
 
-    # Add the correct association names based on database
-    if use_db == "neo4j"
+    # Correcting association names based on database
+    if use_db == 'neo4j'
       include_hash[:likes] = {}
       include_hash[:comments] = {}
     else
@@ -98,7 +98,7 @@ class Api::V1::RecipesController < ApplicationController
       @recipe.destroy
       head :no_content
     else
-      render json: { error: "Failed to delete the recipes." }, status: :unprocessable_entity
+      render json: { error: 'Failed to delete the recipes.' }, status: :unprocessable_entity
     end
   end
 
@@ -125,7 +125,7 @@ class Api::V1::RecipesController < ApplicationController
     end
 
     if image_deleted
-      render json: { message: "OK" }
+      render json: { message: 'OK' }
     else
       render json: { error: image_deleted.error }, status: :unprocessable_entity
     end
@@ -151,7 +151,7 @@ class Api::V1::RecipesController < ApplicationController
     if @comment.destroy
       head :no_content
     else
-      render json: { errors: "Failed to delete comment" }, status: :unprocessable_entity
+      render json: { errors: 'Failed to delete comment' }, status: :unprocessable_entity
     end
   end
 
@@ -159,7 +159,7 @@ class Api::V1::RecipesController < ApplicationController
     like = @recipe.recipe_likes.find_or_initialize_by(user: current_user)
 
     if like.persisted?
-      render json: { message: "Already liked" }, status: :ok
+      render json: { message: 'Already liked' }, status: :ok
     elsif like.save
       render json: like, status: :created
     else
@@ -176,22 +176,22 @@ class Api::V1::RecipesController < ApplicationController
     if @like&.destroy
       head :no_content
     else
-      render json: { errors: "Failed to unlike" }, status: :unprocessable_entity
+      render json: { errors: 'Failed to unlike' }, status: :unprocessable_entity
     end
   end
 
   private
 
   def set_recipe
-    use_db = request.headers["use-db"]
+    use_db = request.headers['use-db']
     @recipe =
-      if use_db == "mongodb"
+      if use_db == 'mongodb'
         begin
           Document::Recipe.find(params[:id])
         rescue Mongoid::Errors::DocumentNotFound
           head :not_found
         end
-      elsif use_db == "neo4j"
+      elsif use_db == 'neo4j'
         Graph::Recipe.find_by(id: params[:id])
       else
         Relational::Recipe.find(params[:id])
@@ -211,14 +211,14 @@ class Api::V1::RecipesController < ApplicationController
   def set_comment
     @comment = @recipe.recipe_comments.find_by(id: params[:comment_id])
     unless @comment
-      render json: { error: "Comment not found" }, status: :not_found
+      render json: { error: 'Comment not found' }, status: :not_found
     end
   end
 
   def set_like
     @like = @recipe.recipe_likes.find_by(user: current_user)
     unless @like
-      render json: { error: "Like  not found" }, status: :not_found
+      render json: { error: 'Like  not found' }, status: :not_found
     end
   end
 

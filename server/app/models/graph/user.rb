@@ -3,7 +3,7 @@ class Graph::User
   include ActiveGraph::Timestamps
   include ActiveModel::SecurePassword
 
-  self.mapped_label_name = "User"
+  self.mapped_label_name = 'User'
 
   # Properties
   id_property :id, auto: :uuid
@@ -17,10 +17,10 @@ class Graph::User
   property :image_src, type: String
 
   # Relationships
-  has_many :out, :recipes, type: :CREATED_BY, dependent: :destroy, model_class: "Graph::Recipe"
-  has_many :out, :llm_usages, type: :HAS_LLM_USAGE, model_class: "Graph::LlmUsage"
-  has_many :in, :owned_grocery_lists, type: :CREATED_BY, model_class: "Graph::GroceryList", dependent: :destroy
-  has_many :in, :shared_grocery_lists, type: :CAN_ACCESS, model_class: "Graph::GroceryList"
+  has_many :out, :recipes, type: :CREATED_BY, dependent: :destroy, model_class: 'Graph::Recipe'
+  has_many :out, :llm_usages, type: :HAS_LLM_USAGE, model_class: 'Graph::LlmUsage'
+  has_many :in, :owned_grocery_lists, type: :CREATED_BY, model_class: 'Graph::GroceryList', dependent: :destroy
+  has_many :in, :shared_grocery_lists, type: :CAN_ACCESS, model_class: 'Graph::GroceryList'
 
   # Validations
   validates :email,
@@ -52,6 +52,6 @@ class Graph::User
       root: false
     }.merge(options)
     attributes = super(base_options)
-    attributes.merge("fullname" => "#{first_name} #{last_name}")
+    attributes.merge('fullname' => "#{first_name} #{last_name}")
   end
 end

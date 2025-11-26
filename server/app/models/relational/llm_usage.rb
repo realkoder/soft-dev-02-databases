@@ -1,5 +1,5 @@
 class Relational::LlmUsage < ApplicationRecord
-  self.primary_key = "id"
+  self.primary_key = 'id'
 
   before_create -> { self.id ||= SecureRandom.uuid }
 

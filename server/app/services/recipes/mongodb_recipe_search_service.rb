@@ -1,5 +1,5 @@
 class Recipes::MongodbRecipeSearchService
-  ADMIN_EMAIL = "alexanderbtcc@gmail.com"
+  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
 
   def initialize(params)
     @params = params || {}
@@ -15,7 +15,7 @@ class Recipes::MongodbRecipeSearchService
     recipes = if current_user&.email == ADMIN_EMAIL
       Document::Recipe.all
     elsif current_user
-      Document::Recipe.where("is_public = ? OR user_id = ?", true, current_user.id)
+      Document::Recipe.where('is_public = ? OR user_id = ?', true, current_user.id)
     else
       Document::Recipe.where(is_public: true)
     end
@@ -41,7 +41,7 @@ class Recipes::MongodbRecipeSearchService
     if @search
       query = Regexp.new(Regexp.escape(@search), Regexp::IGNORECASE)
       recipes = recipes.where(
-        "$or" => [
+        '$or' => [
           { title: query },
           { description: query },
           { cuisine: query }

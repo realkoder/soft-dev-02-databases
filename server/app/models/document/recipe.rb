@@ -21,8 +21,8 @@ class Document::Recipe
   # Reference to user (instead of foreign key)
   belongs_to :user
 
-  has_many :likes, class_name: "RecipeLike", inverse_of: :recipe
-  has_many :comments, class_name: "RecipeComment", inverse_of: :recipe
+  has_many :likes, class_name: 'RecipeLike', inverse_of: :recipe
+  has_many :comments, class_name: 'RecipeComment', inverse_of: :recipe
 
   # Indexes for performance
   index({ user_id: 1 })    # Fast lookup of user's recipes (both private and public)
@@ -33,7 +33,7 @@ class Document::Recipe
   index({ difficulty: 1 }) # Fast filtering by difficulty level
 
   validates :title, presence: true, length: { maximum: 150 }
-  validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true
+  validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: 'must be a valid URL' }, allow_blank: true
   validates :description, presence: true, length: { maximum: 2_000 }
   validates :instructions, presence: true
   validate :instructions_length_limit
@@ -58,10 +58,10 @@ class Document::Recipe
     if instructions.is_a?(Array)
       total_length = instructions.join(' ').length
       if total_length > 3000
-        errors.add(:instructions, "combined length must be less than 3000 characters")
+        errors.add(:instructions, 'combined length must be less than 3000 characters')
       end
     else
-      errors.add(:instructions, "must be an array of steps")
+      errors.add(:instructions, 'must be an array of steps')
     end
   end
 end

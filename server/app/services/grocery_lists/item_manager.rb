@@ -1,6 +1,6 @@
 class GroceryLists::ItemManager
   def self.add_item(list, params, user, use_db)
-    if use_db == "neo4j"
+    if use_db == 'neo4j'
       Graph::GroceryListItem.create!(
         name: params[:name],
         category: params[:category],
@@ -17,18 +17,18 @@ class GroceryLists::ItemManager
   end
 
   def self.update_item(params, current_user, use_db)
-    item = if use_db == "mongodb"
+    item = if use_db == 'mongodb'
              begin
                grocery_list = Document::GroceryList.find(params[:id])
                grocery_list&.items&.find(params[:item_id])
              rescue Mongoid::Errors::DocumentNotFound
                return :forbidden
              end
-           elsif use_db == "neo4j"
+    elsif use_db == 'neo4j'
              Graph::GroceryListItem.find(params[:item_id])
-           else
+    else
              Relational::GroceryListItem.find(params[:item_id])
-           end
+    end
     grocery_list = item.grocery_list
 
     unless grocery_list.owner_id == current_user.id || grocery_list.shared_users.exists?(id: current_user.id)
@@ -42,7 +42,7 @@ class GroceryLists::ItemManager
 
     item.update!(update_attrs)
 
-    if use_db != "mongodb" && use_db != "neo4j"
+    if use_db != 'mongodb' && use_db != 'neo4j'
       GroceryLists::NotifyEvents.item_updated(grocery_list, item)
     end
 
@@ -50,7 +50,7 @@ class GroceryLists::ItemManager
   end
 
   def self.remove_item(list, item_id, use_db)
-    if use_db == "neo4j"
+    if use_db == 'neo4j'
       Graph::GroceryListItem.find_by(id: item_id).destroy
     else
       list.items.find(item_id).destroy!

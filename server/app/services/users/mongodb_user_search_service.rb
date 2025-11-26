@@ -11,10 +11,10 @@ class Users::MongodbUserSearchService
     if @params[:search].present?
       query = /#{Regexp.escape(@params[:search].downcase)}/i
       users = users.where(
-        "$or" => [
-          { :"first_name" => query },
-          { :"last_name" => query },
-          { :"email" => query }
+        '$or' => [
+          { "first_name": query },
+          { "last_name": query },
+          { "email": query }
         ]
       )
     end

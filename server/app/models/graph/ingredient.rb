@@ -2,7 +2,7 @@ class Graph::Ingredient
   include ActiveGraph::Node
   include ActiveGraph::Timestamps
 
-  self.mapped_label_name = "Ingredient"
+  self.mapped_label_name = 'Ingredient'
 
   id_property :id, auto: :uuid
 
@@ -15,5 +15,5 @@ class Graph::Ingredient
   validates :category, presence: true, inclusion: { in: GroceryCategories::CATEGORIES }
 
   # Relationships
-  has_one :in, :recipe, origin: :ingredients, model_class: "Graph::Recipe"
+  has_one :in, :recipe, origin: :ingredients, model_class: 'Graph::Recipe'
 end

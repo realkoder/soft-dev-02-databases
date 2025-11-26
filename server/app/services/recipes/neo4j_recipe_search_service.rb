@@ -1,5 +1,5 @@
 class Recipes::Neo4jRecipeSearchService
-  ADMIN_EMAIL = "alexanderbtcc@gmail.com"
+  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
 
   def initialize(params)
     @params = params || {}
@@ -12,19 +12,18 @@ class Recipes::Neo4jRecipeSearchService
   end
 
   def call(current_user)
-
     if current_user&.email == ADMIN_EMAIL
       recipes = Graph::Recipe.all
     elsif current_user
-      recipes = Graph::Recipe.where("result_recipe2.is_public = 1").or(Recipe.where(user_id: current_user.id))
+      recipes = Graph::Recipe.where('result_recipe2.is_public = 1').or(Recipe.where(user_id: current_user.id))
     else
-      recipes = Graph::Recipe.where("result_recipe2.is_public = 1")
+      recipes = Graph::Recipe.where('result_recipe2.is_public = 1')
     end
 
     filters_applied = false
 
     if @cuisine
-      recipes = recipes.where("ANY(cuis IN n.cuisine WHERE cuis =~ $pattern)", pattern: "(?i).*#{@cuisine}.*")
+      recipes = recipes.where('ANY(cuis IN n.cuisine WHERE cuis =~ $pattern)', pattern: "(?i).*#{@cuisine}.*")
       filters_applied = true
     end
 
@@ -34,14 +33,14 @@ class Recipes::Neo4jRecipeSearchService
     end
 
     if @tag
-      recipes = recipes.where("ANY(tag IN n.tags WHERE tag =~ $pattern)", pattern: "(?i).*#{@tag}.*")
+      recipes = recipes.where('ANY(tag IN n.tags WHERE tag =~ $pattern)', pattern: "(?i).*#{@tag}.*")
       filters_applied = true
     end
 
     if @search
       pattern = "(?i).*#{@search}.*"
       recipes = recipes.where(
-        "n.title =~ $pattern OR n.description =~ $pattern OR ANY(cuis IN n.cuisine WHERE cuis =~ $pattern)",
+        'n.title =~ $pattern OR n.description =~ $pattern OR ANY(cuis IN n.cuisine WHERE cuis =~ $pattern)',
         pattern: pattern
       )
       filters_applied = true

@@ -2,7 +2,7 @@ class Graph::LlmUsage
   include ActiveGraph::Node
   include ActiveGraph::Timestamps
 
-  self.mapped_label_name = "LlmUsage"
+  self.mapped_label_name = 'LlmUsage'
 
   id_property :id, auto: :uuid
 
@@ -13,6 +13,6 @@ class Graph::LlmUsage
   property :completion_tokens, type: Integer
 
   # Relationships
-  has_one :in, :user, origin: :llm_usages, model_class: "Graph::User"
-  has_one :in, :recipe, origin: :llm_usages, model_class: "Graph::Recipe"
+  has_one :in, :user, origin: :llm_usages, model_class: 'Graph::User'
+  has_one :in, :recipe, origin: :llm_usages, model_class: 'Graph::Recipe'
 end

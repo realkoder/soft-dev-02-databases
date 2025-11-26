@@ -7,7 +7,7 @@ class Api::V1::LlmController < ApplicationController
   def generate_recipe
     user_prompt = params[:prompt].to_s[0...MAX_PROMPT_LENGTH]
 
-    use_db = request.headers["use-db"]
+    use_db = request.headers['use-db']
     recipe_data = Llm::LlmService.new(user: @current_user).generate_recipe(user_prompt, use_db)
     render json: recipe_data.as_json(include: { ingredients: { only: [:name, :category, :amount] }, user: { only: [:image_src, :id] } })
 
@@ -33,7 +33,7 @@ class Api::V1::LlmController < ApplicationController
 
   def update_recipe
     user_prompt = params[:prompt].to_s[0...MAX_PROMPT_LENGTH]
-    use_db = request.headers["use-db"]
+    use_db = request.headers['use-db']
 
     recipe_data = Llm::LlmService.new(user: @current_user).update_recipe(user_prompt, @recipe, use_db)
 
@@ -47,10 +47,10 @@ class Api::V1::LlmController < ApplicationController
   private
 
   def set_recipe
-    use_db = request.headers["use-db"]
-    @recipe = if use_db == "mongodb"
+    use_db = request.headers['use-db']
+    @recipe = if use_db == 'mongodb'
       Document::Recipe.find(params[:id])
-    elsif use_db == "neo4j"
+    elsif use_db == 'neo4j'
       @recipe = Graph::Recipe.find(params[:id])
     else
       Relational::Recipe.includes(:ingredients).find(params[:id])

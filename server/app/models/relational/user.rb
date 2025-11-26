@@ -1,5 +1,5 @@
 class Relational::User < ApplicationRecord
-  self.primary_key = "id"
+  self.primary_key = 'id'
 
   before_create -> { self.id ||= SecureRandom.uuid }
 
@@ -41,7 +41,7 @@ class Relational::User < ApplicationRecord
   # Don't want to return password_digest when serializing
   def as_json(options = {})
     super({ except: [:email, :password_digest] }.merge(options)).merge(
-      "fullname" => "#{first_name} #{last_name}", # client relies on attribute fullname instead of first_name / last_name
+      'fullname' => "#{first_name} #{last_name}", # client relies on attribute fullname instead of first_name / last_name
     )
   end
 end

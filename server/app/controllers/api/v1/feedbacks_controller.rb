@@ -4,16 +4,16 @@ class Api::V1::FeedbacksController < ApplicationController
 
   # GET /api/v1/feedbacks?&page=<amount>&per_page=<amount>
   def index
-    use_db = request.headers["use-db"].to_s.downcase
-    result = if use_db == "mongodb"
+    use_db = request.headers['use-db'].to_s.downcase
+    result = if use_db == 'mongodb'
                feedback = Document::Feedback.order(created_at: :desc)
                paginated_feedback = feedback.page(params[:page]).per(params[:per_page] || 10)
-             elsif use_db == "neo4j"
-               return render json: { msg: "Not implemented for Graph" }
-             else
+    elsif use_db == 'neo4j'
+               return render json: { msg: 'Not implemented for Graph' }
+    else
                feedback = Relational::Feedback.order(created_at: :desc)
                paginated_feedback = feedback.page(params[:page]).per(params[:per_page] || 10)
-             end
+    end
 
     render json: {
       data: paginated_feedback,
@@ -32,16 +32,16 @@ class Api::V1::FeedbacksController < ApplicationController
 
   # POST /api/v1/feedbacks
   def create
-    use_db = request.headers["use-db"].to_s.downcase
-    if use_db == "mongodb"
+    use_db = request.headers['use-db'].to_s.downcase
+    if use_db == 'mongodb'
       feedback = Document::Feedback.new(feedback_params)
-    elsif use_db == "neo4j"
-      return render json: { msg: "Not implemented for Graph" }
+    elsif use_db == 'neo4j'
+      return render json: { msg: 'Not implemented for Graph' }
     else
       feedback = Relational::Feedback.new(feedback_params)
     end
     if feedback.save
-      render json: { message: "Feedback submitted successfully." }, status: :created
+      render json: { message: 'Feedback submitted successfully.' }, status: :created
     else
       render json: { errors: feedback.errors.full_messages }, status: :unprocessable_entity
     end
@@ -56,16 +56,16 @@ class Api::V1::FeedbacksController < ApplicationController
   private
 
   def set_feedback
-    use_db = request.headers["use-db"].to_s.downcase
-    if use_db == "mongodb"
+    use_db = request.headers['use-db'].to_s.downcase
+    if use_db == 'mongodb'
       @feedback = Document::Feedback.find(params[:id])
-    elsif use_db == "neo4j"
-      return render json: { msg: "Not implemented for Graph" }
+    elsif use_db == 'neo4j'
+      render json: { msg: 'Not implemented for Graph' }
     else
       @feedback = Relational::Feedback.find(params[:id])
     end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Feedback not found" }, status: :not_found
+    render json: { error: 'Feedback not found' }, status: :not_found
   end
 
   def feedback_params

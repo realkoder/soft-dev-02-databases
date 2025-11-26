@@ -1,11 +1,11 @@
 class GroceryLists::NotifyEvents
-  GROCERY_LIST_NAME_UPDATED = "grocery_list_shared_name_updated"
-  GROCERY_LIST_SHARED = "grocery_list_shared"
-  GROCERY_LIST_UNSHARED = "grocery_list_unshared"
-  GROCERY_LIST_DELETED = "grocery_list_deleted"
-  GROCERY_ITEM_ADDED = "grocery_item_added"
-  GROCERY_ITEM_REMOVED = "grocery_item_removed"
-  GROCERY_ITEM_UPDATED = "grocery_item_updated"
+  GROCERY_LIST_NAME_UPDATED = 'grocery_list_shared_name_updated'
+  GROCERY_LIST_SHARED = 'grocery_list_shared'
+  GROCERY_LIST_UNSHARED = 'grocery_list_unshared'
+  GROCERY_LIST_DELETED = 'grocery_list_deleted'
+  GROCERY_ITEM_ADDED = 'grocery_item_added'
+  GROCERY_ITEM_REMOVED = 'grocery_item_removed'
+  GROCERY_ITEM_UPDATED = 'grocery_item_updated'
 
   def self.name_updated(grocery_list)
     recipients = self.all_recipients_for_grocery_list(grocery_list)

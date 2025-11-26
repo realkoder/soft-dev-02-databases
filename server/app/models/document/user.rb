@@ -2,7 +2,7 @@ class Document::User
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  store_in collection: "users"
+  store_in collection: 'users'
 
   field :first_name, type: String
   field :last_name, type: String
@@ -15,18 +15,18 @@ class Document::User
   field :last_signed_in_at, type: Time
 
   # Owned grocery lists
-  has_many :grocery_lists, class_name: "Document::GroceryList", foreign_key: :owner_id, inverse_of: :owner
+  has_many :grocery_lists, class_name: 'Document::GroceryList', foreign_key: :owner_id, inverse_of: :owner
 
   # Lists shared with this user
   has_and_belongs_to_many :shared_grocery_lists,
-                          class_name: "Document::GroceryList",
+                          class_name: 'Document::GroceryList',
                           inverse_of: :shared_users
 
   # Virtual attribute for password confirmation (not persisted)
   attr_accessor :password, :password_confirmation
 
   # Add these requires at the top of your file or in config/application.rb
-  require "bcrypt"
+  require 'bcrypt'
   include BCrypt
 
   # Password authentication methods
@@ -58,12 +58,12 @@ class Document::User
   validates :image_src, length: { minimum: 6, maximum: 400 }, format: URI.regexp(%w[http https]), allow_blank: true
 
   # Indexes
-  index({ email: 1 }, { unique: true, name: "email_index" })
-  index({ provider: 1, uid: 1 }, { name: "oauth_index" })
+  index({ email: 1 }, { unique: true, name: 'email_index' })
+  index({ provider: 1, uid: 1 }, { name: 'oauth_index' })
 
   def as_json(options = {})
     super({ except: [:email, :password_digest] }.merge(options)).merge(
-      "fullname" => "#{first_name} #{last_name}" # client relies on attribute fullname instead of first_name / last_name
+      'fullname' => "#{first_name} #{last_name}" # client relies on attribute fullname instead of first_name / last_name
     )
   end
 
@@ -74,7 +74,7 @@ class Document::User
   end
 
   def password_length
-    errors.add(:password, "is too short (minimum is 6 characters)") if password.length < 6
-    errors.add(:password, "is too long (maximum is 50 characters)") if password.length > 50
+    errors.add(:password, 'is too short (minimum is 6 characters)') if password.length < 6
+    errors.add(:password, 'is too long (maximum is 50 characters)') if password.length > 50
   end
 end

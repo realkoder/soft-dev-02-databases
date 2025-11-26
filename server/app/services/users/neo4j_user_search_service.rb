@@ -10,7 +10,7 @@ class Users::Neo4jUserSearchService
 
     if @params[:search].present?
       q = @params[:search].downcase
-      users = users.where("toLower(first_name) CONTAINS $q OR toLower(last_name) CONTAINS $q OR toLower(email) CONTAINS $q", q: q)
+      users = users.where('toLower(first_name) CONTAINS $q OR toLower(last_name) CONTAINS $q OR toLower(email) CONTAINS $q', q: q)
     end
 
     total_count = users.count

@@ -1,5 +1,5 @@
 class Relational::GroceryListShare < ApplicationRecord
-  self.table_name = "grocery_list_shares"
+  self.table_name = 'grocery_list_shares'
   belongs_to :grocery_list
   belongs_to :user
 

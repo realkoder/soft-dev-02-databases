@@ -9,4 +9,3 @@ class GroceryLists::Creator
     end
   end
 end
-

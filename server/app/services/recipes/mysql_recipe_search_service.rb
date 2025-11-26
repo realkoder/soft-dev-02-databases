@@ -1,5 +1,5 @@
 class Recipes::MysqlRecipeSearchService
-  ADMIN_EMAIL = "alexanderbtcc@gmail.com"
+  ADMIN_EMAIL = 'alexanderbtcc@gmail.com'
 
   def initialize(params)
     @params = params || {}
@@ -34,14 +34,14 @@ class Recipes::MysqlRecipeSearchService
     end
 
     if @tag
-      recipes = recipes.where("JSON_CONTAINS(tags, ?)", "\"#{@tag.downcase}\"")
+      recipes = recipes.where('JSON_CONTAINS(tags, ?)', "\"#{@tag.downcase}\"")
       filters_applied = true
     end
 
     if @search
       query = "%#{@search.downcase}%"
       recipes = recipes.where(
-        "LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(cuisine) LIKE ?",
+        'LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(cuisine) LIKE ?',
         query, query, query # Protecting against sql injections - using prepared statement
       )
       filters_applied = true
