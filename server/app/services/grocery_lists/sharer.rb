@@ -23,7 +23,7 @@ class GroceryLists::Sharer
 
   private
 
-  def mongodb_share(list, user_ids)
+  def self.mongodb_share(list, user_ids)
     users_to_add = Document::User.where(:id.in => user_ids).not_in(id: list.shared_user_ids)
 
     users_to_add.each do |user|
@@ -42,7 +42,7 @@ class GroceryLists::Sharer
     users_to_add.each(&:save!)
   end
 
-  def neo4j_share(list, user_ids)
+  def self.neo4j_share(list, user_ids)
     current_shared_ids = list.shared_users.map(&:id)
 
     users_to_add = Graph::User.where(id: user_ids - current_shared_ids).to_a
@@ -53,7 +53,7 @@ class GroceryLists::Sharer
     users_to_add
   end
 
-  def mongodb_unshare(list, user_id)
+  def self.mongodb_unshare(list, user_id)
     user = Document::User.find(user_id)
 
     # Remove from list side

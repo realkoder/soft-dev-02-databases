@@ -62,15 +62,19 @@ class Api::V1::GroceryListsController < ApplicationController
     if use_db != "mongodb" && use_db != "neo4j"
       GroceryLists::NotifyEvents.item_added(@grocery_list, item)
     end
-    render json: item, status: :created
+    if item
+      render json: item, status: :created
+    else
+      head :forbidden
+    end
   end
 
   # DELETE /api/v1/grocery_lists/remove-item/:item_id
   def remove_item
     item_id = params[:item_id]
-    GroceryLists::ItemManager.remove_item(@grocery_list, item_id)
-
     use_db = request.headers["use-db"].to_s.downcase
+    GroceryLists::ItemManager.remove_item(@grocery_list, item_id, use_db)
+
     if use_db != "mongodb" && use_db != "neo4j"
       GroceryLists::NotifyEvents.item_removed(@grocery_list, item_id)
     end
@@ -80,7 +84,6 @@ class Api::V1::GroceryListsController < ApplicationController
   def share
     user_ids = Array(params[:user_ids])
     use_db = request.headers["use-db"].to_s.downcase
-    puts "LOOK"
     GroceryLists::Sharer.share(@grocery_list, user_ids, use_db)
 
     if use_db != "mongodb" && use_db != "neo4j"
@@ -100,24 +103,12 @@ class Api::V1::GroceryListsController < ApplicationController
   end
 
   def update_item
-    item = GroceryListItem.find(params[:item_id])
-    @grocery_list = item.grocery_list
-
-    unless @grocery_list.owner_id == current_user.id || @grocery_list.shared_users.exists?(id: current_user.id)
-      return head :forbidden
-    end
-
-    update_attrs = {}
-    update_attrs[:is_completed] = params[:is_completed] unless params[:is_completed].nil?
-    update_attrs[:name] = params[:name] if params[:name].present?
-    update_attrs[:category] = params[:category] if params[:category].present?
-
-    item.update!(update_attrs)
     use_db = request.headers["use-db"].to_s.downcase
-    if use_db != "mongodb" && use_db != "neo4j"
-      GroceryLists::NotifyEvents.item_updated(@grocery_list, item)
+    result = GroceryLists::ItemManager.update_item(params, current_user, use_db)
+    if result == :forbidden
+      return head result
     end
-    render json: item
+    render json: result
   end
 
   private

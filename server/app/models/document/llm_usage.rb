@@ -2,7 +2,7 @@ class Document::LlmUsage
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  store_in collection: 'llm_usages'
+  store_in collection: "llm_usages"
 
   field :model, type: String
   field :provider, type: String

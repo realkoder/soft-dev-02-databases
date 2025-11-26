@@ -8,14 +8,14 @@ class Document::GroceryList
   field :owner_id, type: BSON::ObjectId
 
   # Owner reference
-  belongs_to :owner, class_name: "User", inverse_of: :grocery_lists
+  belongs_to :owner, class_name: "Document::User", inverse_of: :grocery_lists
 
   # Embedded items (store items inside the list document)
-  embeds_many :items, class_name: "GroceryListItem"
+  embeds_many :items, class_name: "Document::GroceryListItem"
 
   # Users this list is shared with (many-to-many)
   has_and_belongs_to_many :shared_users,
-                          class_name: "User",
+                          class_name: "Document::User",
                           inverse_of: :shared_grocery_lists
 
   # Indexes

@@ -205,6 +205,7 @@ grocery_lists.each do |row|
 
   grocery_list_item_rows.each do |item_row|
     grocery_list_items << {
+      _id: BSON::ObjectId.new,
       name: item_row['name'],
       category: item_row['category'],
       is_completed: item_row['is_completed'],
