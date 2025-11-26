@@ -1,4 +1,3 @@
-// hooks/usePaginatedQuery.ts
 import { useQuery } from '@tanstack/react-query';
 import { useFetch } from '~/lib/api-client';
 
