@@ -48,8 +48,6 @@ class Auth::GoogleAuthService
              Relational::User.find_or_initialize_by(email: user_info['email'])
            end
 
-    user = User.find_or_initialize_by(email: user_info["email"])
-
     name_parts = user_info["name"].split(" ")
     first_name = name_parts[0]
     last_name = name_parts.size > 1 ? name_parts[1] : ""

@@ -91,7 +91,7 @@ export default function IngredientSelectorModal({ isOpen, onClose, ingredient }:
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-xs sm:text-sm text-slate-500">
                           <span>{list.items.length} items</span>
-                          {list.shared_users && <span className="truncate">with {list.shared_users.map((sharedUser) => sharedUser.fullname).join(', ')}</span>}
+                          {list.shared_users && <span className="truncate">with {list.shared_users.map((sharedUser) => sharedUser.first_name).join(', ')}</span>}
                         </div>
                       </div>
 
