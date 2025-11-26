@@ -13,7 +13,7 @@ const useFetchRecipes = (page: number, filters?: IFilters) => {
 
   useEffect(() => {
     if (data?.data) {
-      setRecipes(data.data);
+      setRecipes(data.data.recipes);
       setPagination(data.pagination);
     }
   }, [data]);

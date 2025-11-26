@@ -9,11 +9,19 @@ module ErrorHandling
     rescue_from ActionDispatch::Http::Parameters::ParseError, with: :handle_bad_request
     rescue_from JWT::DecodeError, with: :handle_unauthorized
 
+    # MongoDB/Mongoid specific errors
+    rescue_from Mongoid::Errors::DocumentNotFound, with: :handle_not_found
+    rescue_from Mongoid::Errors::Validations, with: :handle_unprocessable_entity
+
     # Catch-all fallback
     rescue_from StandardError, with: :handle_internal_error unless Rails.env.development?
   end
 
   private
+
+  def handle_not_found(exception)
+    render_error(404, 'Resource not found', exception.message)
+  end
 
   def handle_unprocessable_entity(exception)
     # ActiveModel::ValidationError stores the model in `exception.model`

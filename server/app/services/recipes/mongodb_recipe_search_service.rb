@@ -12,13 +12,14 @@ class Recipes::MongodbRecipeSearchService
   end
 
   def call(current_user)
-    recipes = if current_user&.email == ADMIN_EMAIL
-      Document::Recipe.all
-    elsif current_user
-      Document::Recipe.where('is_public = ? OR user_id = ?', true, current_user.id)
-    else
-      Document::Recipe.where(is_public: true)
-    end
+    recipes =
+      if current_user&.email == ADMIN_EMAIL
+        Document::Recipe.all
+      elsif current_user
+        Document::Recipe.where('$or' => [{ :is_public.exists => true, :is_public.ne => false }, { user_id: current_user.id }])
+      else
+        Document::Recipe.where(:is_public.ne => false)
+      end
 
     filters_applied = false
 

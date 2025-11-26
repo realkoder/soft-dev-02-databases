@@ -6,6 +6,7 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent } from '~/components/ui/card';
 import type { IRecipe } from '~/types/recipe.interface';
 import { DeleteUpdateRecipeBtns } from '../delete-update-buttons';
+import { useEffect } from 'react';
 
 interface RecipesGridProps {
   recipes: IRecipe[];

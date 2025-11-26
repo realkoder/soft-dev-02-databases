@@ -15,9 +15,9 @@ class Recipes::Neo4jRecipeSearchService
     if current_user&.email == ADMIN_EMAIL
       recipes = Graph::Recipe.all
     elsif current_user
-      recipes = Graph::Recipe.where('result_recipe2.is_public = 1').or(Recipe.where(user_id: current_user.id))
+      recipes = Graph::Recipe.where('result_graphrecipe2.is_public = 1').or(Recipe.where(user_id: current_user.id))
     else
-      recipes = Graph::Recipe.where('result_recipe2.is_public = 1')
+      recipes = Graph::Recipe.where('result_graphrecipe2.is_public = 1')
     end
 
     filters_applied = false

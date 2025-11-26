@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_user!, only: [:index, :show, :update, :destroy]
+  before_action :authenticate_user!, except: [:create]
 
   # GET /api/v1/users?q=<search>&page=<amount>&per_page=<amount>
   def index
