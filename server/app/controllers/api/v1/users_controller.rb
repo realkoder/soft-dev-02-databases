@@ -63,6 +63,30 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def upload_image
+    result = Users::UsersUploadsService.call(user: current_user, uploaded_file: params[:image], request: request)
+
+    if result.success?
+      render json: { image_url: result.public_url }
+    else
+      render json: { error: result.error }, status: :unprocessable_content
+    end
+  end
+
+  def delete_image
+    if current_user
+      if current_user.image_src.present?
+        Users::UsersUploadsService.delete_old_image(user: current_user)
+        current_user.update(image_src: nil)
+        render json: { message: "OK" }, status: :ok
+      else
+        render json: { error: "No image to delete." }, status: :unprocessable_content
+      end
+    else
+      render json: { error: "Unauthorized" }, status: :unauthorized
+    end
+  end
+
   private
 
   def user_update_params
