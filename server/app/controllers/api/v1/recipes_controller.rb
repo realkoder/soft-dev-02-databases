@@ -186,18 +186,12 @@ class Api::V1::RecipesController < ApplicationController
     use_db = request.headers['use-db']
     @recipe =
       if use_db == 'mongodb'
-        begin
-          Document::Recipe.find(params[:id])
-        rescue Mongoid::Errors::DocumentNotFound
-          head :not_found
-        end
+        Document::Recipe.find(params[:id])
       elsif use_db == 'neo4j'
         Graph::Recipe.find_by(id: params[:id])
       else
         Relational::Recipe.find(params[:id])
       end
-  rescue ActiveRecord::RecordNotFound
-    head :not_found
   end
 
   def recipe_params

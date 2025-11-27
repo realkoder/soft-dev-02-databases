@@ -12,8 +12,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get '/test', to: 'test#test'
-
       # AUDITS
       resources :grocery_list_audits, only: [:index]
       resources :grocery_list_item_audits, only: [:index]
