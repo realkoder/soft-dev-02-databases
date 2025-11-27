@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable/notify'
 
-  namespace :api do
+  namespace :api, format: false do
     namespace :v1 do
       # AUDITS
       resources :grocery_list_audits, only: [:index]
