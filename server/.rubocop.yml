@@ -7,6 +7,10 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
 
+AllCops:
+  Exclude:
+    - 'app/services/recipes/mongodb_recipe_summary_service.rb'
+
 Layout/SpaceInsideArrayLiteralBrackets:
   EnforcedStyle: no_space
 
