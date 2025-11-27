@@ -1,6 +1,65 @@
 # Munchora 👩‍🍳 🧑‍🍳
 
+A Ruby on Rails server with ReactRouterv7 frontend web app.
+
 `Munchora – munch + aura; sounds premium and unique`
+
+### Overview of Endpoints
+
+| Route Name               | HTTP Verb | Path                                           | Controller#Action                     |
+|--------------------------|-----------|------------------------------------------------|---------------------------------------|
+| grocery_list_audits      | GET       | /api/v1/grocery_list_audits                    | api/v1/grocery_list_audits#index      |
+| grocery_list_item_audits | GET       | /api/v1/grocery_list_item_audits               | api/v1/grocery_list_item_audits#index |
+| user_audits              | GET       | /api/v1/user_audits                            | api/v1/user_audits#index              |
+| auth_google              | GET       | /api/v1/auth/google                            | api/v1/auth#google                    |
+| auth_google_callback     | GET       | /api/v1/auth/google/callback                   | api/v1/auth#google_callback           |
+| auth_login               | POST      | /api/v1/auth/login                             | api/v1/auth#login                     |
+| auth_logout              | DELETE    | /api/v1/auth/logout                            | api/v1/auth#logout                    |
+| auth_me                  | GET       | /api/v1/auth/me                                | api/v1/auth#me                        |
+| feedbacks_index          | GET       | /api/v1/feedbacks                              | api/v1/feedbacks#index                |
+| feedbacks_create         | POST      | /api/v1/feedbacks                              | api/v1/feedbacks#create               |
+| feedback_show            | GET       | /api/v1/feedbacks/:id                          | api/v1/feedbacks#show                 |
+| feedback_delete          | DELETE    | /api/v1/feedbacks/:id                          | api/v1/feedbacks#destroy              |
+| add_item_grocery_list    | POST      | /api/v1/grocery_lists/:id/add-item             | api/v1/grocery_lists#add_item         |
+| add_item_grocery_list    | DELETE    | /api/v1/grocery_lists/:id/remove-item/:item_id | api/v1/grocery_lists#remove_item      |
+| add_item_grocery_list    | PATCH     | /api/v1/grocery_lists/:id/update-item/:item_id | api/v1/grocery_lists#update_item      |
+| share_grocery_list       | POST      | /api/v1/grocery_lists/:id/share                | api/v1/grocery_lists#share            |
+| unshare_grocery_list     | DELETE    | /api/v1/grocery_lists/:id/unshare              | api/v1/grocery_lists#unshare          |
+| grocery_lists_index      | GET       | /api/v1/grocery_lists                          | api/v1/grocery_lists#index            |
+| grocery_lists_create     | POST      | /api/v1/grocery_lists                          | api/v1/grocery_lists#create           |
+| grocery_list_update      | PATCH     | /api/v1/grocery_lists/:id                      | api/v1/grocery_lists#update           |
+| grocery_list_update      | PUT       | /api/v1/grocery_lists/:id                      | api/v1/grocery_lists#update           |
+| grocery_list_delete      | DELETE    | /api/v1/grocery_lists/:id                      | api/v1/grocery_lists#destroy          |
+| pay_invoice              | POST      | /api/v1/invoices/:id/pay                       | api/v1/invoices#pay                   |
+| invoices_index           | GET       | /api/v1/invoices                               | api/v1/invoices#index                 |
+| invoice_show             | GET       | /api/v1/invoices/:id                           | api/v1/invoices#show                  |
+| llm_generate_recipe      | POST      | /api/v1/llm/generate-recipe                    | api/v1/llm#generate_recipe            |
+| llm_update_recipe        | PUT       | /api/v1/llm/update-recipe/:id                  | api/v1/llm#update_recipe              |
+| users_delete_image       | DELETE    | /api/v1/users/delete-image                     | api/v1/users#delete_image             |
+| users_upload_image       | POST      | /api/v1/users/upload-image                     | api_v1/users#upload_image             |
+| users_index              | GET       | /api/v1/users                                  | api/v1/users#index                    |
+| users_create             | POST      | /api/v1/users                                  | api/v1/users#create                   |
+| user_show                | GET       | /api/v1/users/:id                              | api/v1/users#show                     |
+| user_update              | PATCH     | /api/v1/users/:id                              | api/v1/users#update                   |
+| user_update              | PUT       | /api/v1/users/:id                              | api/v1/users#update                   |
+| user_delete              | DELETE    | /api/v1/users/:id                              | api/v1/users#destroy                  |
+| upload_image_recipe      | POST      | /api/v1/recipes/:id/upload-image               | api/v1/recipes#upload_image           |
+| delete_image_recipe      | DELETE    | /api/v1/recipes/:id/delete-image               | api/v1/recipes#delete_image           |
+| comments_recipe          | POST      | /api/v1/recipes/:id/comments                   | api/v1/recipes#add_comment            |
+| comments_recipe          | DELETE    | /api/v1/recipes/:id/comments/:comment_id       | api/v1/recipes#delete_comment         |
+| likes_recipe             | POST      | /api/v1/recipes/:id/likes                      | api/v1/recipes#add_like               |
+| likes_recipe             | DELETE    | /api/v1/recipes/:id/likes                      | api/v1/recipes#delete_like            |
+| recipe_index             | GET       | /api/v1/recipes                                | api/v1/recipes#index                  |
+| recipe_show              | GET       | /api/v1/recipes/:id                            | api/v1/recipes#show                   |
+| recipe_update            | PATCH     | /api/v1/recipes/:id                            | api/v1/recipes#update                 |
+| recipe_update            | PUT       | /api/v1/recipes/:id                            | api/v1/recipes#update                 |
+| recipe_delete            | DELETE    | /api/v1/recipes/:id                            | api/v1/recipes#destroy                |
+| recipe_suggestions       | GET       | /api/v1/recipe_suggestions                     | api/v1/recipe_suggestions#index       |
+| recipe_summary_index     | GET       | /api/v1/recipe_summary                         | api/v1/recipe_summary#index           |
+| cancel_subscription      | POST      | /api/v1/subscriptions/:id/cancel               | api/v1/subscriptions#cancel           |
+| subscriptions_index      | GET       | /api/v1/subscriptions                          | api/v1/subscriptions#index            |
+| subscriptions_create     | POST      | /api/v1/subscriptions                          | api/v1/subscriptions#create           |
+| subscription_show        | GET       | /api/v1/subscriptions/:id                      | api/v1/subscriptions#show             |
 
 <br>
 
@@ -8,7 +67,7 @@
 
 ## Tech Stack
 
-This full stack webapp is builded in the following way:
+This full stack webapp is built in the following way:
 
 ### Client
 
