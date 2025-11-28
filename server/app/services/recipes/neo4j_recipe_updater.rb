@@ -1,4 +1,4 @@
-class Recipes::RecipeUpdater
+class Recipes::Neo4jRecipeUpdater
   def initialize(recipe, recipe_params, current_user)
     @recipe = recipe
     @recipe_params = recipe_params
@@ -20,7 +20,7 @@ class Recipes::RecipeUpdater
     @recipe.ingredients.destroy_all
 
     @recipe_params[:ingredients].each do |ingredient_data|
-      new_ingredient = Ingredient.new(
+      new_ingredient = Graph::Ingredient.new(
         name: ingredient_data[:name],
         category: ingredient_data[:category],
         amount: ingredient_data[:amount].to_i
@@ -36,7 +36,8 @@ class Recipes::RecipeUpdater
 
   def update_recipe_attributes
     update_params = @recipe_params.except(:ingredients)
-    update_params = prepare_recipe_attributes(update_params)
+    puts update_params
+    # update_params = prepare_recipe_attributes(update_params)
 
     unless @recipe.update(update_params)
       raise "Failed to update recipe: #{@recipe.errors.full_messages.join(', ')}"
@@ -47,7 +48,7 @@ class Recipes::RecipeUpdater
     # Convert array fields to JSON strings
     [:instructions, :cuisine, :tags].each do |field|
       if params[field].is_a?(Array)
-        params[field] = params[field].to_json
+        params[field] = params[field]
       end
     end
 

@@ -110,7 +110,7 @@ recipes.each do |row|
                   description: row['description'],
                   image_url: row['image_url'],
                   instructions: instructions,
-                  is_public: row['is_public'],
+                  is_public: row['is_public'].to_i == 1,
                   ingredients: ingredients,
                   cuisine: cuisine,
                   difficulty: row['difficulty'],

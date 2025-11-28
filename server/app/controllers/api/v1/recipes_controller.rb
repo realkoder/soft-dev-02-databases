@@ -18,22 +18,11 @@ class Api::V1::RecipesController < ApplicationController
         Recipes::MysqlRecipeSearchService.new(params).call(current_user)
       end
 
-    include_hash = {
-      ingredients: { only: [:id, :name, :category, :amount] },
-      user: { only: [:image_src, :id] }
-    }
-
-    # Correcting association names based on database
-    if use_db == 'neo4j'
-      include_hash[:likes] = {}
-      include_hash[:comments] = {}
-    else
-      include_hash[:recipe_likes] = {}
-      include_hash[:recipe_comments] = {}
-    end
-
     render json: {
-      data: paginated_recipes.as_json(include: include_hash),
+      data: paginated_recipes.as_json(include: {
+        ingredients: { only: [:id, :name, :category, :amount] },
+        user: { only: [:image_src, :id] }, comments: {}, likes: {}
+      }),
       pagination: {
         current_page: paginated_recipes[:current_page],
         total_pages: paginated_recipes[:total_pages],
@@ -44,7 +33,11 @@ class Api::V1::RecipesController < ApplicationController
 
   def show
     if @recipe.is_public || current_user&.email == ADMIN_EMAIL || (current_user && @recipe.user_id == current_user.id)
-      render json: @recipe.as_json(include: { ingredients: { only: [:id, :name, :category, :amount] }, user: { only: [:image_src, :id] } })
+      render json: @recipe.as_json(include: {
+        ingredients: { only: [:id, :name, :category, :amount] },
+        user: { only: [:image_src, :id] },
+        comments: {}, likes: {}
+      })
     else
       head :forbidden
     end
@@ -55,28 +48,21 @@ class Api::V1::RecipesController < ApplicationController
       head :forbidden and return
     end
 
-    Recipe.transaction do
-      if recipe_params[:ingredients]
-        # Remove old ingredients
-        @recipe.ingredients.destroy_all
-
-        # Build new ingredients
-        recipe_params[:ingredients].each do |ingredient|
-          @recipe.ingredients.build(
-            name: ingredient[:name],
-            category: ingredient[:category],
-            amount: ingredient[:amount]
-          )
-        end
-      end
-
-      @recipe.update!(recipe_params.except(:ingredients))
+    use_db = request.headers['use-db']
+    if use_db == 'mongodb'
+      @recipe&.update!(recipe_params)
+    elsif use_db == 'neo4j'
+      Recipes::Neo4jRecipeUpdater.new(@recipe, recipe_params, current_user).call!
+    else
+      Recipes::MysqlRecipeUpdater.new(@recipe, recipe_params).call!
     end
 
     render json: @recipe.as_json(
       include: {
         ingredients: { only: [:id, :name, :category, :amount] },
-        user: { only: [:image_src, :id] }
+        user: { only: [:image_src, :id] },
+        likes: {},
+        comments: {}
       }
     )
   rescue ActiveRecord::RecordInvalid => e
@@ -89,7 +75,7 @@ class Api::V1::RecipesController < ApplicationController
     end
 
     if @recipe.image_url.present?
-      image_deleted = Recipe::RecipesService.delete_old_image(recipe: @recipe)
+      image_deleted = Recipes::RecipesService.delete_old_image(recipe: @recipe)
     else
       image_deleted = true
     end
@@ -132,10 +118,17 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_comment
-    comment = @recipe.recipe_comments.new(comment_params)
-    comment.user = current_user # assuming you have Devise or similar
+    use_db = request.headers['use-db']
+    is_added =
+      if use_db == 'neo4j'
+        comment = Graph::RecipeComment.create(comment_params.merge(user: current_user, recipe: @recipe))
+      else
+        comment = @recipe.comments.new(comment_params)
+        comment.user = current_user
+        comment.save
+      end
 
-    if comment.save
+    if is_added
       render json: comment, status: :created
     else
       render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
@@ -156,14 +149,24 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def add_like
-    like = @recipe.recipe_likes.find_or_initialize_by(user: current_user)
-
-    if like.persisted?
-      render json: { message: 'Already liked' }, status: :ok
-    elsif like.save
-      render json: like, status: :created
+    use_db = request.headers['use-db']
+    if use_db == 'neo4j'
+      like = @recipe.likes.find_by(user: current_user)
+      if like
+        render json: { message: 'Already liked' }, status: :ok
+      else
+        new_like = Graph::RecipeLike.create!(user: current_user, recipe: @recipe)
+        render json: new_like, status: :created
+      end
     else
-      render json: { errors: like.errors.full_messages }, status: :unprocessable_entity
+      like = @recipe.likes.find_or_initialize_by(user: current_user)
+      if like.persisted?
+        render json: { message: 'Already liked' }, status: :ok
+      elsif like.save
+        render json: like, status: :created
+      else
+        render json: { errors: like.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
@@ -196,21 +199,20 @@ class Api::V1::RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(
-      :title, :description, :cuisine,
-      :is_public, :difficulty, :prep_time, :cook_time, :servings,
-      instructions: [], ingredients: [:id, :name, :category, :amount], tags: []
+      :title, :description, :is_public, :difficulty, :prep_time, :cook_time, :servings,
+      instructions: [], ingredients: [:id, :name, :category, :amount], tags: [], cuisine: []
     )
   end
 
   def set_comment
-    @comment = @recipe.recipe_comments.find_by(id: params[:comment_id])
+    @comment = @recipe.comments.find_by(id: params[:comment_id])
     unless @comment
       render json: { error: 'Comment not found' }, status: :not_found
     end
   end
 
   def set_like
-    @like = @recipe.recipe_likes.find_by(user: current_user)
+    @like = @recipe.likes.find_by(user: current_user)
     unless @like
       render json: { error: 'Like  not found' }, status: :not_found
     end

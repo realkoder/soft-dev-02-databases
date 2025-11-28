@@ -18,7 +18,7 @@ class Recipes::MongodbRecipeSearchService
       elsif current_user
         Document::Recipe.where('$or' => [{ :is_public.exists => true, :is_public.ne => false }, { user_id: current_user.id }])
       else
-        Document::Recipe.where(:is_public.ne => false)
+        Document::Recipe.where(is_public: true)
       end
 
     filters_applied = false

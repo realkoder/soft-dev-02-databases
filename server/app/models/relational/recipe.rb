@@ -6,8 +6,8 @@ class Relational::Recipe < ApplicationRecord
   belongs_to :user
   has_many :llm_usages, dependent: :nullify
   has_many :ingredients, dependent: :destroy
-  has_many :recipe_comments, dependent: :destroy
-  has_many :recipe_likes, dependent: :destroy
+  has_many :likes, class_name: 'RecipeLike', dependent: :destroy
+  has_many :comments, class_name: 'RecipeComment', dependent: :destroy
   has_many :recipe_suggestions
 
   accepts_nested_attributes_for :ingredients, allow_destroy: true

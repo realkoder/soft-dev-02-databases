@@ -83,14 +83,13 @@ users = [
   }
 ]
 users.each do |attrs|
-  user = User.find_or_initialize_by(email: attrs[:email])
+  user = Relational::User.find_or_initialize_by(email: attrs[:email])
   user.update!(attrs)
 end
 
-users = User.all
+users = Relational::User.all
 
 puts "Seeded #{users.size} users."
-
 
 # =================
 # RECIPES
@@ -312,7 +311,7 @@ sample_recipes = [
 ]
 
 sample_recipes.each do |recipe_attrs|
-  Recipe.create!(
+  Relational::Recipe.create!(
     user_id: users.sample.id,
     title: recipe_attrs[:title],
     description: recipe_attrs[:description],
@@ -385,7 +384,7 @@ ingredients_list = [
   { name: "Chili Flakes", category: "meat 🍗", amount: 2 }
 ]
 
-Recipe.all.each do |recipe|
+Relational::Recipe.all.each do |recipe|
   case recipe.title
   when "Spaghetti Carbonara"
     ingredients_for_recipe = ingredients_list.select { |i| ["Spaghetti", "Pancetta", "Eggs", "Parmesan Cheese"].include?(i[:name]) }
@@ -398,7 +397,7 @@ Recipe.all.each do |recipe|
   end
 
   ingredients_for_recipe.each do |ing|
-    Ingredient.create!(
+    Relational::Ingredient.create!(
       recipe_id: recipe.id,
       name: ing[:name],
       category: ing[:category],
@@ -414,7 +413,7 @@ puts "Seeded ingredients for recipes."
 # =================
 
 # Make sure there are some recipes and users
-recipes = Recipe.all
+recipes = Relational::Recipe.all
 
 if users.empty? || recipes.empty?
   puts "No users or recipes found! Seed those first."
@@ -447,7 +446,7 @@ llm_usages_sample = [
 
 20.times do
   usage_attrs = llm_usages_sample.sample
-  LlmUsage.create!(
+  Relational::LlmUsage.create!(
     user_id: users.sample.id,
     recipe_id: recipes.sample.id,
     provider: usage_attrs[:provider],
@@ -466,28 +465,28 @@ puts "Seeded 20 LlmUsage records."
 
 # db/seeds.rb
 
-Feedback.create!([
-                   { message: "Love the recipes! Keep up the great work.", name: "Alice Johnson", email: "alice@example.com", category: "general" },
-                   { message: "Found a bug when trying to upload an image.", name: "Bob Smith", email: "bob@example.com", category: "bug" },
-                   { message: "Could you add more vegan recipes?", name: "Carol Lee", email: "carol@example.com", category: "features" },
-                   { message: "The website is loading slowly on mobile.", name: "David Kim", email: "david@example.com", category: "general" },
-                   { message: "I appreciate the detailed cooking instructions!", name: "Eve Martinez", email: "eve@example.com", category: "general" },
-                   { message: "Would love a dark mode option.", name: "Frank Green", email: "frank@example.com", category: "features" },
-                   { message: "The login process is confusing.", name: "Grace Hopper", email: "grace@example.com", category: "interface" },
-                   { message: "Great app, but the search feature could be faster.", name: "Hannah Brown", email: "hannah@example.com", category: "general" },
-                   { message: "Images sometimes fail to upload on Safari.", name: "Ian Clarke", email: "ian@example.com", category: "bug" },
-                   { message: "Please add a category filter for recipes.", name: "Jane Doe", email: "jane@example.com", category: "features" },
-                   { message: "Really enjoy the grocery list feature.", name: "Kevin Lee", email: "kevin@example.com", category: "general" },
-                   { message: "The AI recipe generator is amazing!", name: "Laura Kim", email: "laura@example.com", category: "general" },
-                   { message: "I had trouble resetting my password.", name: "Mike Taylor", email: "mike@example.com", category: "bug" },
-                   { message: "Consider adding multi-language support.", name: "Nina Patel", email: "nina@example.com", category: "features" },
-                   { message: "Some recipes are missing nutrition info.", name: "Oliver White", email: "oliver@example.com", category: "bug" },
-                   { message: "The mobile layout looks great!", name: "Paula Adams", email: "paula@example.com", category: "general" },
-                   { message: "Notifications for saved recipes would be helpful.", name: "Quinn Martin", email: "quinn@example.com", category: "features" },
-                   { message: "Sometimes the app crashes when uploading images.", name: "Rachel Scott", email: "rachel@example.com", category: "bug" },
-                   { message: "Love the step-by-step recipe instructions.", name: "Sam Wilson", email: "sam@example.com", category: "general" },
-                   { message: "Would be great to share recipes with friends.", name: "Tina Young", email: "tina@example.com", category: "features" }
-                 ])
+Relational::Feedback.create!([
+                               { message: "Love the recipes! Keep up the great work.", name: "Alice Johnson", email: "alice@example.com", category: "general" },
+                               { message: "Found a bug when trying to upload an image.", name: "Bob Smith", email: "bob@example.com", category: "bug" },
+                               { message: "Could you add more vegan recipes?", name: "Carol Lee", email: "carol@example.com", category: "features" },
+                               { message: "The website is loading slowly on mobile.", name: "David Kim", email: "david@example.com", category: "general" },
+                               { message: "I appreciate the detailed cooking instructions!", name: "Eve Martinez", email: "eve@example.com", category: "general" },
+                               { message: "Would love a dark mode option.", name: "Frank Green", email: "frank@example.com", category: "features" },
+                               { message: "The login process is confusing.", name: "Grace Hopper", email: "grace@example.com", category: "interface" },
+                               { message: "Great app, but the search feature could be faster.", name: "Hannah Brown", email: "hannah@example.com", category: "general" },
+                               { message: "Images sometimes fail to upload on Safari.", name: "Ian Clarke", email: "ian@example.com", category: "bug" },
+                               { message: "Please add a category filter for recipes.", name: "Jane Doe", email: "jane@example.com", category: "features" },
+                               { message: "Really enjoy the grocery list feature.", name: "Kevin Lee", email: "kevin@example.com", category: "general" },
+                               { message: "The AI recipe generator is amazing!", name: "Laura Kim", email: "laura@example.com", category: "general" },
+                               { message: "I had trouble resetting my password.", name: "Mike Taylor", email: "mike@example.com", category: "bug" },
+                               { message: "Consider adding multi-language support.", name: "Nina Patel", email: "nina@example.com", category: "features" },
+                               { message: "Some recipes are missing nutrition info.", name: "Oliver White", email: "oliver@example.com", category: "bug" },
+                               { message: "The mobile layout looks great!", name: "Paula Adams", email: "paula@example.com", category: "general" },
+                               { message: "Notifications for saved recipes would be helpful.", name: "Quinn Martin", email: "quinn@example.com", category: "features" },
+                               { message: "Sometimes the app crashes when uploading images.", name: "Rachel Scott", email: "rachel@example.com", category: "bug" },
+                               { message: "Love the step-by-step recipe instructions.", name: "Sam Wilson", email: "sam@example.com", category: "general" },
+                               { message: "Would be great to share recipes with friends.", name: "Tina Young", email: "tina@example.com", category: "features" }
+                             ])
 
 puts "Seeded 20 Feedback records."
 
@@ -495,18 +494,18 @@ puts "Seeded 20 Feedback records."
 # GROCERY_LIST
 # =================
 
-grocery_lists = GroceryList.create([
-                                     { name: "Home", owner_id: users.sample.id },
-                                     { name: "Etc", owner_id: users.sample.id },
-                                     { name: "stuff", owner_id: users.sample.id },
-                                     { name: "Dinner party", owner_id: users.sample.id },
-                                     { name: "Work", owner_id: users.sample.id },
-                                     { name: "Shared", owner_id: users.sample.id },
-                                     { name: "Random", owner_id: users.sample.id },
-                                     { name: "Sports", owner_id: users.sample.id },
-                                     { name: "Baking", owner_id: users.sample.id },
-                                     { name: "Holiday", owner_id: users.sample.id }
-                                   ])
+grocery_lists = Relational::GroceryList.create([
+                                                 { name: "Home", owner_id: users.sample.id },
+                                                 { name: "Etc", owner_id: users.sample.id },
+                                                 { name: "stuff", owner_id: users.sample.id },
+                                                 { name: "Dinner party", owner_id: users.sample.id },
+                                                 { name: "Work", owner_id: users.sample.id },
+                                                 { name: "Shared", owner_id: users.sample.id },
+                                                 { name: "Random", owner_id: users.sample.id },
+                                                 { name: "Sports", owner_id: users.sample.id },
+                                                 { name: "Baking", owner_id: users.sample.id },
+                                                 { name: "Holiday", owner_id: users.sample.id }
+                                               ])
 
 puts "Seeded 10 GroceryList records."
 
@@ -515,10 +514,10 @@ puts "Seeded 10 GroceryList records."
 # =================
 
 def create_items_for_random_lists(items)
-  grocery_list = GroceryList.all.sample
+  grocery_list = Relational::GroceryList.all.sample
 
   items.each do |attrs|
-    GroceryListItem.create!(
+    Relational::GroceryListItem.create!(
       attrs.merge(
         grocery_list_id: grocery_list.id,
         added_by_id: grocery_list.owner_id
@@ -562,7 +561,7 @@ puts "Seeded 10 GroceryListItem records."
 pairs = grocery_lists.product(users) # all possible [grocery_list, user] pairs
 unique_pairs = pairs.sample(20) # pick 20 unique pairs at random
 
-GroceryListShare.create!(unique_pairs.map do |list, user|
+Relational::GroceryListShare.create!(unique_pairs.map do |list, user|
   { grocery_list_id: list.id, user_id: user.id }
 end)
 
@@ -572,44 +571,44 @@ puts "Seeded 20 GroceryListShare records."
 # SUBSCRIPTION_PLAN
 # =================
 
-SubscriptionPlan.create!([
-                           {
-                             name: "Basic",
-                             price: 9.99,
-                             billing_cycle: "monthly",
-                             feature_description: "Access to core features, limited support, 5 projects per month."
-                           },
-                           {
-                             name: "Pro",
-                             price: 29.99,
-                             billing_cycle: "monthly",
-                             feature_description: "All core features, priority support, unlimited projects."
-                           },
-                           {
-                             name: "Enterprise",
-                             price: 99.99,
-                             billing_cycle: "monthly",
-                             feature_description: "Custom solutions, dedicated account manager, enterprise-level support."
-                           },
-                           {
-                             name: "Basic Annual",
-                             price: 99.99,
-                             billing_cycle: "yearly",
-                             feature_description: "Access to core features, limited support, 5 projects per month. Billed yearly."
-                           },
-                           {
-                             name: "Pro Annual",
-                             price: 299.99,
-                             billing_cycle: "yearly",
-                             feature_description: "All core features, priority support, unlimited projects. Billed yearly."
-                           },
-                           {
-                             name: "Enterprise Annual",
-                             price: 999.99,
-                             billing_cycle: "yearly",
-                             feature_description: "Custom solutions, dedicated account manager, enterprise-level support. Billed yearly."
-                           }
-                         ])
+Relational::SubscriptionPlan.create!([
+                                       {
+                                         name: "Basic",
+                                         price: 9.99,
+                                         billing_cycle: "monthly",
+                                         feature_description: "Access to core features, limited support, 5 projects per month."
+                                       },
+                                       {
+                                         name: "Pro",
+                                         price: 29.99,
+                                         billing_cycle: "monthly",
+                                         feature_description: "All core features, priority support, unlimited projects."
+                                       },
+                                       {
+                                         name: "Enterprise",
+                                         price: 99.99,
+                                         billing_cycle: "monthly",
+                                         feature_description: "Custom solutions, dedicated account manager, enterprise-level support."
+                                       },
+                                       {
+                                         name: "Basic Annual",
+                                         price: 99.99,
+                                         billing_cycle: "yearly",
+                                         feature_description: "Access to core features, limited support, 5 projects per month. Billed yearly."
+                                       },
+                                       {
+                                         name: "Pro Annual",
+                                         price: 299.99,
+                                         billing_cycle: "yearly",
+                                         feature_description: "All core features, priority support, unlimited projects. Billed yearly."
+                                       },
+                                       {
+                                         name: "Enterprise Annual",
+                                         price: 999.99,
+                                         billing_cycle: "yearly",
+                                         feature_description: "Custom solutions, dedicated account manager, enterprise-level support. Billed yearly."
+                                       }
+                                     ])
 
 puts "Seeded 6 SubscriptionPlan records."
 
@@ -617,16 +616,16 @@ puts "Seeded 6 SubscriptionPlan records."
 # SUBSCRIPTION
 # =================
 
-plans = SubscriptionPlan.all
+plans = Relational::SubscriptionPlan.all
 
-Subscription.create(
+Relational::Subscription.create(
   user: users.sample,
   subscription_plan: plans.sample,
   cancelled_at: nil,
   status: "active"
 )
 
-Subscription.create(
+Relational::Subscription.create(
   user: users.sample,
   subscription_plan: plans.sample,
   cancelled_at: nil,
@@ -642,7 +641,7 @@ Subscription.create(
 #   )
 # end
 
-puts "Seeded #{Subscription.count} subscriptions."
+puts "Seeded #{Relational::Subscription.count} subscriptions."
 
 # =================
 # RECIPE_LIKE
@@ -652,7 +651,7 @@ recipes.each do |recipe|
   num_likes = rand(1..users.to_a.size)
 
   users.sample(num_likes).each do |user|
-    RecipeLike.create(
+    Relational::RecipeLike.create(
       user_id: user.id,
       recipe_id: recipe.id
     )
@@ -667,7 +666,7 @@ puts "Seeded some recipe_like records."
 
 recipes.each do |recipe|
   rand(1..20).times do
-    RecipeComment.create(user_id: users.sample.id, recipe_id: recipe.id, comment: 'Okay it\'s delicious and MUNCHYYY!')
+    Relational::RecipeComment.create(user_id: users.sample.id, recipe_id: recipe.id, comment: 'Okay it\'s delicious and MUNCHYYY!')
   end
 end
 
