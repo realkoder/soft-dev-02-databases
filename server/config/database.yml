@@ -15,6 +15,15 @@
 default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 3 } %>
 
+# User for the application (with the minimum privileges it needs)
+# user: app_user | password: passwd
+
+#  User with read-only privileges
+#  user: readonly | password: passwd
+
+# restricted user only reading privileges for some tables
+# user: restricted | password: passwd
+
 development:
   <<: *default
   adapter: mysql2

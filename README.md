@@ -65,6 +65,39 @@ A Ruby on Rails server with ReactRouterv7 frontend web app.
 
 ---
 
+## MySQL Users
+
+```mysql
+-- A user for the application (with the minimum privileges it needs)
+CREATE USER 'app_user'@'%' IDENTIFIED BY 'passwd';
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+    ON munchora.*
+    TO 'app_user'@'%';
+
+FLUSH PRIVILEGES;
+
+-- A user with full database admin privileges
+-- Check admin user generated in docker-compose
+
+-- A user with read-only privileges
+CREATE USER 'readonly'@'%' IDENTIFIED BY 'passwd';
+
+GRANT SELECT ON munchora.* TO 'readonly'@'%';
+
+FLUSH PRIVILEGES;
+
+-- A user with restricted reading privileges, which will be unable to see some data
+CREATE USER 'restricted'@'%' IDENTIFIED BY 'passwd';
+
+GRANT SELECT ON munchora.users TO 'restricted'@'%';
+GRANT SELECT ON munchora.recipes TO 'restricted'@'%';
+```
+
+<br>
+
+---
+
 ## Tech Stack
 
 This full stack webapp is built in the following way:
@@ -134,7 +167,7 @@ Dotenv.load('.env.dev') if Rails.env.development?
 
 Add the following gem to Gemfile: ´gem 'mysql2', '>= 0.5'´
 
-Had some issues with dependencies for `mysql-client openssl@3 zstd`
+Issues with dependencies for `mysql-client openssl@3 zstd`
 Installed them with brew: `brew install mysql-client openssl@3 zstd`
 
 And then told bundle where to find the dependencies
