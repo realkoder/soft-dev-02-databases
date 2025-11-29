@@ -27,7 +27,7 @@ export default function IngredientSelectorModal({ isOpen, onClose, ingredient }:
 
     setAddedToLists([...addedToLists, listId]);
 
-    await addItemToList(listId, ingredient.ingredient, ingredient.category);
+    await addItemToList(listId, ingredient.name, ingredient.category);
     toast.info('Successfully added ingredient to your list');
   };
 

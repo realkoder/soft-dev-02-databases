@@ -26,7 +26,7 @@ export function meta() {
 
 export default function GroceryListDetail() {
   const params = useParams();
-  const listId = Number(params.listId);
+  const listId = params.listId;
   const [curGroceryList, setCurGroceryList] = useAtom(curGroceryListAtom);
   const { addItemToList, deleteGroceryList, deleteGroceryListItem, groceryLists, toggleItemCompleted, isAddingItem, updateItem } = useGroceryLists();
   const [isEditing, setIsEditing] = useState(false);
@@ -54,6 +54,7 @@ export default function GroceryListDetail() {
   };
 
   const handleUpdate = () => {
+    if (!listId) return;
     updateItem(listId, editItemId, editedName, editedCategory);
     setEditModalVisible(false);
   };
