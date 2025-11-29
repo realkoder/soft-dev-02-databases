@@ -1,1 +1,0 @@
-class LlmUsageLimitExceeded < StandardError; end

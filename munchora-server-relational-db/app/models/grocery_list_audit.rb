@@ -1,2 +1,0 @@
-class GroceryListAudit < ApplicationRecord
-end
