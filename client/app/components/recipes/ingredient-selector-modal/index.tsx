@@ -62,7 +62,7 @@ export default function IngredientSelectorModal({ isOpen, onClose, ingredient }:
           {/* Selected Ingredient */}
           <div className="bg-secondary/50 p-3 sm:p-4 rounded-lg border border-border">
             <DialogDescription className="text-xs sm:text-sm text-fourth mb-1">Selected ingredient:</DialogDescription>
-            <DialogDescription>{ingredient?.ingredient}</DialogDescription>
+            <DialogDescription>{ingredient?.name}</DialogDescription>
           </div>
 
           {/* Existing Lists */}
