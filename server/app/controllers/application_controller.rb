@@ -27,7 +27,7 @@ class ApplicationController < ActionController::API
                    end
                end
 
-    # More lenient 100 requests per minute for all other requests ===
+    # More lenient 20 requests per minute for all other requests ===
     rate_limit to: 20,
                within: 1.minute,
                by: -> { request.domain },
