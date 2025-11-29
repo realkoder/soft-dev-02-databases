@@ -406,7 +406,7 @@ Relational::Recipe.all.each do |recipe|
   end
 end
 
-puts "Seeded ingredients for recipes."
+puts "Seeded ingredients for #{Recipe.all.size} recipes."
 
 # =================
 # LLM_USAGE
