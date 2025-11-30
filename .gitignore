@@ -3,8 +3,6 @@ jmeter.log
 .env.*
 .env
 
-docker-compose.dev.mongo-express.yml
-
 .DS_Store
 
 neo4j/data/

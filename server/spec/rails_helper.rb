@@ -2,17 +2,22 @@ require 'simplecov'
 require 'simplecov_json_formatter'
 SimpleCov.formatters = [SimpleCov::Formatter::JSONFormatter]
 SimpleCov.coverage_dir 'coverage'
-SimpleCov.start do
+SimpleCov.start 'rails' do
   # Track only the User model
-  # track_files "app/models/user.rb"
+  # track_files "app/models/relational/user.rb"
+
+  enable_coverage :branch
+
+  # Showcasing how branch coverage works
+  # add_filter do |source_file|
+  #   !source_file.filename.end_with?("app/controllers/api/v1/test_controller.rb")
+  # end
 
   # Optionally, ignore everything else
   # add_filter do |source_file|
-  #   !source_file.filename.end_with?("app/models/user.rb", "app/controllers/api/v1/users_controller.rb")
+  #   !source_file.filename.end_with?("app/models/relational/user.rb", "app/controllers/api/v1/users_controller.rb")
   # end
-  add_filter %w[spec/ config/ vendor/]
 end
-
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'

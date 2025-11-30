@@ -5,9 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/.iml" filepath="$PROJECT_DIR$/.idea/modules/.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/migrate-mysql-to-mongodb.iml" filepath="$PROJECT_DIR$/.idea/modules/migrate-mysql-to-mongodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/migrate-mysql-to-neo4j.iml" filepath="$PROJECT_DIR$/.idea/modules/migrate-mysql-to-neo4j.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/munchora-server-graph-db.iml" filepath="$PROJECT_DIR$/.idea/modules/munchora-server-graph-db.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/munchora-server-no-sql-db.iml" filepath="$PROJECT_DIR$/.idea/modules/munchora-server-no-sql-db.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/munchora-server-relational-db.iml" filepath="$PROJECT_DIR$/.idea/modules/munchora-server-relational-db.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/soft-dev-02-databases.iml" filepath="$PROJECT_DIR$/.idea/soft-dev-02-databases.iml" />
     </modules>

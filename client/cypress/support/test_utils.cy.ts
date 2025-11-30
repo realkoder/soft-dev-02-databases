@@ -1,19 +1,18 @@
 export function deleteListIfExist() {
-  cy.get('body').then(($body) => {
-    const deleteBtn = $body.find('button[cy-data="delete-list-btn"]');
-    if (deleteBtn.length) {
-      cy.wrap(deleteBtn).each(($btn) => {
-        // Click the initial delete button (opens modal)
-        cy.wrap($btn).click({ force: true });
+  cy.document().then((doc) => {
+    const deleteBtns = doc.querySelectorAll('button[cy-data="delete-list-btn"]');
 
-        // Wait for modal to appear and click the actual Delete button inside it
-        cy.get('[role="dialog"]') // Radix Dialog has role="dialog"
-          .should('be.visible')
-          .within(() => {
-            // Click the button that says "Delete" (not "Cancel")
-            cy.contains('button', 'Delete').click({ force: true });
-          });
+    if (deleteBtns.length) {
+      const btn = deleteBtns[0];
+      cy.wrap(btn).click({force: true});
+
+      cy.get('[role="dialog"]').should('be.visible').within(() => {
+        cy.contains('button', 'Delete').click({force: true});
       });
+
+      cy.wait(500);
+      cy.reload(); // This is not pretty but faced a lot of issues - now it works xD
+      if (doc.querySelectorAll('button[cy-data="delete-list-btn"]').length > 0) deleteListIfExist();
     }
   });
 }

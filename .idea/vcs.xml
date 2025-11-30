@@ -2,8 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/munchora-server-graph-db" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/munchora-server-no-sql-db" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/server" vcs="Git" />
   </component>
 </project>

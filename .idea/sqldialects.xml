@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/munchora-server-relational-db/db/migrate/20250916161805_add_create_invoice_trigger_to_subscriptions.rb" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/munchora-server-relational-db/db/migrate/20250917160306_add_generate_recipe_suggestions_procedure.rb" dialect="GenericSQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>
