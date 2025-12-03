@@ -70,7 +70,7 @@ export function loader({ params }: Route.LoaderArgs) {
 
 export default function Recipe({ loaderData }: Route.ComponentProps) {
   const params = useParams();
-  const recipeId = Number(params.recipeId);
+  const recipeId = params.recipeId;
   const [recipe, setRecipe] = useState(loaderData);
   const [showIngredientModal, setShowIngredientModal] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<IIngredient>();

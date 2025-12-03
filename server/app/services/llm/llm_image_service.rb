@@ -34,16 +34,17 @@ module Llm
       raise LlmUsageLimitExceeded, "Daily AI usage limit (#{DAILY_LIMIT}) reached."
     end
 
-    def log_usage(usage, model)
+    def log_usage(prompt, recipe, usage, model)
       return unless usage && @user
 
-      LlmUsage.create!(
+      Relational::LlmUsage.create!(
         user: @user,
+        recipe: recipe,
+        prompt: prompt,
         model: model,
         provider: 'openai',
         prompt_tokens: usage[:prompt_tokens],
-        completion_tokens: usage[:completion_tokens],
-        total_tokens: usage[:total_tokens]
+        completion_tokens: usage[:completion_tokens]
       )
     end
 
@@ -65,7 +66,7 @@ module Llm
 
       usage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
 
-      log_usage(usage, model)
+      log_usage(prompt, recipe, usage, model)
 
       open_ai_image_url = image_gen_response.data[0].url
 

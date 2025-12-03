@@ -20,6 +20,10 @@ class Api::V1::LlmController < ApplicationController
   end
 
   def generate_recipe_image
+    if request.headers['use-db'] == 'mongodb' || request.headers['use-db'] == 'neo4j'
+      return render json: { error: 'Accepts only use-db mysql' }
+    end
+
     recipe_image_url = Llm::LlmImageService.new(user: @current_user).generate_recipe_image(recipe: @recipe, request: request)
     render json: { image_url: recipe_image_url }
 
@@ -27,7 +31,7 @@ class Api::V1::LlmController < ApplicationController
     render json: { error: e.message }, status: :too_many_requests
 
   rescue => e
-    Rails.logger.error("chat_json error: #{e.message}")
+    Rails.logger.error(" chat_json error: #{e.message}")
     render json: { error: e.message }, status: 500
   end
 
