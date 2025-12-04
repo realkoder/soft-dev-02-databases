@@ -1,6 +1,6 @@
-# ===========================================================
-#       🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
-# ===========================================================
+# ===========================================================================================================
+#                            🐳 🐳 🐳 🐳 🐳 DOCKER COMPOSE DEV 🐳 🐳 🐳 🐳 🐳
+# ===========================================================================================================
 # docker-compose up:    docker-compose -f docker-compose.dev.yml up
 # docker-compose logs:  docker-compose -f docker-compose.dev.yml logs -f
 # docker-compose down:  docker-compose -f docker-compose.dev.yml down --rmi all --remove-orphans
@@ -35,11 +35,19 @@ services:
     environment:
       - NEO4J_AUTH=neo4j/password
     volumes:
-      - ./neo4j/data:/data
-      - ./neo4j/logs:/logs
-      - ./neo4j/import:/var/lib/neo4j/import
-      - ./neo4j/plugins:/plugins
+      - munchora_neo4j_data:/data
+      - munchora_neo4j_logs:/logs
+      - munchora_neo4j_import:/var/lib/neo4j/import
+      - munchora_neo4j_plugins:/plugins
 
 volumes:
   munchora_mysql_data:
     name: munchora_mysql_data
+  munchora_neo4j_data:
+    name: munchora_neo4j_data
+  munchora_neo4j_logs:
+    name: munchora_neo4j_logs
+  munchora_neo4j_import:
+    name: munchora_neo4j_import
+  munchora_neo4j_plugins:
+    name: munchora_neo4j_plugins
