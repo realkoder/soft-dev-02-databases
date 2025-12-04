@@ -140,7 +140,7 @@ class Llm::LlmService
       Relational::Recipe.transaction do
         if validated_recipe['ingredients']
           # Remove old ingredients
-          recipe.ingredients.destroy_all
+          recipe.ingredients.delete_all
 
           # Build new ingredients
           validated_recipe['ingredients'].each do |ingredient|
