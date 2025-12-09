@@ -10,7 +10,7 @@ It's required to `git clone https://github.com/realkoder/soft-dev-02-databases.g
 
 ### _Recommended_: Start MySQL migrated and ready to query using docker-compose
 
-In terminal cd to  `./munchora-server-relational-db`
+In terminal cd to  `./dumps-and-migrations-scripts`
 
 Start MySQL by `docker-compose -f docker-compose.mysql-migrated.yml up -d`
 
