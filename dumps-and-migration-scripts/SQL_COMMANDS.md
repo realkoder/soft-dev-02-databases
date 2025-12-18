@@ -161,9 +161,9 @@ COMMIT; -- Only Step 1 and Step 3 are committed
 
 ---
 
-### Stored procedures
+### Prepared Statements
 
-How **stored procedures** are executed in _SQL_
+How **prepared statements** are executed in _SQL_
 
 ```mysql
 PREPARE q FROM 'SELECT * from users WHERE first_name = ?';
